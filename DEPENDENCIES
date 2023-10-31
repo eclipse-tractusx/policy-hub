@@ -1,0 +1,8 @@
+nuget/nuget/-/EFCore.NamingConventions/7.0.2, Apache-2.0, approved, #10067
+nuget/nuget/-/Flurl.Signed/3.0.6, MIT, approved, #3501
+nuget/nuget/-/Humanizer.Core/2.14.1, MIT, approved, #10060
+nuget/nuget/-/Mono.TextTemplating/2.2.1, MIT, approved, clearlydefined
+nuget/nuget/-/Npgsql.EntityFrameworkCore.PostgreSQL/7.0.11, PostgreSQL AND MIT AND Apache-2.0, approved, #10081
+nuget/nuget/-/Npgsql/7.0.6, PostgreSQL, approved, #10062
+nuget/nuget/-/Serilog.Extensions.Logging/7.0.0, Apache-2.0, approved, #10070
+nuget/nuget/-/Serilog/2.12.0, Apache-2.0, approved, #8435
