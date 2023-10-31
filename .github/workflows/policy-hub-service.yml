@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-name: Administration-Service
+name: Policy-Hub-Service
 
 on:
   # push:

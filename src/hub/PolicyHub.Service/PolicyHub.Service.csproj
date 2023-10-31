@@ -43,6 +43,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\database\PolicyHub.DbAccess\PolicyHub.DbAccess.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.DependencyInjection\Framework.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.ErrorHandling.Library\Framework.ErrorHandling.Library.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.ErrorHandling.Web\Framework.ErrorHandling.Web.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.Linq\Framework.Linq.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.Logging\Framework.Logging.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.Swagger\Framework.Swagger.csproj" />
   </ItemGroup>
 
   <ItemGroup>

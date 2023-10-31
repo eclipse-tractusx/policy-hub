@@ -17,4 +17,16 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-Host.CreateDefaultBuilder(args).Build().Run();
+using Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
+using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
+
+const string Version = "v2";
+
+WebApplicationBuildRunner
+    .BuildAndRunWebApplication<Program>(args, "hub", Version, null,
+    app =>
+    {
+        app.MapGroup("/api")
+            .WithOpenApi()
+            .MapPolicyHubApi();
+    });

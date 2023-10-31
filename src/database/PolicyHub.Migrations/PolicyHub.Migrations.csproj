@@ -49,6 +49,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\framework\Framework.Logging\Framework.Logging.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.Seeding\Framework.Seeding.csproj" />
     <ProjectReference Include="..\PolicyHub.Entities\PolicyHub.Entities.csproj" />
   </ItemGroup>
 

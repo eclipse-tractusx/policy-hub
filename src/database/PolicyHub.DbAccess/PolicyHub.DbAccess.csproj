@@ -28,6 +28,9 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\..\framework\Framework.DependencyInjection\Framework.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.ErrorHandling.Library\Framework.ErrorHandling.Library.csproj" />
+    <ProjectReference Include="..\..\framework\Framework.Seeding\Framework.Seeding.csproj" />
     <ProjectReference Include="..\PolicyHub.Entities\PolicyHub.Entities.csproj" />
   </ItemGroup>
 
