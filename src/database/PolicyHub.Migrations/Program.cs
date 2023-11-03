@@ -17,6 +17,42 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Org.Eclipse.TractusX.PolicyHub.Entities;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.Logging;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.Seeding.DependencyInjection;
+using Serilog;
+using System.Reflection;
 
-Host.CreateDefaultBuilder(args).Build().Run();
+LoggingExtensions.EnsureInitialized();
+Log.Information("Starting process");
+try
+{
+    var host = Host.CreateDefaultBuilder(args)
+        .ConfigureServices((hostContext, services) =>
+        {
+            services
+                .AddDbContext<PolicyHubContext>(o =>
+                    o.UseNpgsql(hostContext.Configuration.GetConnectionString("PolicyHubDb"),
+                        x => x.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)
+                            .MigrationsHistoryTable("__efmigrations_history_hub")))
+                .AddDatabaseInitializer<PolicyHubContext>(hostContext.Configuration.GetSection("Seeding"));
+        })
+        .AddLogging()
+        .Build();
+
+    await host.Services.InitializeDatabasesAsync(); // We don't actually run anything here. The magic happens in InitializeDatabasesAsync
+}
+catch (Exception ex) when (!ex.GetType().Name.Equals("StopTheHostException", StringComparison.Ordinal))
+{
+    Log.Fatal("Unhandled exception {Exception}", ex);
+    throw;
+}
+finally
+{
+    Log.Information("Process Shutting down...");
+    Log.CloseAndFlush();
+}
