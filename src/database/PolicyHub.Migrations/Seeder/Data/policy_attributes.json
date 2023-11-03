@@ -1,0 +1,80 @@
+[
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b1",
+    "key": 1,
+    "attribute_value": "^BPNL[\\w|\\d]{12}$",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b2",
+    "key": 2,
+    "attribute_value": "active",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
+    "key": 5,
+    "attribute_value": "1.0",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
+    "key": 5,
+    "attribute_value": "1.1",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
+    "key": 5,
+    "attribute_value": "1.2",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b4",
+    "key": 5,
+    "attribute_value": "1.0",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b5",
+    "key": 5,
+    "attribute_value": "1.0",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b6",
+    "key": 5,
+    "attribute_value": "1.0",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b7",
+    "key": 2,
+    "attribute_value": "ID Trace 3.1",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b8",
+    "key": 3,
+    "attribute_value": "vehicleDismantle",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
+    "key": 4,
+    "attribute_value": "BMW",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
+    "key": 4,
+    "attribute_value": "Audi",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
+    "key": 4,
+    "attribute_value": "VW",
+    "is_active": true
+  }
+]
