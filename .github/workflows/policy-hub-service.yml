@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-name: Administration-Service
+name: PolicyHub-Service
 
 on:
   # push:
@@ -25,7 +25,7 @@ on:
   #     # service and transitive paths
   #     - 'src/**'
   #     # workflow file
-  #     - '.github/workflows/policy_hub-service.yml'
+  #     - '.github/workflows/policy-hub-service.yml'
   #     # dockerfile
   #     - 'docker/Dockerfile-policy-hub-service'
 

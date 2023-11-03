@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-name: Portal-Migrations
+name: PolicyHub-Migrations
 
 on: 
   # push:
