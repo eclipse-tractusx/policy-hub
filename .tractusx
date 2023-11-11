@@ -17,4 +17,5 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
+product: "Policy Hub"
 leadingRepository: "https://github.com/eclipse-tractusx/policy-hub"
