@@ -23,7 +23,6 @@ namespace Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 
 public record PolicyTypeResponse
 (
-    PolicyKindId Name,
     string TechnicalKey,
     IEnumerable<PolicyTypeId> Type,
     string Description,

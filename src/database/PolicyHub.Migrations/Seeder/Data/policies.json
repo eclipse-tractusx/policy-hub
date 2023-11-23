@@ -50,16 +50,16 @@
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300b7",
     "kind_id": 4,
-    "technical_key": "purpose",
-    "description": "tbd",
+    "technical_key": "purpose.trace.v1.TraceBattery",
+    "description": "Facilitating compliance with mandatory regulatory requirements for tracking and reporting battery cells, modules & high-voltage batteries.",
     "is_active": true,
     "attribute_key_id": 2
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300b8",
     "kind_id": 4,
-    "technical_key": "purpose",
-    "description": "tbd",
+    "technical_key": "purpose.trace.v1.aspects",
+    "description": "Establishing a digital representation of the automotive supply chain to enable a component specific data exchange.",
     "is_active": true,
     "attribute_key_id": 3
   },
@@ -71,5 +71,13 @@
     "description": "tbd",
     "is_active": true,
     "attribute_key_id": 4
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
+    "kind_id": 4,
+    "technical_key": "purpose.trace.v1.qualityanalysis",
+    "description": " The data can be used for quality analysis to identify and select affected components and to send quality notifications to affected customers or suppliers.",
+    "is_active": true,
+    "attribute_key_id": 3
   }
 ]
