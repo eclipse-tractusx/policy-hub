@@ -44,7 +44,6 @@ public class PolicyRepository : IPolicyRepository
                 (type == null || p.Types.Any(x => x.Id == type)) &&
                 (useCase == null || p.UseCases.Any(x => x.Id == useCase)))
             .Select(p => new PolicyTypeResponse(
-                p.KindId,
                 p.TechnicalKey,
                 p.Types.Where(t => t.IsActive).Select(t => t.Id),
                 p.Description,
