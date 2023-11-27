@@ -39,7 +39,7 @@ public static class PolicyHubController
         policyHub.MapGet("policy-attributes", (IPolicyHubBusinessLogic logic) => logic.GetAttributeKeys())
             .WithSwaggerDescription("Gets the keys for the attributes",
                 "Example: GET: api/policy-hub/policy-attributes")
-            // .RequireAuthorization()
+            .RequireAuthorization()
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(string), Constants.JsonContentType);
 
@@ -48,7 +48,7 @@ public static class PolicyHubController
                 "Example: GET: api/policy-hub/policy-types",
                 "OPTIONAL: Type to filter the response",
                 "OPTIONAL: UseCase to filter the response")
-            // .RequireAuthorization()
+            .RequireAuthorization()
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(PolicyTypeResponse), Constants.JsonContentType);
 
@@ -66,7 +66,7 @@ public static class PolicyHubController
                 "The technical key of the policy",
                 "The operator of the left and right operand",
                 "OPTIONAL: Value for dynamic or regex operands")
-            // .RequireAuthorization()
+            .RequireAuthorization()
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(PolicyResponse), Constants.JsonContentType)
             .Produces(StatusCodes.Status404NotFound, typeof(ErrorResponse), Constants.JsonContentType);
@@ -75,7 +75,7 @@ public static class PolicyHubController
             .WithSwaggerDescription("Gets the content for a specific policy type",
                 "Example: POST: api/policy-hub/policy-content",
                 "Request data with the configuration of the constraints")
-            // .RequireAuthorization()
+            .RequireAuthorization()
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(PolicyResponse), Constants.JsonContentType)
             .Produces(StatusCodes.Status404NotFound, typeof(ErrorResponse), Constants.JsonContentType);
