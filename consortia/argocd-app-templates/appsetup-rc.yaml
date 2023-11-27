@@ -20,14 +20,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: portal-rc
+  name: policy-hub-rc
 spec:
   destination:
     namespace: product-iam
     server: 'https://kubernetes.default.svc'
   source:
-    path: charts/portal
-    repoURL: 'https://github.com/eclipse-tractusx/portal-cd.git'
+    path: charts/policy-hub
+    repoURL: 'https://github.com/eclipse-tractusx/policy-hub.git'
     targetRevision: release-candidate
     plugin:
       env:
@@ -35,4 +35,4 @@ spec:
           value: vault-secret
         - name: helm_args
           value: '-f values.yaml -f ../../consortia/environments/values-rc.yaml'
-  project: project-portal
+  project: project-policy-hub

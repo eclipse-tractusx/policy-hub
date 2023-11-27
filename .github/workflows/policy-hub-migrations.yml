@@ -24,7 +24,7 @@ on:
   #   paths:
   #     # service and transitive paths
   #     - 'src/database/PolicyHub.Migrations/**'
-  #     - 'src/database/PolicyHub.PortalEntities/**'
+  #     - 'src/database/PolicyHub.Entities/**'
   #     # workflow file
   #     - '.github/workflows/policy-hub-migrations.yml'
   #     # dockerfile

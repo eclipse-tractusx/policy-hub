@@ -26,7 +26,7 @@ using Org.Eclipse.TractusX.Portal.Backend.Framework.Seeding;
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Seeder;
 
 /// <summary>
-/// Seeder to seed the base entities (those with an id as primary key)
+/// Seeder to seed the all configured entities
 /// </summary>
 public class BatchInsertSeeder : ICustomSeeder
 {

@@ -34,18 +34,18 @@ public static class PolicyHubController
 {
     public static RouteGroupBuilder MapPolicyHubApi(this RouteGroupBuilder group)
     {
-        var policyHub = group.MapGroup("/policyHub");
+        var policyHub = group.MapGroup("/policy-hub");
 
         policyHub.MapGet("policy-attributes", (IPolicyHubBusinessLogic logic) => logic.GetAttributeKeys())
             .WithSwaggerDescription("Gets the keys for the attributes",
-                "Example: GET: api/policyhub/policy-attributes")
+                "Example: GET: api/policy-hub/policy-attributes")
             // .RequireAuthorization()
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(string), Constants.JsonContentType);
 
         policyHub.MapGet("policy-types", (PolicyTypeId? type, UseCaseId? useCase, IPolicyHubBusinessLogic logic) => logic.GetPolicyTypes(type, useCase))
             .WithSwaggerDescription("Gets the policy types",
-                "Example: GET: api/policyhub/policy-types",
+                "Example: GET: api/policy-hub/policy-types",
                 "OPTIONAL: Type to filter the response",
                 "OPTIONAL: UseCase to filter the response")
             // .RequireAuthorization()
@@ -58,9 +58,9 @@ public static class PolicyHubController
                 string credential,
                 OperatorId operatorId,
                 string? value,
-                IPolicyHubBusinessLogic logic) => logic.GetPolicyContentAsync(useCase, type, credential, operatorId, value))
+                IPolicyHubBusinessLogic logic) => logic.GetPolicyContentWithFiltersAsync(useCase, type, credential, operatorId, value))
             .WithSwaggerDescription("Gets the content for a specific policy type",
-                "Example: GET: api/policyhub/policy-content",
+                "Example: GET: api/policy-hub/policy-content",
                 "OPTIONAL: The use case",
                 "Type of the policy to get the content for",
                 "The technical key of the policy",
@@ -73,7 +73,7 @@ public static class PolicyHubController
 
         policyHub.MapPost("policy-content", ([FromBody] PolicyContentRequest requestData, IPolicyHubBusinessLogic logic) => logic.GetPolicyContentAsync(requestData))
             .WithSwaggerDescription("Gets the content for a specific policy type",
-                "Example: POST: api/policyhub/policy-content",
+                "Example: POST: api/policy-hub/policy-content",
                 "Request data with the configuration of the constraints")
             // .RequireAuthorization()
             .WithDefaultResponses()
