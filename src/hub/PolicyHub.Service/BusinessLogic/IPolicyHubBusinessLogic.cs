@@ -28,6 +28,6 @@ public interface IPolicyHubBusinessLogic : ITransient
 {
     IAsyncEnumerable<string> GetAttributeKeys();
     IAsyncEnumerable<PolicyTypeResponse> GetPolicyTypes(PolicyTypeId? type, UseCaseId? useCase);
-    Task<PolicyResponse> GetPolicyContentAsync(UseCaseId? useCase, PolicyTypeId type, string credential, OperatorId operatorId, string? value);
+    Task<PolicyResponse> GetPolicyContentWithFiltersAsync(UseCaseId? useCase, PolicyTypeId type, string credential, OperatorId operatorId, string? value);
     Task<PolicyResponse> GetPolicyContentAsync(PolicyContentRequest requestData);
 }

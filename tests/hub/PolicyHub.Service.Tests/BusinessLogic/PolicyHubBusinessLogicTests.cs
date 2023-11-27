@@ -23,7 +23,6 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
-using System.Text.Json;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Tests.BusinessLogic;
 
@@ -118,7 +117,7 @@ public class PolicyHubBusinessLogicTests
         const PolicyTypeId policyTypeId = PolicyTypeId.Access;
         A.CallTo(() => _policyRepository.GetPolicyContentAsync(null, policyTypeId, "membership"))
             .Returns(new ValueTuple<bool, string, (AttributeKeyId, IEnumerable<string>), string?>(false, null!, default, null!));
-        async Task Act() => await _sut.GetPolicyContentAsync(null, policyTypeId, "membership", OperatorId.Equals, null);
+        async Task Act() => await _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, null);
 
         // Act
         var ex = await Assert.ThrowsAsync<NotFoundException>(Act);

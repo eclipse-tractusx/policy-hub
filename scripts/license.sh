@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ###############################################################
 # Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
 #
@@ -17,22 +19,32 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: policy-hub-pen
-spec:
-  destination:
-    namespace: product-policy-hub-pen
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: charts/policy-hub
-    repoURL: 'https://github.com/eclipse-tractusx/policy-hub.git'
-    targetRevision: policy-hub-1.0.0
-    plugin:
-      env:
-        - name: AVP_SECRET
-          value: vault-secret
-        - name: helm_args
-          value: '-f values.yaml -f ../../consortia/environments/values-pen.yaml'
-  project: project-policy-hub
+print-usage() {
+  cat << EOF
+#
+# Generate license files for all images in folder and subfolders
+#
+# usage:
+#       source ./scripts/license.sh
+#       cd path/to/your/images
+#       license-images
+#
+EOF
+}
+
+license-images() {
+  for file in $(find . -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.svg' \));
+  do
+    echo $file
+    cat << EOF > $file.license
+This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
+
+- SPDX-License-Identifier: CC-BY-4.0
+- SPDX-FileCopyrightText: Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+- Source URL: https://github.com/eclipse-tractusx/policy-hub
+
+EOF
+  done
+}
+
+print-usage

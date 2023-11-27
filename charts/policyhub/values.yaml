@@ -62,7 +62,7 @@ backend:
         metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
         tokenValidationParameters:
           validIssuerPath: "/auth/realms/CX-Central"
-          validAudience: "Cl2-CX-Portal"
+          validAudience: "ClXX-CX-Policy-Hub"
         refreshInterval: "00:00:30"
       tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
       # -- Flag if the api should be used with an leading /auth path
@@ -77,7 +77,7 @@ backend:
   policyhub:
     name: "policy-hub-service"
     image:
-      name: "tractusx/portal-hub-service"
+      name: "tractusx/policy-hub-service"
       policyhubservicetag: 29dbdeb9a8b3e809fdab2406140a226bc55de844
     # -- We recommend not to specify default resources and to leave this as a conscious choice for the user.
     # If you do want to specify resources, uncomment the following lines,
@@ -92,7 +92,7 @@ backend:
     logging:
       businessLogic: "Information"
       default: "Information"
-    keycloakClientId: "Cl2-CX-Portal"
+    keycloakClientId: "ClXX-CX-Policy-Hub"
   policyhubmigrations:
     name: "policy-hub-migrations"
     image:
@@ -127,7 +127,7 @@ postgresql:
     database: "postgres"
     # -- Database port number
     port: 5432
-    # -- Secret containing the passwords for root usernames postgres and non-root usernames repl_user, portal and provisioning.
+    # -- Secret containing the passwords for root usernames postgres and non-root usernames repl_user and hub.
     existingSecret: "secret-postgres-init"
     # -- Password for the root username 'postgres'. Secret-key 'postgres-password'.
     password: ""
@@ -164,7 +164,7 @@ externalDatabase:
   database: "postgres"
   # -- Database port number
   port: 5432
-  # -- Secret containing the passwords non-root usernames portal and provisioning.
+  # -- Secret containing the passwords non-root username hub.
   secret: "secret-postgres-external-db"
   # -- Non-root username for hub.
   policyHubUser: "hub"

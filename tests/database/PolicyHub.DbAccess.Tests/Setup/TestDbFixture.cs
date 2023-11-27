@@ -39,14 +39,14 @@ public class TestDbFixture : IAsyncLifetime
         .Build();
 
     /// <summary>
-    /// Foreach test a new portalDbContext will be created and filled with the custom seeding data. 
+    /// Foreach test a new policyHubContext will be created and filled with the custom seeding data. 
     /// </summary>
     /// <remarks>
     /// In this method the migrations don't need to get executed since they are already on the testcontainer.
     /// Because of that the EnsureCreatedAsync is enough.
     /// </remarks>
-    /// <returns>Returns the created PortalDbContext</returns>
-    public async Task<PolicyHubContext> GetPortalDbContext()
+    /// <returns>Returns the created PolicyHubContext</returns>
+    public async Task<PolicyHubContext> GetPolicyHubDbContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<PolicyHubContext>();
 

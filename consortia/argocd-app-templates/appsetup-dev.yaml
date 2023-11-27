@@ -20,14 +20,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: portal-upgrade
+  name: policy-hub-upgrade
 spec:
   destination:
-    namespace: product-iam
+    namespace: policy-hub
     server: 'https://kubernetes.default.svc'
   source:
-    path: charts/portal
-    repoURL: 'https://github.com/eclipse-tractusx/portal-cd.git'
+    path: charts/policy-hub
+    repoURL: 'https://github.com/eclipse-tractusx/policy-hub-cd.git'
     targetRevision: dev
     plugin:
       env:
@@ -35,7 +35,7 @@ spec:
           value: vault-secret
         - name: helm_args
           value: '-f values.yaml -f ../../consortia/environments/values-dev.yaml'
-  project: project-portal
+  project: project-policy-hub
   syncPolicy:
     automated:
       prune: true
