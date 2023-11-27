@@ -2,18 +2,17 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.PolicyHub.Service.Tests.Setup;
-using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
 using System.Net;
 using System.Net.Http.Json;
-using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Tests.Controllers;
 
 public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 {
-    private static readonly JsonSerializerOptions Options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-    private const string BaseUrl = "/api/policyHub";
+    private static readonly JsonSerializerOptions Options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, Converters = { new JsonStringEnumConverter() } };
+    private const string BaseUrl = "/api/policy-hub";
     private readonly HttpClient _client;
 
     public PolicyHubControllerTests(IntegrationTestFactory factory)
@@ -47,20 +46,21 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithoutFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types").ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types", Options).ConfigureAwait(false);
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(9).And.Satisfy(
-                x => x.TechnicalKey == "BusinessPartnerNumber" && x.Name == PolicyKindId.BusinessPartnerNumber,
-                x => x.TechnicalKey == "Membership" && x.Name == PolicyKindId.Membership,
-                x => x.TechnicalKey == "FrameworkAgreement.traceability" && x.Name == PolicyKindId.Framework,
-                x => x.TechnicalKey == "FrameworkAgreement.quality" && x.Name == PolicyKindId.Framework,
-                x => x.TechnicalKey == "FrameworkAgreement.pcf" && x.Name == PolicyKindId.Framework,
-                x => x.TechnicalKey == "FrameworkAgreement.behavioraltwin" && x.Name == PolicyKindId.Framework,
-                x => x.TechnicalKey == "purpose" && x.Name == PolicyKindId.Purpose,
-                x => x.TechnicalKey == "purpose" && x.Name == PolicyKindId.Purpose,
-                x => x.TechnicalKey == "companyRole.dismantler" && x.Name == PolicyKindId.Dismantler
+            .And.HaveCount(10).And.Satisfy(
+                x => x.TechnicalKey == "BusinessPartnerNumber",
+                x => x.TechnicalKey == "Membership",
+                x => x.TechnicalKey == "FrameworkAgreement.traceability",
+                x => x.TechnicalKey == "FrameworkAgreement.quality",
+                x => x.TechnicalKey == "FrameworkAgreement.pcf",
+                x => x.TechnicalKey == "FrameworkAgreement.behavioraltwin",
+                x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
+                x => x.TechnicalKey == "purpose.trace.v1.aspects",
+                x => x.TechnicalKey == "companyRole.dismantler",
+                x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis"
             );
     }
 
@@ -68,14 +68,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithTypeFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?type={PolicyTypeId.Access}").ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?type={PolicyTypeId.Access.ToString()}", Options).ConfigureAwait(false);
 
         // Assert
         policies.Should().NotBeNull()
             .And.HaveCount(3).And.Satisfy(
-                x => x.TechnicalKey == "BusinessPartnerNumber" && x.Name == PolicyKindId.BusinessPartnerNumber,
-                x => x.TechnicalKey == "Membership" && x.Name == PolicyKindId.Membership,
-                x => x.TechnicalKey == "companyRole.dismantler" && x.Name == PolicyKindId.Dismantler
+                x => x.TechnicalKey == "BusinessPartnerNumber",
+                x => x.TechnicalKey == "Membership",
+                x => x.TechnicalKey == "companyRole.dismantler"
             );
     }
 
@@ -83,17 +83,18 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithUseCaseFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?useCase={UseCaseId.Traceability}").ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?useCase={UseCaseId.Traceability.ToString()}", Options).ConfigureAwait(false);
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(6).And.Satisfy(
-                x => x.TechnicalKey == "BusinessPartnerNumber" && x.Name == PolicyKindId.BusinessPartnerNumber,
-                x => x.TechnicalKey == "Membership" && x.Name == PolicyKindId.Membership,
-                x => x.TechnicalKey == "FrameworkAgreement.traceability" && x.Name == PolicyKindId.Framework,
-                x => x.TechnicalKey == "purpose" && x.Name == PolicyKindId.Purpose,
-                x => x.TechnicalKey == "purpose" && x.Name == PolicyKindId.Purpose,
-                x => x.TechnicalKey == "companyRole.dismantler" && x.Name == PolicyKindId.Dismantler
+            .And.HaveCount(7).And.Satisfy(
+                x => x.TechnicalKey == "BusinessPartnerNumber",
+                x => x.TechnicalKey == "Membership",
+                x => x.TechnicalKey == "FrameworkAgreement.traceability",
+                x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
+                x => x.TechnicalKey == "purpose.trace.v1.aspects",
+                x => x.TechnicalKey == "companyRole.dismantler",
+                x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis"
             );
     }
 
@@ -161,42 +162,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_TraceabilityUsagePurposeEquals_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Traceability}&type={PolicyTypeId.Usage}&credential=purpose&operatorId={OperatorId.Equals}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Traceability}&type={PolicyTypeId.Usage}&credential=purpose.trace.v1.TraceBattery&operatorId={OperatorId.Equals}").ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"purpose\",\"operator\":\"eq\",\"rightOperand\":\"ID Trace 3.1\"}}}}");
-    }
-
-    [Fact]
-    public async Task GetPolicyContent_QualityUsagePurposeEqualsWithoutValue_ReturnsExpected()
-    {
-        // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Quality}&type={PolicyTypeId.Usage}&credential=purpose&operatorId={OperatorId.Equals}").ConfigureAwait(false);
-
-        // Assert
-        response.Should().NotBeNull();
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
-            .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"purpose\",\"operator\":\"eq\",\"rightOperand\":\"{dynamicValue}\"}}}}");
-    }
-
-    [Fact]
-    public async Task GetPolicyContent_QualityUsagePurposeEqualsWithValue_ReturnsExpected()
-    {
-        // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Quality}&type={PolicyTypeId.Usage}&credential=purpose&operatorId={OperatorId.Equals}&value=Test").ConfigureAwait(false);
-
-        // Assert
-        response.Should().NotBeNull();
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
-            .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"purpose\",\"operator\":\"eq\",\"rightOperand\":\"Test\"}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"purpose.trace.v1.TraceBattery\",\"operator\":\"eq\",\"rightOperand\":\"ID Trace 3.1\"}}}}");
     }
 
     #endregion

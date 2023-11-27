@@ -33,6 +33,7 @@ using Org.Eclipse.TractusX.PolicyHub.Migrations.Seeder;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Logging;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Seeding;
+using System.Text.Json.Serialization;
 using Testcontainers.PostgreSql;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -58,12 +59,20 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
         });
         builder.ConfigureTestServices(services =>
         {
+            services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+            services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             services.RemoveProdDbContext<PolicyHubContext>();
             services.AddDbContext<PolicyHubContext>(options =>
             {
                 options.UseNpgsql(Container.GetConnectionString(),
                     x => x.MigrationsAssembly(typeof(BatchInsertSeeder).Assembly.GetName().Name)
-                        .MigrationsHistoryTable("__efmigrations_history_portal"));
+                        .MigrationsHistoryTable("__efmigrations_history_hub"));
             });
             services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
         });

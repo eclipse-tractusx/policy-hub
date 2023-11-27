@@ -43,7 +43,7 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
     public IAsyncEnumerable<PolicyTypeResponse> GetPolicyTypes(PolicyTypeId? type, UseCaseId? useCase) =>
         _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyTypes(type, useCase);
 
-    public async Task<PolicyResponse> GetPolicyContentAsync(UseCaseId? useCase, PolicyTypeId type, string credential, OperatorId operatorId, string? value)
+    public async Task<PolicyResponse> GetPolicyContentWithFiltersAsync(UseCaseId? useCase, PolicyTypeId type, string credential, OperatorId operatorId, string? value)
     {
         var (exists, leftOperand, attributes, rightOperandValue) = await _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyContentAsync(useCase, type, credential).ConfigureAwait(false);
         if (!exists)

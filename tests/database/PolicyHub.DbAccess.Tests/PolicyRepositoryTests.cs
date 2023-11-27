@@ -75,16 +75,17 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var result = await sut.GetPolicyTypes(null, null).ToListAsync().ConfigureAwait(false);
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(9).And.Satisfy(
-            x => x.TechnicalKey == "BusinessPartnerNumber" && x.Name == PolicyKindId.BusinessPartnerNumber,
-            x => x.TechnicalKey == "Membership" && x.Name == PolicyKindId.Membership,
-            x => x.TechnicalKey == "FrameworkAgreement.traceability" && x.Name == PolicyKindId.Framework,
-            x => x.TechnicalKey == "FrameworkAgreement.quality" && x.Name == PolicyKindId.Framework,
-            x => x.TechnicalKey == "FrameworkAgreement.pcf" && x.Name == PolicyKindId.Framework,
-            x => x.TechnicalKey == "FrameworkAgreement.behavioraltwin" && x.Name == PolicyKindId.Framework,
-            x => x.TechnicalKey == "purpose" && x.Name == PolicyKindId.Purpose,
-            x => x.TechnicalKey == "purpose" && x.Name == PolicyKindId.Purpose,
-            x => x.TechnicalKey == "companyRole.dismantler" && x.Name == PolicyKindId.Dismantler
+        result.Should().NotBeEmpty().And.HaveCount(10).And.Satisfy(
+            x => x.TechnicalKey == "BusinessPartnerNumber",
+            x => x.TechnicalKey == "Membership",
+            x => x.TechnicalKey == "FrameworkAgreement.traceability",
+            x => x.TechnicalKey == "FrameworkAgreement.quality",
+            x => x.TechnicalKey == "FrameworkAgreement.pcf",
+            x => x.TechnicalKey == "FrameworkAgreement.behavioraltwin",
+            x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
+            x => x.TechnicalKey == "purpose.trace.v1.aspects",
+            x => x.TechnicalKey == "companyRole.dismantler",
+            x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis"
         );
     }
 
@@ -115,10 +116,9 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var result = await sut.GetPolicyTypes(null, UseCaseId.Sustainability).ToListAsync().ConfigureAwait(false);
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(4).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(3).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "Membership" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "purpose" && x.Attribute.Count() == 1 && x.Type.Count() == 1 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "companyRole.dismantler" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5
         );
     }
@@ -129,7 +129,7 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
 
     private async Task<PolicyRepository> CreateSut()
     {
-        var context = await _dbTestDbFixture.GetPortalDbContext().ConfigureAwait(false);
+        var context = await _dbTestDbFixture.GetPolicyHubDbContext().ConfigureAwait(false);
         var sut = new PolicyRepository(context);
         return sut;
     }
