@@ -41,7 +41,7 @@ spec:
             drop:
             - ALL
           runAsNonRoot: true
-        image: "{{ .Values.backend.policyhub.image.name }}:{{ .Values.backend.policyhub.image.policyhubservicetag | default .Chart.AppVersion }}"
+        image: "{{ .Values.backend.policyhub.image }}"
         imagePullPolicy: "Always"
         env:
         - name: DOTNET_ENVIRONMENT
@@ -63,6 +63,7 @@ spec:
               key: "policy-hub-password"
         - name: "CONNECTIONSTRINGS__POLICYHUBDB"
           value: "Server={{ .Values.externalDatabase.host }};Database={{ .Values.externalDatabase.database }};Port={{ .Values.externalDatabase.port }};User Id={{ .Values.externalDatabase.policyHubUser }};Password=$(POLICY_HUB_PASSWORD);Ssl Mode={{ .Values.backend.dbConnection.sslMode }};"
+        {{- end }}
         - name: "HEALTHCHECKS__0__PATH"
           value: "{{ .Values.backend.healthChecks.startup.path}}"
         {{- if .Values.backend.policyhub.healthChecks.startup.tags }}

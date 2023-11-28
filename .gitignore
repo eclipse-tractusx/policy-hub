@@ -43,5 +43,11 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 
+### Helm ###
+# Chart dependencies and local install
+**/charts/*.tgz
+Chart.lock
+**/values-local.yaml
+
 # local dev configuration
 appsettings.Development.json
