@@ -39,7 +39,7 @@ spec:
             drop:
             - ALL
           runAsNonRoot: true
-        image: "{{ .Values.backend.policyhubmigrations.image.name }}:{{ .Values.backend.policyhubmigrations.image.policyhubmigrationstag | default .Chart.AppVersion }}"
+        image: "{{ .Values.backend.policyhubmigrations.image }}"
         imagePullPolicy: "Always"
         env:
           - name: DOTNET_ENVIRONMENT

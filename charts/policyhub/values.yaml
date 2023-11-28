@@ -90,6 +90,11 @@ backend:
       businessLogic: "Information"
       default: "Information"
     keycloakClientId: "ClXX-CX-Policy-Hub"
+    healthChecks:
+      startup:
+        tags:
+        - name: "HEALTHCHECKS__0__TAGS__1"
+          value: "policyhubdb"
   policyhubmigrations:
     name: "policy-hub-migrations"
     image: "tractusx/policy-hub-migrations:0.1.0"
