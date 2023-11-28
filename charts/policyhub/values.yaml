@@ -76,7 +76,7 @@ backend:
       path: "/ready"
   policyhub:
     name: "policy-hub-service"
-    image: "tractusx/policy-hub-service:29dbdeb9a8b3e809fdab2406140a226bc55de844"
+    image: "tractusx/policy-hub-service:0.1.0"
     # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
     # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
     resources:
@@ -92,7 +92,7 @@ backend:
     keycloakClientId: "ClXX-CX-Policy-Hub"
   policyhubmigrations:
     name: "policy-hub-migrations"
-    image: "tractusx/policy-hub-migrations:29dbdeb9a8b3e809fdab2406140a226bc55de844"
+    image: "tractusx/policy-hub-migrations:0.1.0"
     # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
     # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
     resources:

@@ -27,7 +27,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: charts/policy-hub
-    repoURL: 'https://github.com/eclipse-tractusx/policy-hub-cd.git'
+    repoURL: 'https://github.com/eclipse-tractusx/policy-hub.git'
     targetRevision: dev
     plugin:
       env:

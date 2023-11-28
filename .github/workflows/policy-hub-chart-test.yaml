@@ -31,18 +31,19 @@ on:
     inputs:
       node_image:
         description: 'kindest/node image for k8s kind cluster'
-        # k8s version to support
-        default: 'kindest/node:v1.26.6'
+        # k8s version from 3.1 release as default
+        default: 'kindest/node:v1.27.3'
         required: false
         type: string
       upgrade_from:
         description: 'policyhub chart version to upgrade from'
-        # policyhub version from 23.09 release
-        default: '1.0.0'
+        # tbd
+        default: '0.1.0'
         required: false
         type: string
 
 jobs:
+
   lint-test:
     runs-on: ubuntu-latest
     steps:
@@ -52,17 +53,36 @@ jobs:
           fetch-depth: 0
 
       - name: Kubernetes KinD Cluster
-        uses: container-tools/kind-action@v2
+        uses: container-tools/kind-action@v1
         with:
-          version: v0.19.0
-          node_image: ${{ github.event.inputs.node_image || 'kindest/node:v1.26.6' }}
+          # upgrade version, default (v0.17.0) uses node image v1.21.1 and doesn't work with more recent node image versions
+          version: v0.20.0
+          # default value for event_name != workflow_dispatch
+          node_image: ${{ github.event.inputs.node_image || 'kindest/node:v1.27.3' }}
 
+      - name: Build migration image
+        id: build-migration-image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: docker/Dockerfile-policy-hub-migrations
+          push: true
+          tags: kind-registry:5000/policy-hub-migration:testing
+
+      - name: Build service image
+        id: build-service-image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: docker/Dockerfile-policy-hub-service
+          push: true
+          tags: kind-registry:5000/policy-hub-service:testing
+  
       - name: Set up Helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.10.3
+          version: v3.9.3
 
-      # Setup python as a prerequisite for chart linting 
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
@@ -79,23 +99,21 @@ jobs:
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
-      # run chart linting 
       - name: Run chart-testing (lint)
-        run: ct lint --charts charts/policyhub --config charts/chart-testing-config.yaml
+        run: ct lint --validate-maintainers=false --target-branch ${{ github.event.repository.default_branch }}
 
-      - name: Run helm install
-        run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo add tractusx-dev https://eclipse-tractusx.github.io/charts/dev
-          helm install policyhub charts/policyhub --namespace install --create-namespace
+      - name: Run service chart-testing (install)
+        run: ct install --charts charts/policy-hub --helm-extra-set-args "--set=backend.policyhub.image=kind-registry:5000/policy-hub-service:testing --set=backend.policyhubmigrations.image=kind-registry:5000/policy-hub-migrations:testing"
         if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
 
-        # Upgrade the released policyhub chart version with the locally available chart
-      - name: Run helm upgrade
-        run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo add tractusx-dev https://eclipse-tractusx.github.io/charts/dev
-          helm install policyhub tractusx-dev/policyhub --version ${{ github.event.inputs.upgrade_from || '1.0.0' }} --namespace upgrade --create-namespace
-          helm dependency update charts/policyhub
-          helm upgrade policyhub charts/policyhub --namespace upgrade
-        if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
+        # Upgrade the released chart version with the locally available chart
+        # default value for event_name != workflow_dispatch
+        # tbd update noch nicht möglich
+        # - name: Run helm upgrade
+        #   run: |
+        #     helm repo add bitnami https://charts.bitnami.com/bitnami
+        #     helm repo add tractusx-dev https://eclipse-tractusx.github.io/charts/dev
+        #     helm install policy-hub-service tractusx-dev/policy-hub-service --version ${{ github.event.inputs.upgrade_from || '1.0.0' }} 
+        #     helm dependency update charts/policy-hub-service
+        #     helm upgrade policy-hub-service charts/policy-hub-service
+        #   if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
