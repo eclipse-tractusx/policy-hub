@@ -39,7 +39,7 @@ env:
   DOTNET_VERSION: '7.0' # The .NET SDK version to use
 
 jobs:
-  analyze-administration-service:
+  analyze-policy-hub-service:
     runs-on: ubuntu-latest
     permissions:
       actions: read
