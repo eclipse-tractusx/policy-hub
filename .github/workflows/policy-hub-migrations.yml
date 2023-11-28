@@ -90,5 +90,3 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           repository: ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}
           readme-filepath: "./docker/notice-policy-hub-migrations.md"
-
-  # build chart
