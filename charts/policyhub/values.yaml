@@ -76,42 +76,34 @@ backend:
       path: "/ready"
   policyhub:
     name: "policy-hub-service"
-    image:
-      name: "tractusx/policy-hub-service"
-      policyhubservicetag: 29dbdeb9a8b3e809fdab2406140a226bc55de844
-    # -- We recommend not to specify default resources and to leave this as a conscious choice for the user.
-    # If you do want to specify resources, uncomment the following lines,
-    # adjust them as necessary, and remove the curly braces after 'resources:'.
-    resources: {}
+    image: "tractusx/policy-hub-service:29dbdeb9a8b3e809fdab2406140a226bc55de844"
+    # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
+    # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
+    resources:
+      requests:
+        cpu: 15m
+        memory: 300M
       # limits:
-      #   cpu: 250m
-      #   memory: 256Mi
-      # requests:
-      #   cpu: 250m
-      #   memory: 256Mi
+      #   cpu: 45m
+      #   memory: 400M
     logging:
       businessLogic: "Information"
       default: "Information"
     keycloakClientId: "ClXX-CX-Policy-Hub"
   policyhubmigrations:
     name: "policy-hub-migrations"
-    image:
-      name: "tractusx/policy-hub-migrations"
-      policyhubmigrationstag: 29dbdeb9a8b3e809fdab2406140a226bc55de844
-    # -- We recommend not to specify default resources and to leave this as a conscious choice for the user.
-    # If you do want to specify resources, uncomment the following lines,
-    # adjust them as necessary, and remove the curly braces after 'resources:'.
-    resources: {}
+    image: "tractusx/policy-hub-migrations:29dbdeb9a8b3e809fdab2406140a226bc55de844"
+    # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
+    # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
+    resources:
+      requests:
+        cpu: 15m
+        memory: 105M
       # limits:
-      #   cpu: 250m
-      #   memory: 256Mi
-      # requests:
-      #   cpu: 250m
-      #   memory: 256Mi
+      #   cpu: 45m
+      #   memory: 105M
     seeding:
       testDataEnvironments: ""
-      # -- when changing the testDataPath the processIdentity needs to be adjusted as well,
-      # or it must be ensured that the identity is existing within the files under the new path
       testDataPaths: "Seeder/Data"
     logging:
       default: "Information"
