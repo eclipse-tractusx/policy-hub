@@ -26,7 +26,7 @@ metadata:
 data:
   01-init-db-user.sh: |
     postgresql_create_hub_user() {
-      local -r escaped_password="${POLICYHUB_PASSWORD//\'/\'\'}"
+      local -r escaped_password="${POLICY_HUB_PASSWORD//\'/\'\'}"
       info "Creating user hub"
       export PGPASSWORD="$POSTGRES_PASSWORD"
       echo "CREATE USER hub WITH PASSWORD '${escaped_password}';" | psql -U postgres
