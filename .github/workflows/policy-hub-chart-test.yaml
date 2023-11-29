@@ -67,7 +67,7 @@ jobs:
           context: .
           file: docker/Dockerfile-policy-hub-migrations
           push: true
-          tags: kind-registry:5000/policy-hub-migration:testing
+          tags: kind-registry:5000/policy-hub-migrations:testing
 
       - name: Build service image
         id: build-service-image
