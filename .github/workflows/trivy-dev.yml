@@ -90,7 +90,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.14.0
         with:
           # Path to Docker image
-          image-ref: "${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}-policy-hub-service:dev"
+          image-ref: "${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}-service:dev"
           format: "sarif"
           output: "trivy-results3.sarif"
           vuln-type: "os,library"
@@ -122,7 +122,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.14.0
         with:
           # Path to Docker image
-          image-ref: "${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}-policy-hub-migrations:dev"
+          image-ref: "${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}-migrations:dev"
           format: "sarif"
           output: "trivy-results9.sarif"
           vuln-type: "os,library"

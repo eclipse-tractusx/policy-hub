@@ -22,11 +22,11 @@ name: PolicyHub Lint and Test Chart
 on:
   push:
     paths:
-      - 'charts/policyhub/**'
+      - 'charts/policy-hub/**'
     branches: [main, dev, release-candidate]
   pull_request:
     paths:
-      - 'charts/policyhub/**'
+      - 'charts/policy-hub/**'
   workflow_dispatch:
     inputs:
       node_image:
@@ -106,9 +106,9 @@ jobs:
         run: ct install --charts charts/policy-hub --helm-extra-set-args "--set=backend.policyhub.image=kind-registry:5000/policy-hub-service:testing --set=backend.policyhubmigrations.image=kind-registry:5000/policy-hub-migrations:testing"
         if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
 
+        # currently the update is commented out, at the moment we're working for the initial version, after that the update will be enabled
         # Upgrade the released chart version with the locally available chart
         # default value for event_name != workflow_dispatch
-        # tbd update noch nicht möglich
         # - name: Run helm upgrade
         #   run: |
         #     helm repo add bitnami https://charts.bitnami.com/bitnami

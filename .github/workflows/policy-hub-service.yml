@@ -20,17 +20,17 @@
 name: PolicyHub-Service
 
 on:
-  # push:
-  #   paths:
-  #     # service and transitive paths
-  #     - 'src/**'
-  #     # workflow file
-  #     - '.github/workflows/policy-hub-service.yml'
-  #     # dockerfile
-  #     - 'docker/Dockerfile-policy-hub-service'
+  push:
+    paths:
+      # service and transitive paths
+      - 'src/**'
+      # workflow file
+      - '.github/workflows/policy-hub-service.yml'
+      # dockerfile
+      - 'docker/Dockerfile-policy-hub-service'
 
-  #   branches:
-  #     - 'dev'
+    branches:
+      - 'dev'
   workflow_dispatch:
 
 env:
@@ -89,5 +89,3 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           repository: ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}
           readme-filepath: "./docker/notice-policy-hub-service.md"
-
-      # build chart

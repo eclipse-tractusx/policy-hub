@@ -1,12 +1,12 @@
 # Helm chart for Catena-X Policy Hub
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square) 
 
 This helm chart installs the Catena-X Policy Hub application v1.0.0.
 
-For information on how to upgrade from previous versions please refer to [Version Upgrade](https://github.com/eclipse-tractusx/policy-hub/tree/v1.0.0/docs/developer/Technical%20Documentation/Version%20Upgrade/policy-hub-upgrade-details.md).
+For information on how to upgrade from previous versions please refer to [Version Upgrade](./docs/developer/Technical-Documentation/version-upgrade).
 
-For further information please refer to [Technical Documentation](https://github.com/eclipse-tractusx/policy-hub/tree/v1.0.0/docs/developer/Technical%20Documentation).
+For further information please refer to [Technical Documentation](./docs/developer/Technical-Documentation).
 
 The referenced container images are for demonstration purposes only.
 
@@ -31,7 +31,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 1.0.0
+    version: 0.1.0
 ```
 
 ## Requirements
@@ -69,20 +69,20 @@ dependencies:
 | backend.keycloak.central.jwtBearerOptions.tokenValidationParameters.validIssuerPath | string | `"/auth/realms/CX-Central"` |  |
 | backend.keycloak.central.tokenPath | string | `"/auth/realms/CX-Central/protocol/openid-connect/token"` |  |
 | backend.keycloak.central.useAuthTrail | bool | `true` | Flag if the api should be used with an leading /auth path |
-| backend.policyhub.image.name | string | `"tractusx/policy-hub-service"` |  |
-| backend.policyhub.image.policyhubservicetag | string | `"29dbdeb9a8b3e809fdab2406140a226bc55de844"` |  |
+| backend.policyhub.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
+| backend.policyhub.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
+| backend.policyhub.image | string | `"tractusx/policy-hub-service:0.1.0"` |  |
 | backend.policyhub.keycloakClientId | string | `"ClXX-CX-Policy-Hub"` |  |
 | backend.policyhub.logging.businessLogic | string | `"Information"` |  |
 | backend.policyhub.logging.default | string | `"Information"` |  |
 | backend.policyhub.name | string | `"policy-hub-service"` |  |
-| backend.policyhub.resources | object | `{}` | We recommend not to specify default resources and to leave this as a conscious choice for the user. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'. |
-| backend.policyhubmigrations.image.name | string | `"tractusx/policy-hub-migrations"` |  |
-| backend.policyhubmigrations.image.policyhubmigrationstag | string | `"29dbdeb9a8b3e809fdab2406140a226bc55de844"` |  |
+| backend.policyhub.resources | object | `{"requests":{"cpu":"15m","memory":"300M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
+| backend.policyhubmigrations.image | string | `"tractusx/policy-hub-migrations:0.1.0"` |  |
 | backend.policyhubmigrations.logging.default | string | `"Information"` |  |
 | backend.policyhubmigrations.name | string | `"policy-hub-migrations"` |  |
-| backend.policyhubmigrations.resources | object | `{}` | We recommend not to specify default resources and to leave this as a conscious choice for the user. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'. |
+| backend.policyhubmigrations.resources | object | `{"requests":{"cpu":"15m","memory":"105M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
 | backend.policyhubmigrations.seeding.testDataEnvironments | string | `""` |  |
-| backend.policyhubmigrations.seeding.testDataPaths | string | `"Seeder/Data"` | when changing the testDataPath the processIdentity needs to be adjusted as well, or it must be ensured that the identity is existing within the files under the new path |
+| backend.policyhubmigrations.seeding.testDataPaths | string | `"Seeder/Data"` |  |
 | centralidpAddress | string | `"https://centralidp.example.org"` | Provide centralidp base address (CX IAM), without trailing '/auth'. |
 | externalDatabase.database | string | `"postgres"` | Database name |
 | externalDatabase.host | string | `"policy-hub-postgresql-external-db"` | External PostgreSQL configuration IMPORTANT: init scripts (01-init-db-user.sh and 02-init-db.sql) available in templates/configmap-backend-postgres-init.yaml need to be executed beforehand. Database host |

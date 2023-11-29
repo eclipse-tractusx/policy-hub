@@ -20,18 +20,18 @@
 name: PolicyHub-Migrations
 
 on: 
-  # push:
-  #   paths:
-  #     # service and transitive paths
-  #     - 'src/database/PolicyHub.Migrations/**'
-  #     - 'src/database/PolicyHub.Entities/**'
-  #     # workflow file
-  #     - '.github/workflows/policy-hub-migrations.yml'
-  #     # dockerfile
-  #     - 'docker/Dockerfile-policy-hub-migrations'
+  push:
+    paths:
+      # service and transitive paths
+      - 'src/database/PolicyHub.Migrations/**'
+      - 'src/database/PolicyHub.Entities/**'
+      # workflow file
+      - '.github/workflows/policy-hub-migrations.yml'
+      # dockerfile
+      - 'docker/Dockerfile-policy-hub-migrations'
 
-  #   branches:
-  #     - 'dev'
+    branches:
+      - 'dev'
   workflow_dispatch:
 
 env:
