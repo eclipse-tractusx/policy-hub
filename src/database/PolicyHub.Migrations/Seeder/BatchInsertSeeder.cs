@@ -70,21 +70,21 @@ public class BatchInsertSeeder : ICustomSeeder
 
     private async Task SeedTable<T>(string fileName, Func<T, object> keySelector, CancellationToken cancellationToken) where T : class
     {
-        _logger.LogInformation("Start seeding {Filename}", fileName);
+        _logger.LogDebug("Start seeding {Filename}", fileName);
         var additionalEnvironments = _settings.TestDataEnvironments ?? Enumerable.Empty<string>();
         var data = await SeederHelper.GetSeedData<T>(_logger, fileName, _settings.DataPaths, cancellationToken, additionalEnvironments.ToArray()).ConfigureAwait(false);
-        _logger.LogInformation("Found {ElementCount} data", data.Count);
+        _logger.LogDebug("Found {ElementCount} data", data.Count);
         if (data.Any())
         {
             var typeName = typeof(T).Name;
-            _logger.LogInformation("Started to Seed {TableName}", typeName);
+            _logger.LogDebug("Started to Seed {TableName}", typeName);
             data = data.GroupJoin(_context.Set<T>(), keySelector, keySelector, (d, dbEntry) => new { d, dbEntry })
                 .SelectMany(t => t.dbEntry.DefaultIfEmpty(), (t, x) => new { t, x })
                 .Where(t => t.x == null)
                 .Select(t => t.t.d).ToList();
-            _logger.LogInformation("Seeding {DataCount} {TableName}", data.Count, typeName);
+            _logger.LogDebug("Seeding {DataCount} {TableName}", data.Count, typeName);
             await _context.Set<T>().AddRangeAsync(data, cancellationToken).ConfigureAwait(false);
-            _logger.LogInformation("Seeded {TableName}", typeName);
+            _logger.LogDebug("Seeded {TableName}", typeName);
         }
     }
 }

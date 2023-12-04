@@ -22,117 +22,112 @@ name: "policy-hub"
 # -- Provide centralidp base address (CX IAM), without trailing '/auth'.
 centralidpAddress: "https://centralidp.example.org"
 
-backend:
-  ingress:
-    # -- Policy Hub ingress parameters,
-    # enable ingress record generation for policy-hub.
-    enabled: false
-    name: "policy-hub"
-    className: "nginx"
-    annotations:
-      nginx.ingress.kubernetes.io/use-regex: "true"
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/proxy-body-size: "8m"
-      # -- Provide CORS allowed origin.
-      nginx.ingress.kubernetes.io/cors-allow-origin: "https://*.example.org"
-    tls:
-      # -- Provide tls secret.
-      - secretName: ""
-        # -- Provide host for tls secret.
-        hosts:
-          - ""
-    hosts:
-      # -- Provide default path for the ingress record.
-      - host: "policy-hub.example.org"
-        paths:
-          - path: "/api/hub"
-            pathType: "Prefix"
-            backend:
-              service: "policy-hub-service"
-              port: 8080
-  dotnetEnvironment: "Production"
-  dbConnection:
-    schema: "hub"
-    sslMode: "Disable"
-  keycloak:
-    central:
-      authRealm: "CX-Central"
-      jwtBearerOptions:
-        requireHttpsMetadata: "true"
-        metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
-        tokenValidationParameters:
-          validIssuerPath: "/auth/realms/CX-Central"
-          validAudience: "ClXX-CX-Policy-Hub"
-        refreshInterval: "00:00:30"
-      tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
-      # -- Flag if the api should be used with an leading /auth path
-      useAuthTrail: true
+ingress:
+  # -- Policy Hub ingress parameters,
+  # enable ingress record generation for policy-hub.
+  enabled: false
+  name: "policy-hub"
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+    # -- Provide CORS allowed origin.
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://*.example.org"
+  tls:
+    # -- Provide tls secret.
+    - secretName: ""
+      # -- Provide host for tls secret.
+      hosts:
+        - ""
+  hosts:
+    # -- Provide default path for the ingress record.
+    - host: "policy-hub.example.org"
+      paths:
+        - path: "/api/hub"
+          pathType: "Prefix"
+          backend:
+            service: "policy-hub-service"
+            port: 8080
+dotnetEnvironment: "Production"
+dbConnection:
+  schema: "hub"
+  sslMode: "Disable"
+keycloak:
+  central:
+    authRealm: "CX-Central"
+    jwtBearerOptions:
+      requireHttpsMetadata: "true"
+      metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
+      tokenValidationParameters:
+        validIssuerPath: "/auth/realms/CX-Central"
+        validAudience: "ClXX-CX-Policy-Hub"
+      refreshInterval: "00:00:30"
+    tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
+    # -- Flag if the api should be used with an leading /auth path
+    useAuthTrail: true
+healthChecks:
+  startup:
+    path: "/health/startup"
+  liveness:
+    path: "/healthz"
+  readyness:
+    path: "/ready"
+policyhub:
+  name: "policy-hub-service"
+  image: "tractusx/policy-hub-service:0.1.0"
+  # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
+  # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
+  resources:
+    requests:
+      cpu: 15m
+      memory: 300M
+    # limits:
+    #   cpu: 45m
+    #   memory: 400M
+  logging:
+    businessLogic: "Information"
+    default: "Information"
+  keycloakClientId: "ClXX-CX-Policy-Hub"
   healthChecks:
     startup:
-      path: "/health/startup"
-    liveness:
-      path: "/healthz"
-    readyness:
-      path: "/ready"
-  policyhub:
-    name: "policy-hub-service"
-    image: "tractusx/policy-hub-service:0.1.0"
-    # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
-    # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
-    resources:
-      requests:
-        cpu: 15m
-        memory: 300M
-      # limits:
-      #   cpu: 45m
-      #   memory: 400M
-    logging:
-      businessLogic: "Information"
-      default: "Information"
-    keycloakClientId: "ClXX-CX-Policy-Hub"
-    healthChecks:
-      startup:
-        tags:
-        - name: "HEALTHCHECKS__0__TAGS__1"
-          value: "policyhubdb"
-  policyhubmigrations:
-    name: "policy-hub-migrations"
-    image: "tractusx/policy-hub-migrations:0.1.0"
-    # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
-    # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
-    resources:
-      requests:
-        cpu: 15m
-        memory: 105M
-      # limits:
-      #   cpu: 45m
-      #   memory: 105M
-    seeding:
-      testDataEnvironments: ""
-      testDataPaths: "Seeder/Data"
-    logging:
-      default: "Information"
+      tags:
+      - name: "HEALTHCHECKS__0__TAGS__1"
+        value: "policyhubdb"
+
+policyhubmigrations:
+  name: "policy-hub-migrations"
+  image: "tractusx/policy-hub-migrations:0.1.0"
+  # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
+  # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
+  resources:
+    requests:
+      cpu: 15m
+      memory: 105M
+    # limits:
+    #   cpu: 45m
+    #   memory: 105M
+  seeding:
+    testDataEnvironments: ""
+    testDataPaths: "Seeder/Data"
+  logging:
+    default: "Information"
 
 postgresql:
-# -- PostgreSQL chart configuration
-  # Switch to enable or disable the PostgreSQL helm chart
+  # -- PostgreSQL chart configuration;
+  # default configurations:
+  # host: "policy-hub-postgresql-primary",
+  # port: 5432;
+  # Switch to enable or disable the PostgreSQL helm chart.
   enabled: true
-  # -- FullnameOverride to 'policy-hub-postgresql'.
-  fullnameOverride: "policy-hub-postgresql"
   auth:
-    # -- Database name
-    database: "postgres"
-    # -- Database port number
-    port: 5432
-    # -- Secret containing the passwords for root usernames postgres and non-root usernames repl_user and hub.
-    existingSecret: "secret-postgres-init"
-    # -- Password for the root username 'postgres'. Secret-key 'postgres-password'.
-    password: ""
-    # -- Non-root username for hub.
-    policyHubUser: "hub"
-    # -- Password for the non-root username 'hub'. Secret-key 'policy-hub-password'.
-    policyHubPassword: ""
-  architecture: "replication"
+    # -- Non-root username.
+    username: hub
+    # -- Database name.
+    database: policy-hub
+    # -- Secret containing the passwords for root usernames postgres and non-root username hub.
+    existingSecret: "policy-hub-postgres"
+  architecture: replication
   audit:
     pgAuditLog: "write, ddl"
     logLinePrefix: "%m %u %d "
@@ -141,32 +136,38 @@ postgresql:
     extendedConfiguration: ""
     initdb:
       scriptsConfigMap: "configmap-postgres-init"
-    extraEnvVars:
-      - name: "POLICY_HUB_PASSWORD"
-        valueFrom:
-          secretKeyRef:
-            name: "{{ .Values.auth.existingSecret }}"
-            key: "policy-hub-password"
   readReplicas:
   # -- Extended PostgreSQL read only replicas configuration (increase of max_connections recommended - default is 100)
     extendedConfiguration: ""
 
 externalDatabase:
-# -- External PostgreSQL configuration
-# IMPORTANT: init scripts (01-init-db-user.sh and 02-init-db.sql) available
-# in templates/configmap-backend-postgres-init.yaml need to be executed beforehand.
-  # Database host
+  # -- External PostgreSQL configuration
+  # IMPORTANT: non-root db user needs needs to be created beforehand on external database.
+  # Database host ('-primary' is added as postfix).
   host: "policy-hub-postgresql-external-db"
-  # -- Database name
-  database: "postgres"
-  # -- Database port number
+  # -- Database port number.
   port: 5432
-  # -- Secret containing the passwords non-root username hub.
-  secret: "secret-postgres-external-db"
-  # -- Non-root username for hub.
-  policyHubUser: "hub"
-  # -- Password for the non-root username 'hub'. Secret-key 'policy-hub-password'.
-  policyHubPassword: ""
+  # -- Non-root username for policy-hub.
+  user: "hub"
+  # -- Database name.
+  database: "policy-hub"
+  # -- Password for the non-root username (default 'hub'). Secret-key 'password'.
+  password: ""
+  # -- Secret containing the password non-root username, (default 'hub').
+  existingSecret: "policy-hub-external-db"
+  # -- Name of an existing secret key containing the database credentials.
+  existingSecretPasswordKey: "password"
+
+secrets:
+  postgresql:
+    auth:
+      existingSecret:
+        # -- Password for the root username 'postgres'. Secret-key 'postgres-password'.
+        postgrespassword: ""
+        # -- Password for the non-root username 'hub'. Secret-key 'password'.
+        password: ""
+        # -- Password for the non-root username 'repl_user'. Secret-key 'replication-password'.
+        replicationPassword: ""
 
 portContainer: 8080
 

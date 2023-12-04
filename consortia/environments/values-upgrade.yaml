@@ -19,8 +19,10 @@
 
 replicaCount: 0
 
-postgresql:
-  auth:
-    password: "<path:policy-hub/data/dev/postgres#postgres-password>"
-    replicationPassword: "<path:policy-hub/data/dev/postgres#replication-password>"
-    policyHubPassword: "<path:policy-hub/data/dev/postgres#policy-hub-password>"
+secrets:
+  postgresql:
+    auth:
+      existingSecret:
+        postgrespassword: "<path:policy-hub/data/dev/postgres#postgres-password>"
+        password: "<path:policy-hub/data/dev/postgres#password>"
+        replicationPassword: "<path:policy-hub/data/dev/postgres#replication-password>"

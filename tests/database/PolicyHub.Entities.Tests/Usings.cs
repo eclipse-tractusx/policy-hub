@@ -17,9 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-namespace Org.Eclipse.TractusX.PolicyHub.DbAccess;
-
-public interface IHubRepositories
-{
-    public T GetInstance<T>();
-}
+global using AutoFixture;
+global using AutoFixture.AutoFakeItEasy;
+global using FluentAssertions;
+global using Xunit;

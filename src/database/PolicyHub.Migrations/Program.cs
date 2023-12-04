@@ -38,7 +38,7 @@ try
                 .AddDbContext<PolicyHubContext>(o =>
                     o.UseNpgsql(hostContext.Configuration.GetConnectionString("PolicyHubDb"),
                         x => x.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)
-                            .MigrationsHistoryTable("__efmigrations_history_hub")))
+                            .MigrationsHistoryTable("__efmigrations_history_hub", "public")))
                 .AddDatabaseInitializer<PolicyHubContext>(hostContext.Configuration.GetSection("Seeding"));
         })
         .AddLogging()

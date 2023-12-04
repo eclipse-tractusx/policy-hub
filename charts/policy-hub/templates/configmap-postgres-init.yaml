@@ -24,14 +24,6 @@ metadata:
   name: {{ .Values.postgresql.primary.initdb.scriptsConfigMap }}
   namespace: {{ .Release.Namespace }}
 data:
-  01-init-db-user.sh: |
-    postgresql_create_hub_user() {
-      local -r escaped_password="${POLICY_HUB_PASSWORD//\'/\'\'}"
-      info "Creating user hub"
-      export PGPASSWORD="$POSTGRES_PASSWORD"
-      echo "CREATE USER hub WITH PASSWORD '${escaped_password}';" | psql -U postgres
-    }
-    postgresql_create_hub_user
   02-init-db.sql: |
     CREATE SCHEMA hub;
     ALTER SCHEMA hub OWNER TO hub;

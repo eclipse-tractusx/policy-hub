@@ -60,3 +60,32 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Determine database hostname for subchart
+*/}}
+
+{{- define "postgresql.primary.fullname" -}}
+{{- if eq .Values.postgresql.architecture "replication" }}
+{{- printf "%s-primary" (include "chart-name-postgresql-dependency" .) | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+    {{- include "chart-name-postgresql-dependency" . -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "postgresql.readReplica.fullname" -}}
+{{- printf "%s-read" (include "chart-name-postgresql-dependency" .) | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "chart-name-postgresql-dependency" -}}
+{{- if .Values.postgresql.fullnameOverride -}}
+{{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}

@@ -86,7 +86,7 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
             throw new UnexpectedConditionException("There should only be one regex pattern defined");
         }
 
-        if (!Regex.IsMatch(value, attributes.Values.Single()))
+        if (!Regex.IsMatch(value, attributes.Values.Single(), RegexOptions.Compiled, TimeSpan.FromSeconds(1)))
         {
             throw new ControllerArgumentException($"The provided value {value} does not match the regex pattern {attributes.Values.Single()}", nameof(value));
         }
@@ -118,13 +118,13 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
         var multipleDefinedKey = keyCounts.Where(x => x.Value != 1);
         if (multipleDefinedKey.Any())
         {
-            throw new ControllerArgumentException($"Keys {multipleDefinedKey.Select(x => x.Key)} have been defined multiple times");
+            throw new ControllerArgumentException($"Keys {string.Join(",", multipleDefinedKey.Select(x => x.Key).Distinct())} have been defined multiple times");
         }
 
         var policies = await _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyForOperandContent(requestData.PolicyType, requestData.Constraints.Select(x => x.Key)).ToListAsync().ConfigureAwait(false);
         if (policies.Count != requestData.Constraints.Count())
         {
-            throw new NotFoundException($"Policy for type {requestData.PolicyType} and technicalKeys {requestData.Constraints.Select(x => x.Key).Except(policies.Select(x => x.TechnicalKey))} does not exists");
+            throw new NotFoundException($"Policy for type {requestData.PolicyType} and technicalKeys {string.Join(",", requestData.Constraints.Select(x => x.Key).Except(policies.Select(x => x.TechnicalKey)))} does not exists");
         }
 
         var constraints = new List<Constraint>();
@@ -172,5 +172,5 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
         return new PolicyResponse(content, additionalAttributes);
     }
 
-    private static object[] GetContext() => new object[] { "https://www.w3.org/ns/odrl.jsonld", new { cx = "https://w3id.org/catenax/v0.0.1/ns/" } };
+    private static IEnumerable<object> GetContext() => new object[] { "https://www.w3.org/ns/odrl.jsonld", new { cx = "https://w3id.org/catenax/v0.0.1/ns/" } };
 }
