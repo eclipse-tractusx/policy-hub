@@ -2,6 +2,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.PolicyHub.Service.Tests.Setup;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -103,17 +104,31 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     #region Policy Content
 
     [Fact]
-    public async Task GetPolicyContent_UsageMembershipEquals_ReturnsExpected()
+    public async Task GetPolicyContent_WithRegexWithIncorrectValue_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&credential=Membership&operatorId={OperatorId.Equals}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&credential=BusinessPartnerNumber&operatorId={OperatorId.Equals}&value=notmatching").ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
-            .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"Membership\",\"operator\":\"eq\",\"rightOperand\":\"active\"}}}}");
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(Options).ConfigureAwait(false);
+        error!.Errors.Should().ContainSingle().And.Satisfy(
+            x => x.Value.Single() == @"The provided value notmatching does not match the regex pattern ^BPNL[\w|\d]{12}$ (Parameter 'value')");
+    }
+
+    [Fact]
+    public async Task GetPolicyContent_WithRegexWithoutValue_ReturnsExpected()
+    {
+        // Act
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&credential=BusinessPartnerNumber&operatorId={OperatorId.Equals}").ConfigureAwait(false);
+
+        // Assert
+        response.Should().NotBeNull();
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(Options).ConfigureAwait(false);
+        error!.Errors.Should().ContainSingle().And.Satisfy(
+            x => x.Value.Single() == "you must provide a value for the regex (Parameter 'value')");
     }
 
     [Fact]
@@ -174,10 +189,10 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
     #endregion
 
-    #region Policy Content with Constraints
+    #region Policy Content with Filters
 
     [Fact]
-    public async Task GetPolicyContent_TwoEqualsConstraintsAndOperand_ReturnsExpected()
+    public async Task GetPolicyContentWithFiltersAsync_TwoEqualsConstraintsAndOperand_ReturnsExpected()
     {
         // Arrange
         var data = new PolicyContentRequest(
@@ -201,7 +216,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     }
 
     [Fact]
-    public async Task GetPolicyContent_MultipleConstraintsEqualsAndOperand_ReturnsExpected()
+    public async Task GetPolicyContentWithFiltersAsync_MultipleConstraintsEqualsAndOperand_ReturnsExpected()
     {
         // Arrange
         var data = new PolicyContentRequest(
@@ -226,7 +241,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     }
 
     [Fact]
-    public async Task GetPolicyContent_MultipleConstraintsEqualsOrOperand_ReturnsExpected()
+    public async Task GetPolicyContentWithFiltersAsync_MultipleConstraintsEqualsOrOperand_ReturnsExpected()
     {
         // Arrange
         var data = new PolicyContentRequest(
@@ -247,6 +262,30 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
             .Should()
             .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:or\":[{\"leftOperand\":\"FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"},{\"leftOperand\":\"Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentWithFiltersAsync_WithSameConstraintKeys_ReturnsError()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(
+            PolicyTypeId.Usage,
+            ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
+                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
+            });
+
+        // Act
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, Options).ConfigureAwait(false);
+
+        // Assert
+        response.Should().NotBeNull();
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(Options).ConfigureAwait(false);
+        error!.Errors.Should().ContainSingle().And.Satisfy(
+            x => x.Value.Single() == "Keys FrameworkAgreement.traceability have been defined multiple times");
     }
 
     #endregion

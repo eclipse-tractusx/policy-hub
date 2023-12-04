@@ -17,10 +17,8 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-using Microsoft.EntityFrameworkCore;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
 using Org.Eclipse.TractusX.PolicyHub.Entities;
-using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
 using System.Collections.Immutable;
 
 namespace Org.Eclipse.TractusX.PolicyHub.DbAccess;
@@ -49,18 +47,4 @@ public class HubRepositories : IHubRepositories
 
         return (RepositoryType)(repository ?? throw new ArgumentException($"unexpected type {typeof(RepositoryType).Name}", nameof(RepositoryType)));
     }
-
-    public Task<int> SaveAsync()
-    {
-        try
-        {
-            return _dbContext.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException e)
-        {
-            throw new ConflictException("while processing a concurrent update was saved to the database (reason could also be data to be deleted is no longer existing)", e);
-        }
-    }
-
-    public void Clear() => _dbContext.ChangeTracker.Clear();
 }

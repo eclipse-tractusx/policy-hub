@@ -35,41 +35,43 @@ spec:
         - name: HELM_VALUES
           value: |
             policyHubBackendAddress: "https://policy-hub.stable.demo.catena-x.net"
-            backend:
-              ingress:
-                enabled: true
-                className: "nginx"
-                annotations:
-                  nginx.ingress.kubernetes.io/use-regex: "true"
-                  nginx.ingress.kubernetes.io/enable-cors: "true"
-                  nginx.ingress.kubernetes.io/proxy-body-size: "8m"
-                  nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:3000, https://*.stable.demo.catena-x.net"
-                tls:
-                  - secretName: "tls-secret"
-                    hosts:
-                      - "policy-hub.stable.demo.catena-x.net"
-                hosts:
-                  - host: "policy-hub.stable.demo.catena-x.net"
-                    paths:
-                      - path: "/api/policy-hub"
-                        pathType: "Prefix"
-                        backend:
-                          service: "policy-hub-service"
-                          port: 8080
-              policyhubmigrations:
-                logging:
-                  default: "Debug"
+            ingress:
+              enabled: true
+              className: "nginx"
+              annotations:
+                nginx.ingress.kubernetes.io/use-regex: "true"
+                nginx.ingress.kubernetes.io/enable-cors: "true"
+                nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+                nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:3000, https://*.stable.demo.catena-x.net"
+              tls:
+                - secretName: "tls-secret"
+                  hosts:
+                    - "policy-hub.stable.demo.catena-x.net"
+              hosts:
+                - host: "policy-hub.stable.demo.catena-x.net"
+                  paths:
+                    - path: "/api/policy-hub"
+                      pathType: "Prefix"
+                      backend:
+                        service: "policy-hub-service"
+                        port: 8080
+            policyhubmigrations:
+              logging:
+                default: "Debug"
             postgresql:
-              auth:
-                password: "<path:policy-hub/data/stable/postgres#postgres-password>"
-                replicationPassword: "<path:policy-hub/data/stable/postgres#replication-password>"
-                policy-hubPassword: "<path:policy-hub/data/stable/postgres#policy-hub-password>"
               primary:
                 extendedConfiguration: |
                   max_connections = 200
               readReplicas:
                 extendedConfiguration: |
                   max_connections = 200
+            secrets:
+              postgresql:
+                auth:
+                  existingSecret:
+                    postgrespassword: "<path:policy-hub/data/stable/policy-hub-postgres#postgres-password>"
+                    password: "<path:policy-hub/data/stable/policy-hub-postgres#password>"
+                    replicationPassword: "<path:policy-hub/data/stable/policy-hub-postgres#replication-password>"
     chart: policy-hub
   sources: []
   project: project-policy-hub

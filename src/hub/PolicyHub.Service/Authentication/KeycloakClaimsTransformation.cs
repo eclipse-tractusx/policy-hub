@@ -28,7 +28,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Service.Authentication;
 public class KeycloakClaimsTransformation : IClaimsTransformation
 {
     private readonly JwtBearerOptions _options;
-    private const string ResourceAccess = "resource_access";
+    public const string ResourceAccess = "resource_access";
 
     public KeycloakClaimsTransformation(IOptions<JwtBearerOptions> options)
     {

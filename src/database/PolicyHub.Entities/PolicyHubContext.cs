@@ -25,6 +25,10 @@ namespace Org.Eclipse.TractusX.PolicyHub.Entities;
 
 public class PolicyHubContext : DbContext
 {
+    public PolicyHubContext()
+    {
+    }
+
     public PolicyHubContext(DbContextOptions<PolicyHubContext> options)
         : base(options)
     {
@@ -75,23 +79,6 @@ public class PolicyHubContext : DbContext
                     x =>
                     {
                         x.HasKey(e => new { e.PolicyId, e.PolicyTypeId });
-                    });
-
-            entity.HasMany(p => p.UseCases)
-                .WithMany(pt => pt.Policies)
-                .UsingEntity<PolicyAssignedUseCases>(p => p
-                        .HasOne(x => x.UseCase)
-                        .WithMany()
-                        .HasForeignKey(x => x.UseCaseId)
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    p => p
-                        .HasOne(x => x.Policy)
-                        .WithMany()
-                        .HasForeignKey(x => x.PolicyId)
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    x =>
-                    {
-                        x.HasKey(e => new { e.PolicyId, e.UseCaseId });
                     });
 
             entity.HasMany(p => p.UseCases)

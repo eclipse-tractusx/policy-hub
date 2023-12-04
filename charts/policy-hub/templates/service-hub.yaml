@@ -17,15 +17,14 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-apiVersion: v2
-name: policy-hub
-type: application
-version: 0.1.0
-appVersion: 0.1.0
-description: Helm chart for Catena-X Policy Hub
-home: https://github.com/eclipse-tractusx/policy-hub
-dependencies:
-  - condition: postgresql.enabled
-    name: postgresql
-    repository: https://charts.bitnami.com/bitnami
-    version: 12.12.x
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.policyhub.name }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.portService }}
+    targetPort: {{ .Values.portContainer }}
+  selector:
+    app: {{ .Values.policyhub.name }}

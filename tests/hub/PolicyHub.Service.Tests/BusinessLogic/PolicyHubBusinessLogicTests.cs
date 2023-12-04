@@ -22,6 +22,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
+using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Tests.BusinessLogic;
@@ -108,10 +109,10 @@ public class PolicyHubBusinessLogicTests
 
     #endregion
 
-    #region GetPolicyContentAsync
+    #region GetPolicyContentWithFiltersAsync
 
     [Fact]
-    public async Task GetPolicyContentAsync_WithNotExistingInDatabase_ThrowsNotFoundException()
+    public async Task GetPolicyContentWithFiltersAsync_WithNotExistingInDatabase_ThrowsNotFoundException()
     {
         // Arrange
         const PolicyTypeId policyTypeId = PolicyTypeId.Access;
@@ -124,6 +125,98 @@ public class PolicyHubBusinessLogicTests
 
         // Assert
         ex.Message.Should().Be($"Policy for type {policyTypeId} and technicalKey membership does not exists");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentWithFiltersAsync_AttributeAndRightOperandNull_ThrowsUnexpectedConditionException()
+    {
+        // Arrange
+        const PolicyTypeId policyTypeId = PolicyTypeId.Access;
+        A.CallTo(() => _policyRepository.GetPolicyContentAsync(null, policyTypeId, "membership"))
+            .Returns(new ValueTuple<bool, string, (AttributeKeyId?, IEnumerable<string>), string?>(true, "test", (null, Enumerable.Empty<string>()), null!));
+        async Task Act() => await _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, null);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("There must be one configured rightOperand value");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentWithFiltersAsync_WithDynamicValue_ThrowsUnexpectedConditionException()
+    {
+        // Arrange
+        const PolicyTypeId policyTypeId = PolicyTypeId.Access;
+        A.CallTo(() => _policyRepository.GetPolicyContentAsync(null, policyTypeId, "membership"))
+            .Returns(new ValueTuple<bool, string, (AttributeKeyId?, IEnumerable<string>), string?>(true, "test", (AttributeKeyId.DynamicValue, Enumerable.Empty<string>()), "test:{0}"));
+
+        // Act
+        var result = await _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, "abc");
+
+        // Assert
+        result.Content.Permission.Constraint.RightOperandValue.Should().Be("abc");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentWithFiltersAsync_WithMultipleRegexValues_ThrowsUnexpectedConditionException()
+    {
+        // Arrange
+        const PolicyTypeId policyTypeId = PolicyTypeId.Access;
+        A.CallTo(() => _policyRepository.GetPolicyContentAsync(null, policyTypeId, "membership"))
+            .Returns(new ValueTuple<bool, string, (AttributeKeyId?, IEnumerable<string>), string?>(true, "test", (AttributeKeyId.Regex, new[] { "test1", "test2" }), null));
+        async Task Act() => await _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, "test");
+
+        // Act
+        var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act).ConfigureAwait(false);
+
+        // Assert
+        ex.Message.Should().Be("There should only be one regex pattern defined");
+    }
+
+    #endregion
+
+    #region GetPolicyContentAsync
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithUnmatchingPoliciesAndConstraints_ThrowsNotFoundException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.In, null),
+                new Constraints("abc", OperatorId.Equals, null)
+            });
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", default, null), 1).ToAsyncEnumerable());
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<NotFoundException>(Act).ConfigureAwait(false);
+
+        // Assert
+        ex.Message.Should().Be($"Policy for type {data.PolicyType} and technicalKeys abc does not exists");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithAttributeAndRightOperandNull_ThrowsUnexpectedConditionException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.In, null),
+            });
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", (null, Enumerable.Empty<string>()), null), 1).ToAsyncEnumerable());
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act).ConfigureAwait(false);
+
+        // Assert
+        ex.Message.Should().Be("There must be one configured rightOperand value");
     }
 
     #endregion

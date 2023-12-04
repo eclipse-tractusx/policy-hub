@@ -53,7 +53,7 @@ public class TestDbFixture : IAsyncLifetime
         optionsBuilder.UseNpgsql(
             _container.GetConnectionString(),
             x => x.MigrationsAssembly(typeof(BatchInsertSeeder).Assembly.GetName().Name)
-                .MigrationsHistoryTable("__efmigrations_history_hub")
+                .MigrationsHistoryTable("__efmigrations_history_hub", "public")
         );
         var context = new PolicyHubContext(optionsBuilder.Options);
         await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
@@ -74,7 +74,7 @@ public class TestDbFixture : IAsyncLifetime
         optionsBuilder.UseNpgsql(
             _container.GetConnectionString(),
             x => x.MigrationsAssembly(typeof(BatchInsertSeeder).Assembly.GetName().Name)
-                .MigrationsHistoryTable("__efmigrations_history_hub")
+                .MigrationsHistoryTable("__efmigrations_history_hub", "public")
         );
         var context = new PolicyHubContext(optionsBuilder.Options);
         await context.Database.MigrateAsync();

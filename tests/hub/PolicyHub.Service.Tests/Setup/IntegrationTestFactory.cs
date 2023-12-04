@@ -72,7 +72,7 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
             {
                 options.UseNpgsql(Container.GetConnectionString(),
                     x => x.MigrationsAssembly(typeof(BatchInsertSeeder).Assembly.GetName().Name)
-                        .MigrationsHistoryTable("__efmigrations_history_hub"));
+                        .MigrationsHistoryTable("__efmigrations_history_hub", "public"));
             });
             services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
         });
@@ -89,7 +89,7 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
         optionsBuilder.UseNpgsql(
             Container.GetConnectionString(),
             x => x.MigrationsAssembly(typeof(BatchInsertSeeder).Assembly.GetName().Name)
-                .MigrationsHistoryTable("__efmigrations_history_hub")
+                .MigrationsHistoryTable("__efmigrations_history_hub", "public")
         );
         var context = new PolicyHubContext(optionsBuilder.Options);
         context.Database.Migrate();
@@ -103,6 +103,10 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
             LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<BatchInsertSeeder>(),
             seederOptions);
         insertSeeder.ExecuteAsync(CancellationToken.None).GetAwaiter().GetResult();
+        var updateSeeder = new BatchUpdateSeeder(context,
+            LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<BatchUpdateSeeder>(),
+            seederOptions);
+        updateSeeder.ExecuteAsync(CancellationToken.None).GetAwaiter().GetResult();
         return host;
     }
 
