@@ -18,9 +18,11 @@
  ********************************************************************************/
 
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class RouteHandlerBuilderExtensions
 {
     public static RouteHandlerBuilder WithSwaggerDescription(this RouteHandlerBuilder builder, string summary, string description, params string[] parameterDescriptions) =>

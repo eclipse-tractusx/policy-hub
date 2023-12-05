@@ -17,7 +17,5 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-global using AutoFixture;
-global using AutoFixture.AutoFakeItEasy;
 global using FluentAssertions;
 global using Xunit;

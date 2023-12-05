@@ -21,11 +21,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Org.Eclipse.TractusX.PolicyHub.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Eclipse.TractusX.PolicyHub.DbAccess.DependencyInjection;
 
 public static class HubRepositoriesServiceExtensions
 {
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddHubRepositories(this IServiceCollection services, IConfiguration configuration)
     {
         services

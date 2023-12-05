@@ -28,23 +28,9 @@ namespace Org.Eclipse.TractusX.PolicyHub.Service.Tests.Setup;
 
 public class FakePolicyEvaluator : IPolicyEvaluator
 {
-    private const string TestScheme = "FakeScheme";
+    public Task<AuthenticateResult> AuthenticateAsync(AuthorizationPolicy policy, HttpContext context) =>
+        Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties(), "FakeScheme")));
 
-    public async Task<AuthenticateResult> AuthenticateAsync(AuthorizationPolicy policy, HttpContext context)
-    {
-        var principal = new ClaimsPrincipal();
-        principal.AddIdentity(new ClaimsIdentity(new[] {
-            new Claim(ClaimTypes.Role, "Administrator"),
-            new Claim(ClaimTypes.NameIdentifier, "John")
-        }, TestScheme));
-
-        return await Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(principal,
-            new AuthenticationProperties(), TestScheme)));
-    }
-
-    public async Task<PolicyAuthorizationResult> AuthorizeAsync(AuthorizationPolicy policy,
-        AuthenticateResult authenticationResult, HttpContext context, object? resource)
-    {
-        return await Task.FromResult(PolicyAuthorizationResult.Success());
-    }
+    public Task<PolicyAuthorizationResult> AuthorizeAsync(AuthorizationPolicy policy, AuthenticateResult authenticationResult, HttpContext context, object? resource) =>
+        Task.FromResult(PolicyAuthorizationResult.Success());
 }

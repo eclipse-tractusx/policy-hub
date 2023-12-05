@@ -1,5 +1,4 @@
 /********************************************************************************
- * Copyright (c) 2021, 2023 BMW Group AG
  * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
@@ -33,6 +32,7 @@ using Org.Eclipse.TractusX.PolicyHub.Migrations.Seeder;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Logging;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Seeding;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using Testcontainers.PostgreSql;
 
@@ -41,7 +41,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Service.Tests.Setup;
 
 public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLogic>, IAsyncLifetime
 {
-    protected readonly PostgreSqlContainer Container = new PostgreSqlBuilder()
+    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
         .WithDatabase("test_db")
         .WithImage("postgres")
         .WithCleanUp(true)
@@ -55,7 +55,9 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
 
         builder.ConfigureAppConfiguration((_, conf) =>
         {
-            conf.AddJsonFile(configPath, true);
+            conf.AddJsonFile(configPath, true)
+                .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
+                .AddEnvironmentVariables();
         });
         builder.ConfigureTestServices(services =>
         {
@@ -67,13 +69,18 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
-            services.RemoveProdDbContext<PolicyHubContext>();
+
+            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<PolicyHubContext>));
+            if (descriptor != null)
+                services.Remove(descriptor);
+
             services.AddDbContext<PolicyHubContext>(options =>
             {
-                options.UseNpgsql(Container.GetConnectionString(),
+                options.UseNpgsql(_container.GetConnectionString(),
                     x => x.MigrationsAssembly(typeof(BatchInsertSeeder).Assembly.GetName().Name)
                         .MigrationsHistoryTable("__efmigrations_history_hub", "public"));
             });
+
             services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
         });
     }
@@ -87,7 +94,7 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
         var optionsBuilder = new DbContextOptionsBuilder<PolicyHubContext>();
 
         optionsBuilder.UseNpgsql(
-            Container.GetConnectionString(),
+            _container.GetConnectionString(),
             x => x.MigrationsAssembly(typeof(BatchInsertSeeder).Assembly.GetName().Name)
                 .MigrationsHistoryTable("__efmigrations_history_hub", "public")
         );
@@ -100,17 +107,17 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
             DataPaths = new[] { "Seeder/Data" }
         });
         var insertSeeder = new BatchInsertSeeder(context,
-            LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<BatchInsertSeeder>(),
+            LoggerFactory.Create(c => c.AddConsole()).CreateLogger<BatchInsertSeeder>(),
             seederOptions);
         insertSeeder.ExecuteAsync(CancellationToken.None).GetAwaiter().GetResult();
         var updateSeeder = new BatchUpdateSeeder(context,
-            LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<BatchUpdateSeeder>(),
+            LoggerFactory.Create(c => c.AddConsole()).CreateLogger<BatchUpdateSeeder>(),
             seederOptions);
         updateSeeder.ExecuteAsync(CancellationToken.None).GetAwaiter().GetResult();
         return host;
     }
 
-    public async Task InitializeAsync() => await Container.StartAsync();
+    public async Task InitializeAsync() => await _container.StartAsync();
 
-    public new async Task DisposeAsync() => await Container.DisposeAsync();
+    public new async Task DisposeAsync() => await _container.DisposeAsync();
 }

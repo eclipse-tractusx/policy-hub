@@ -46,6 +46,6 @@ public class PolicyKindExtensionsTests
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() => ((PolicyKindId)0).IsTechnicalEnforced());
 
         // Assert
-        ex.Message.Should().Be("PolicyKindId 0 is not supported (Parameter 'policyKindId')\nActual value was 0.");
+        ex.Message.Should().Be($"PolicyKindId 0 is not supported (Parameter 'policyKindId'){Environment.NewLine}Actual value was 0.");
     }
 }

@@ -174,6 +174,33 @@ public class PolicyHubBusinessLogicTests
         ex.Message.Should().Be("There should only be one regex pattern defined");
     }
 
+    [Fact]
+    public async Task GetPolicyContentWithFiltersAsync_WithMultipleValues_ReturnsExpected()
+    {
+        // Arrange
+        A.CallTo(() => _policyRepository.GetPolicyContentAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues"))
+            .Returns(new ValueTuple<bool, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(true, "multipleAdditionalValues", new ValueTuple<AttributeKeyId, IEnumerable<string>>(AttributeKeyId.Static, new[] { "value1", "value2", "value3" }), null));
+
+        // Act
+        var result = await _sut.GetPolicyContentWithFiltersAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues", OperatorId.Equals, "test").ConfigureAwait(false);
+
+        // Assert
+        result.Content.Id.Should().Be("....");
+        result.Content.Permission.Action.Should().Be("use");
+        result.AdditionalAttributes.Should().ContainSingle();
+        result.AdditionalAttributes!.Single().PossibleValues.Should().HaveCount(3)
+            .And.Satisfy(
+                x => x == "value1",
+                x => x == "value2",
+                x => x == "value3"
+            );
+        result.Content.Permission.Constraint.RightOperandValue.Should().Be("@multipleAdditionalValues-Static");
+        result.Content.Permission.Constraint.LeftOperand.Should().Be("multipleAdditionalValues");
+        result.Content.Permission.Constraint.Operator.Should().Be("eq");
+        result.Content.Permission.Constraint.AndOperands.Should().BeNull();
+        result.Content.Permission.Constraint.OrOperands.Should().BeNull();
+    }
+
     #endregion
 
     #region GetPolicyContentAsync
@@ -217,6 +244,150 @@ public class PolicyHubBusinessLogicTests
 
         // Assert
         ex.Message.Should().Be("There must be one configured rightOperand value");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithRegexWithoutValue_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.Equals, null),
+            });
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", (AttributeKeyId.Regex, Enumerable.Repeat(@"^BPNL[\w|\d]{12}$", 1)), null), 1).ToAsyncEnumerable());
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+
+        // Assert
+        ex.ParamName.Should().Be("value");
+        ex.Message.Should().Be("you must provide a value for the regex (Parameter 'value')");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithRegexWithoutMatchingRegexPattern_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.Equals, "testRegValue"),
+            });
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", (AttributeKeyId.Regex, Enumerable.Repeat(@"^BPNL[\w|\d]{12}$", 1)), null), 1).ToAsyncEnumerable());
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+
+        // Assert
+        ex.ParamName.Should().Be("value");
+        ex.Message.Should().Be(@"The provided value testRegValue does not match the regex pattern ^BPNL[\w|\d]{12}$ (Parameter 'value')");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithMultipleDefinedKeys_ThrowsNotFoundException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.In, null),
+                new Constraints("test", OperatorId.Equals, null)
+            });
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(new[]
+            {
+                new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", default, null)
+            }.ToAsyncEnumerable());
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+
+        // Assert
+        ex.Message.Should().Be("Keys test have been defined multiple times");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithValid_ReturnsExpected()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("inValues", OperatorId.In, null),
+                new Constraints("regValue", OperatorId.Equals, "BPNL00000001TEST"),
+                new Constraints("dynamicWithoutValue", OperatorId.Equals, null),
+                new Constraints("dynamicWithValue", OperatorId.Equals, "test")
+            });
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(new[]
+            {
+                new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("inValues", "active", new (AttributeKeyId.Brands, new[] { "BMW", "Mercedes" }), null),
+                new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("regValue", "active", new (AttributeKeyId.Regex, Enumerable.Repeat(@"^BPNL[\w|\d]{12}$", 1)), null),
+                new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("dynamicWithoutValue", "active", new (AttributeKeyId.DynamicValue, Enumerable.Repeat("active:{0}", 1)), "rightOperandValueTest"),
+                new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("dynamicWithValue", "active", new (AttributeKeyId.DynamicValue, Enumerable.Repeat("active:{0}", 1)), "rightOperandValueTest")
+            }.ToAsyncEnumerable());
+
+        // Act
+        var result = await _sut.GetPolicyContentAsync(data).ConfigureAwait(false);
+
+        // Assert
+        result.Content.Id.Should().Be("....");
+        result.Content.Permission.Action.Should().Be("access");
+        result.Content.Permission.Constraint.RightOperandValue.Should().BeNull();
+        result.Content.Permission.Constraint.LeftOperand.Should().BeNull();
+        result.Content.Permission.Constraint.Operator.Should().BeNull();
+        result.Content.Permission.Constraint.AndOperands.Should().BeNull();
+        result.Content.Permission.Constraint.OrOperands.Should().HaveCount(4)
+            .And.Satisfy(
+                x => x.LeftOperand == "active" && x.Operator == "in" && ((x.RightOperandValue as IEnumerable<string>)!).Count() == 2,
+                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "BPNL00000001TEST",
+                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "{dynamicValue}",
+                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "test");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithMultipleValues_ReturnsExpected()
+    {
+        var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("multipleAdditionalValues", OperatorId.Equals, null),
+                new Constraints("test", OperatorId.In, null)
+            });
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(new[]
+            {
+                new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("multipleAdditionalValues", "multipleAdditionalValues", new(AttributeKeyId.Static, new[] { "value1", "value2", "value3" }), null),
+                new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "test", new(AttributeKeyId.Version, new[] { "1.0", "1.1" }), null)
+            }.ToAsyncEnumerable());
+
+        // Act
+        var result = await _sut.GetPolicyContentAsync(data).ConfigureAwait(false);
+
+        // Assert
+        result.Content.Id.Should().Be("....");
+        result.Content.Permission.Action.Should().Be("use");
+        result.Content.Permission.Constraint.RightOperandValue.Should().BeNull();
+        result.Content.Permission.Constraint.LeftOperand.Should().BeNull();
+        result.Content.Permission.Constraint.Operator.Should().BeNull();
+        result.Content.Permission.Constraint.OrOperands.Should().BeNull();
+        result.Content.Permission.Constraint.AndOperands.Should().HaveCount(2)
+            .And.Satisfy(
+                x => x.LeftOperand == "multipleAdditionalValues" && x.Operator == "eq" && x.RightOperandValue as string == "@multipleAdditionalValues-Static",
+                x => x.LeftOperand == "test" && x.Operator == "in" && (x.RightOperandValue as IEnumerable<string>)!.Count() == 2);
+        result.AdditionalAttributes.Should().ContainSingle()
+            .And.Satisfy(x => x.Key == "@multipleAdditionalValues-Static");
+        result.AdditionalAttributes!.Single().PossibleValues.Should().HaveCount(3)
+            .And.Satisfy(
+                x => x == "value1",
+                x => x == "value2",
+                x => x == "value3");
     }
 
     #endregion

@@ -77,7 +77,7 @@ public class TestDbFixture : IAsyncLifetime
                 .MigrationsHistoryTable("__efmigrations_history_hub", "public")
         );
         var context = new PolicyHubContext(optionsBuilder.Options);
-        await context.Database.MigrateAsync();
+        await context.Database.MigrateAsync().ConfigureAwait(false);
 
         var seederOptions = Options.Create(new SeederSettings
         {
@@ -87,7 +87,11 @@ public class TestDbFixture : IAsyncLifetime
         var insertSeeder = new BatchInsertSeeder(context,
             LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<BatchInsertSeeder>(),
             seederOptions);
-        await insertSeeder.ExecuteAsync(CancellationToken.None);
+        await insertSeeder.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
+        var updateSeeder = new BatchUpdateSeeder(context,
+            LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<BatchUpdateSeeder>(),
+            seederOptions);
+        await updateSeeder.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
     }
 
     /// <inheritdoc />

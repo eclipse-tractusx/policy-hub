@@ -50,29 +50,35 @@
   {
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b7",
     "key": 2,
-    "attribute_value": "ID Trace 3.1",
+    "attribute_value": "purpose.trace.v1.TraceBattery",
     "is_active": true
   },
   {
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b8",
-    "key": 3,
-    "attribute_value": "vehicleDismantle",
+    "key": 2,
+    "attribute_value": "purpose.trace.v1.aspects",
     "is_active": true
   },
   {
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
+    "key": 2,
+    "attribute_value": "purpose.trace.v1.qualityanalysis",
+    "is_active": true
+  },
+  {
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "key": 4,
     "attribute_value": "BMW",
     "is_active": true
   },
   {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "key": 4,
     "attribute_value": "Audi",
     "is_active": true
   },
   {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "key": 4,
     "attribute_value": "VW",
     "is_active": true

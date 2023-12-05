@@ -1,3 +1,22 @@
+/********************************************************************************
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
@@ -10,9 +29,17 @@ using System.Text.Json.Serialization;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Tests.Controllers;
 
+[Trait("Category", "PolicyHubEndToEnd")]
+[Collection("PolicyHub")]
 public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 {
-    private static readonly JsonSerializerOptions Options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, Converters = { new JsonStringEnumConverter() } };
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() },
+        DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
+    };
+
     private const string BaseUrl = "/api/policy-hub";
     private readonly HttpClient _client;
 
@@ -47,7 +74,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithoutFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types", Options).ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types", JsonOptions).ConfigureAwait(false);
 
         // Assert
         policies.Should().NotBeNull()
@@ -69,7 +96,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithTypeFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?type={PolicyTypeId.Access.ToString()}", Options).ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?type={PolicyTypeId.Access.ToString()}", JsonOptions).ConfigureAwait(false);
 
         // Assert
         policies.Should().NotBeNull()
@@ -84,7 +111,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithUseCaseFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?useCase={UseCaseId.Traceability.ToString()}", Options).ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?useCase={UseCaseId.Traceability.ToString()}", JsonOptions).ConfigureAwait(false);
 
         // Assert
         policies.Should().NotBeNull()
@@ -112,7 +139,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(Options).ConfigureAwait(false);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions).ConfigureAwait(false);
         error!.Errors.Should().ContainSingle().And.Satisfy(
             x => x.Value.Single() == @"The provided value notmatching does not match the regex pattern ^BPNL[\w|\d]{12}$ (Parameter 'value')");
     }
@@ -126,7 +153,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(Options).ConfigureAwait(false);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions).ConfigureAwait(false);
         error!.Errors.Should().ContainSingle().And.Satisfy(
             x => x.Value.Single() == "you must provide a value for the regex (Parameter 'value')");
     }
@@ -184,7 +211,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"purpose.trace.v1.TraceBattery\",\"operator\":\"eq\",\"rightOperand\":\"ID Trace 3.1\"}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"purpose.trace.v1.TraceBattery\",\"operator\":\"eq\",\"rightOperand\":\"purpose.trace.v1.TraceBattery\"}}}}");
     }
 
     #endregion
@@ -205,7 +232,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             });
 
         // Act
-        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, Options).ConfigureAwait(false);
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
@@ -230,7 +257,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             });
 
         // Act
-        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, Options).ConfigureAwait(false);
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
@@ -254,7 +281,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             });
 
         // Act
-        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, Options).ConfigureAwait(false);
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
@@ -278,12 +305,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             });
 
         // Act
-        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, Options).ConfigureAwait(false);
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(Options).ConfigureAwait(false);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions).ConfigureAwait(false);
         error!.Errors.Should().ContainSingle().And.Satisfy(
             x => x.Value.Single() == "Keys FrameworkAgreement.traceability have been defined multiple times");
     }
