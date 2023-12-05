@@ -24,6 +24,7 @@ using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
 
@@ -32,6 +33,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
 /// </summary>
 public static class PolicyHubController
 {
+    [ExcludeFromCodeCoverage]
     public static RouteGroupBuilder MapPolicyHubApi(this RouteGroupBuilder group)
     {
         var policyHub = group.MapGroup("/policy-hub");

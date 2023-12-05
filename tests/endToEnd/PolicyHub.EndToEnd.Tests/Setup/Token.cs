@@ -17,25 +17,11 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Org.Eclipse.TractusX.PolicyHub.Entities;
-using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
-namespace Org.Eclipse.TractusX.PolicyHub.DbAccess.DependencyInjection;
+namespace Org.Eclipse.TractusX.PolicyHub.EndToEnd.Tests.Setup;
 
-public static class HubRepositoriesServiceExtensions
-{
-    [ExcludeFromCodeCoverage]
-    public static IServiceCollection AddHubRepositories(this IServiceCollection services, IConfiguration configuration)
-    {
-        services
-            .AddDbContext<PolicyHubContext>(o => o
-                .UseNpgsql(configuration.GetConnectionString("PolicyHubDb")))
-            .AddScoped<IHubRepositories, HubRepositories>()
-            .AddHealthChecks()
-            .AddDbContextCheck<PolicyHubContext>("PolicyHubContext", tags: new[] { "policydb" });
-        return services;
-    }
-}
+public abstract record Token(
+    [property: JsonPropertyName("access_token")]
+    string AccessToken
+);

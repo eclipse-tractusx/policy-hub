@@ -21,6 +21,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.DependencyInjection;
 using Org.Eclipse.TractusX.PolicyHub.Service.Authentication;
 using Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Web;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 const string Version = "v2";

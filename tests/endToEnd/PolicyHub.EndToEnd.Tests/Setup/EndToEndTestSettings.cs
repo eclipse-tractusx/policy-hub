@@ -17,25 +17,25 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Org.Eclipse.TractusX.PolicyHub.Entities;
-using System.Diagnostics.CodeAnalysis;
 
-namespace Org.Eclipse.TractusX.PolicyHub.DbAccess.DependencyInjection;
+namespace Org.Eclipse.TractusX.PolicyHub.EndToEnd.Tests.Setup;
 
-public static class HubRepositoriesServiceExtensions
+public class EndToEndTestSettings
 {
-    [ExcludeFromCodeCoverage]
-    public static IServiceCollection AddHubRepositories(this IServiceCollection services, IConfiguration configuration)
+    public EndToEndTestSettings()
     {
-        services
-            .AddDbContext<PolicyHubContext>(o => o
-                .UseNpgsql(configuration.GetConnectionString("PolicyHubDb")))
-            .AddScoped<IHubRepositories, HubRepositories>()
-            .AddHealthChecks()
-            .AddDbContextCheck<PolicyHubContext>("PolicyHubContext", tags: new[] { "policydb" });
-        return services;
+        var configuration = new ConfigurationBuilder()
+            .AddUserSecrets<EndToEndTestSettings>()
+            .AddEnvironmentVariables()
+            .Build();
+
+        AuthClientId = configuration["AUTH_CLIENT_ID"]!;
+        AuthClientSecret = configuration["AUTH_CLIENT_SECRET"]!;
+        AuthUrl = configuration["AUTH_URL"]!;
     }
+
+    public string AuthClientId { get; }
+    public string AuthClientSecret { get; }
+    public string AuthUrl { get; set; }
 }

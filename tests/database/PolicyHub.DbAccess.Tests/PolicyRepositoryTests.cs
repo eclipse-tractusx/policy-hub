@@ -33,11 +33,6 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
 
     public PolicyRepositoryTests(TestDbFixture testDbFixture)
     {
-        var fixture = new Fixture().Customize(new AutoFakeItEasyCustomization { ConfigureMembers = true });
-        fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
-            .ForEach(b => fixture.Behaviors.Remove(b));
-
-        fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         _dbTestDbFixture = testDbFixture;
     }
 
@@ -121,6 +116,69 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
             x => x.TechnicalKey == "Membership" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "companyRole.dismantler" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5
         );
+    }
+
+    #endregion
+
+    #region GetPolicyContentAsync
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithoutRightOperand_ReturnsExpectedResult()
+    {
+        // Arrange
+        var sut = await CreateSut().ConfigureAwait(false);
+
+        // Act
+        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "purpose.trace.v1.TraceBattery").ConfigureAwait(false);
+
+        // Assert
+        result.Exists.Should().BeTrue();
+        result.Attributes.Key.Should().Be(AttributeKeyId.Static);
+        result.Attributes.Values.Should().ContainSingle()
+            .And.Satisfy(x => x == "purpose.trace.v1.TraceBattery");
+        result.LeftOperand.Should().Be("purpose.trace.v1.TraceBattery");
+        result.RightOperandValue.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithRightOperand_ReturnsExpectedResult()
+    {
+        // Arrange
+        var sut = await CreateSut().ConfigureAwait(false);
+
+        // Act
+        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "FrameworkAgreement.behavioraltwin").ConfigureAwait(false);
+
+        // Assert
+        result.Exists.Should().BeTrue();
+        result.Attributes.Key.Should().Be(AttributeKeyId.Version);
+        result.Attributes.Values.Should().ContainSingle()
+            .And.Satisfy(x => x == "1.0");
+        result.LeftOperand.Should().Be("FrameworkAgreement.behavioraltwin");
+        result.RightOperandValue.Should().Be("active:{0}");
+    }
+
+    #endregion
+
+    #region GetPolicyForOperandContent
+
+    [Fact]
+    public async Task GetPolicyForOperandContent__ReturnsExpectedResult()
+    {
+        // Arrange
+        var sut = await CreateSut().ConfigureAwait(false);
+
+        // Act
+        var result = await sut.GetPolicyForOperandContent(PolicyTypeId.Usage, Enumerable.Repeat("purpose.trace.v1.TraceBattery", 1)).ToListAsync().ConfigureAwait(false);
+
+        // Assert
+        result.Should().ContainSingle()
+            .And.Satisfy(
+                x => x.TechnicalKey == "purpose.trace.v1.TraceBattery" &&
+                     x.Attributes.Key == AttributeKeyId.Static &&
+                     x.Attributes.Values.Single() == "purpose.trace.v1.TraceBattery" &&
+                     x.LeftOperand == "purpose.trace.v1.TraceBattery" &&
+                     x.RightOperandValue == null);
     }
 
     #endregion

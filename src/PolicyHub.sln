@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolicyHub.Service.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolicyHub.Entities.Tests", "..\tests\database\PolicyHub.Entities.Tests\PolicyHub.Entities.Tests.csproj", "{1F4F15B3-C3D6-4030-9822-62D72B6DA1C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolicyHub.EndToEnd.Tests", "..\tests\endToEnd\PolicyHub.EndToEnd.Tests\PolicyHub.EndToEnd.Tests.csproj", "{3A37B6B2-40FE-43DB-9C98-E80803FD4568}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{1F4F15B3-C3D6-4030-9822-62D72B6DA1C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F4F15B3-C3D6-4030-9822-62D72B6DA1C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F4F15B3-C3D6-4030-9822-62D72B6DA1C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A37B6B2-40FE-43DB-9C98-E80803FD4568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A37B6B2-40FE-43DB-9C98-E80803FD4568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A37B6B2-40FE-43DB-9C98-E80803FD4568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A37B6B2-40FE-43DB-9C98-E80803FD4568}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{92B16AED-3229-4C46-8498-11D33E5C7F69} = {D30D713C-43E8-488F-BFBB-FD610E77ACA3}
@@ -63,5 +69,6 @@ Global
 		{F1551715-BECA-45B2-A71B-CAB60F2D35FE} = {9C9DA872-893E-48BA-9DD5-025D477F6EC3}
 		{A337EA35-B303-4F1B-9A83-5205E2CBA69D} = {9C9DA872-893E-48BA-9DD5-025D477F6EC3}
 		{1F4F15B3-C3D6-4030-9822-62D72B6DA1C9} = {9C9DA872-893E-48BA-9DD5-025D477F6EC3}
+		{3A37B6B2-40FE-43DB-9C98-E80803FD4568} = {9C9DA872-893E-48BA-9DD5-025D477F6EC3}
 	EndGlobalSection
 EndGlobal

@@ -61,23 +61,23 @@
     "technical_key": "purpose.trace.v1.aspects",
     "description": "Establishing a digital representation of the automotive supply chain to enable a component specific data exchange.",
     "is_active": true,
-    "attribute_key_id": 3
+    "attribute_key_id": 2
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
-    "kind_id": 5,
-    "technical_key": "companyRole.dismantler",
-    "left_operand_value": "Dismantler.activityType",
-    "description": "tbd",
-    "is_active": true,
-    "attribute_key_id": 4
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "kind_id": 4,
     "technical_key": "purpose.trace.v1.qualityanalysis",
     "description": " The data can be used for quality analysis to identify and select affected components and to send quality notifications to affected customers or suppliers.",
     "is_active": true,
-    "attribute_key_id": 3
+    "attribute_key_id": 2
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
+    "kind_id": 5,
+    "technical_key": "companyRole.dismantler",
+    "left_operand_value": "Dismantler.activityType",
+    "description": "Company role defining a dismantler. Companies holding the credential are dismantler certified companies.",
+    "is_active": true,
+    "attribute_key_id": 4
   }
 ]
