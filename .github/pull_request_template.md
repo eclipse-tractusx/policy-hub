@@ -22,3 +22,4 @@ Please delete options that are not relevant.
 - [ ] I have added tests that prove my changes work
 - [ ] I have checked that new and existing tests pass locally with my changes
 - [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have added copyright and license headers, footers (for .md files) or files (for images)

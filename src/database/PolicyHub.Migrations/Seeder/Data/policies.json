@@ -1,0 +1,83 @@
+[
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b1",
+    "kind_id": 1,
+    "technical_key": "BusinessPartnerNumber",
+    "description": "The business partner number restriction can get used to define which exact business partners (based on BPNL) are allowed to view or negotiate the respective data offer. Please ensure that you add minimum one 16-digit BPNL Number in the rightOperand; wildcards are not supported.",
+    "is_active": true,
+    "attribute_key_id": 1
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b2",
+    "kind_id": 2,
+    "technical_key": "Membership",
+    "description": "The membership credential can get used to ensure that only CX members are allowed to view or negotiate the respective data offer.",
+    "is_active": true,
+    "attribute_key_id": 2
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement.traceability",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b4",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement.quality",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b5",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement.pcf",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b6",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement.behavioraltwin",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b7",
+    "kind_id": 4,
+    "technical_key": "purpose.trace.v1.TraceBattery",
+    "description": "Facilitating compliance with mandatory regulatory requirements for tracking and reporting battery cells, modules & high-voltage batteries.",
+    "is_active": true,
+    "attribute_key_id": 2
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b8",
+    "kind_id": 4,
+    "technical_key": "purpose.trace.v1.aspects",
+    "description": "Establishing a digital representation of the automotive supply chain to enable a component specific data exchange.",
+    "is_active": true,
+    "attribute_key_id": 2
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
+    "kind_id": 4,
+    "technical_key": "purpose.trace.v1.qualityanalysis",
+    "description": " The data can be used for quality analysis to identify and select affected components and to send quality notifications to affected customers or suppliers.",
+    "is_active": true,
+    "attribute_key_id": 2
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
+    "kind_id": 5,
+    "technical_key": "companyRole.dismantler",
+    "left_operand_value": "Dismantler.activityType",
+    "description": "Company role defining a dismantler. Companies holding the credential are dismantler certified companies.",
+    "is_active": true,
+    "attribute_key_id": 4
+  }
+]
