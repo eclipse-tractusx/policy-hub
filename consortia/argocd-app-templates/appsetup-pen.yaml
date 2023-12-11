@@ -23,12 +23,12 @@ metadata:
   name: policy-hub-pen
 spec:
   destination:
-    namespace: product-policy-hub-pen
+    namespace: product-portal-pen
     server: 'https://kubernetes.default.svc'
   source:
     path: charts/policy-hub
     repoURL: 'https://github.com/eclipse-tractusx/policy-hub.git'
-    targetRevision: policy-hub-1.0.0
+    targetRevision: policy-hub-0.1.0
     plugin:
       env:
         - name: AVP_SECRET

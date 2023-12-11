@@ -20,10 +20,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: policy-hub-upgrade
+  name: policy-hub
 spec:
   destination:
-    namespace: policy-hub
+    namespace: product-portal
     server: 'https://kubernetes.default.svc'
   source:
     path: charts/policy-hub

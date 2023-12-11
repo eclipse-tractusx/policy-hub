@@ -31,15 +31,15 @@ using Org.Eclipse.TractusX.PolicyHub.Entities;
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
     [DbContext(typeof(PolicyHubContext))]
-    [Migration("20231024084527_CPLP-3330-Initial")]
-    partial class CPLP3330Initial
+    [Migration("20231211154805_0.1.0")]
+    partial class _010
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("hub")
+                .HasDefaultSchema("policy-hub")
                 .UseCollation("en_US.utf8")
                 .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
@@ -60,7 +60,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasKey("Id")
                         .HasName("pk_attribute_keys");
 
-                    b.ToTable("attribute_keys", "hub");
+                    b.ToTable("attribute_keys", "policy-hub");
 
                     b.HasData(
                         new
@@ -134,7 +134,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasIndex("KindId")
                         .HasDatabaseName("ix_policies_kind_id");
 
-                    b.ToTable("policies", "hub");
+                    b.ToTable("policies", "policy-hub");
                 });
 
             modelBuilder.Entity("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.PolicyAssignedTypes", b =>
@@ -153,7 +153,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasIndex("PolicyTypeId")
                         .HasDatabaseName("ix_policy_assigned_types_policy_type_id");
 
-                    b.ToTable("policy_assigned_types", "hub");
+                    b.ToTable("policy_assigned_types", "policy-hub");
                 });
 
             modelBuilder.Entity("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.PolicyAssignedUseCases", b =>
@@ -172,7 +172,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasIndex("UseCaseId")
                         .HasDatabaseName("ix_policy_assigned_use_cases_use_case_id");
 
-                    b.ToTable("policy_assigned_use_cases", "hub");
+                    b.ToTable("policy_assigned_use_cases", "policy-hub");
                 });
 
             modelBuilder.Entity("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.PolicyAttribute", b =>
@@ -201,7 +201,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasIndex("Key")
                         .HasDatabaseName("ix_policy_attributes_key");
 
-                    b.ToTable("policy_attributes", "hub");
+                    b.ToTable("policy_attributes", "policy-hub");
                 });
 
             modelBuilder.Entity("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.PolicyKind", b =>
@@ -222,7 +222,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasKey("Id")
                         .HasName("pk_policy_kinds");
 
-                    b.ToTable("policy_kinds", "hub");
+                    b.ToTable("policy_kinds", "policy-hub");
 
                     b.HasData(
                         new
@@ -271,7 +271,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasKey("PolicyKindId")
                         .HasName("pk_policy_kind_configurations");
 
-                    b.ToTable("policy_kind_configurations", "hub");
+                    b.ToTable("policy_kind_configurations", "policy-hub");
                 });
 
             modelBuilder.Entity("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.PolicyType", b =>
@@ -294,7 +294,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasKey("Id")
                         .HasName("pk_policy_types");
 
-                    b.ToTable("policy_types", "hub");
+                    b.ToTable("policy_types", "policy-hub");
 
                     b.HasData(
                         new
@@ -337,7 +337,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                     b.HasKey("Id")
                         .HasName("pk_use_cases");
 
-                    b.ToTable("use_cases", "hub");
+                    b.ToTable("use_cases", "policy-hub");
 
                     b.HasData(
                         new

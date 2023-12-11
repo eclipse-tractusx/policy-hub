@@ -23,7 +23,7 @@ metadata:
   name: policy-hub
 spec:
   destination:
-    namespace: product-policy-hub
+    namespace: product-portal
     server: 'https://kubernetes.default.svc'
   source:
     path: charts/policy-hub

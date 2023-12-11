@@ -20,15 +20,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: policy-hub-upgrade
+  name: policy-hub
 spec:
   destination:
-    namespace: product-policy-hub
+    namespace: product-portal
     server: 'https://kubernetes.default.svc'
   source:
     path: charts/policy-hub
     repoURL: 'https://github.com/eclipse-tractusx/policy-hub.git'
-    targetRevision: policy-hub-1.0.0
+    targetRevision: policy-hub-0.1.0
     plugin:
       env:
         - name: AVP_SECRET

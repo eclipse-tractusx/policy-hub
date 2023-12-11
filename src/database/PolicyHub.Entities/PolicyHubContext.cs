@@ -52,7 +52,7 @@ public class PolicyHubContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasAnnotation("Relational:Collation", "en_US.utf8");
-        modelBuilder.HasDefaultSchema("hub");
+        modelBuilder.HasDefaultSchema("policy-hub");
 
         modelBuilder.Entity<AttributeKey>().HasData(
             Enum.GetValues(typeof(AttributeKeyId))

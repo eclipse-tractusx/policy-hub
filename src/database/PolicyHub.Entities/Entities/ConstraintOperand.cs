@@ -36,6 +36,4 @@ public class ConstraintOperand
 
     public ConstraintOperandId Id { get; private set; }
     public string Label { get; private set; }
-
-    // Navigation properties
 }

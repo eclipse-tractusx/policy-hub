@@ -36,6 +36,4 @@ public class Operator
 
     public OperatorId Id { get; private set; }
     public string Label { get; private set; }
-
-    // Navigation properties
 }

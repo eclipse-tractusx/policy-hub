@@ -41,19 +41,18 @@ ingress:
             service: "policy-hub-service"
             port: 8080
 
+keycloak:
+  central:
+    jwtBearerOptions:
+      tokenValidationParameters:
+        validAudience: "Cl2-CX-Portal"
+
+policyhub:
+  swaggerEnabled: true
+
 policyhubmigrations:
   logging:
     default: "Debug"
-  seeding:
-    testDataEnvironments: "consortia"
-
-postgresql:
-  primary:
-    extendedConfiguration: |
-      max_connections = 200
-  readReplicas:
-    extendedConfiguration: |
-      max_connections = 200
 
 secrets:
   postgresql:

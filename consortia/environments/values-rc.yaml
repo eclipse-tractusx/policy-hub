@@ -41,17 +41,12 @@ ingress:
             service: "policy-hub-service"
             port: 8080
 
+policyhub:
+  swaggerEnabled: true
+
 policyhubmigrations:
   logging:
     default: "Debug"
-
-postgresql:
-  primary:
-    extendedConfiguration: |
-      max_connections = 200
-  readReplicas:
-    extendedConfiguration: |
-      max_connections = 200
 
 secrets:
   postgresql:

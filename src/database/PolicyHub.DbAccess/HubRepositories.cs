@@ -27,7 +27,7 @@ public class HubRepositories : IHubRepositories
 {
     private readonly PolicyHubContext _dbContext;
 
-    private static readonly IReadOnlyDictionary<Type, Func<PolicyHubContext, Object>> Types = new Dictionary<Type, Func<PolicyHubContext, Object>> {
+    private static readonly IReadOnlyDictionary<Type, Func<PolicyHubContext, object>> Types = new Dictionary<Type, Func<PolicyHubContext, object>> {
         { typeof(IPolicyRepository), context => new PolicyRepository(context) }
     }.ToImmutableDictionary();
 

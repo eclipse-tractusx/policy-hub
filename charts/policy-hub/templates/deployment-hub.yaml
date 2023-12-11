@@ -87,6 +87,8 @@ spec:
           value: "{{ .Values.policyhub.logging.default }}"
         - name: "SERILOG__MINIMUMLEVEL__OVERRIDE__Org.Eclipse.TractusX.PolicyHub.Service"
           value: "{{ .Values.policyhub.logging.businessLogic }}"
+        - name: "SWAGGERENABLED"
+          value: "{{ .Values.policyhub.swaggerEnabled }}"
         ports:
         - name: http
           containerPort: {{ .Values.portContainer }}

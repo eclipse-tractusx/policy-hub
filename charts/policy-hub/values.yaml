@@ -39,12 +39,12 @@ ingress:
     - secretName: ""
       # -- Provide host for tls secret.
       hosts:
-        - ""
+        - "policy-hub.example.org"
   hosts:
     # -- Provide default path for the ingress record.
     - host: "policy-hub.example.org"
       paths:
-        - path: "/api/hub"
+        - path: "/api"
           pathType: "Prefix"
           backend:
             service: "policy-hub-service"
@@ -53,6 +53,7 @@ dotnetEnvironment: "Production"
 dbConnection:
   schema: "hub"
   sslMode: "Disable"
+
 keycloak:
   central:
     authRealm: "CX-Central"
@@ -73,6 +74,7 @@ healthChecks:
     path: "/healthz"
   readyness:
     path: "/ready"
+
 policyhub:
   name: "policy-hub-service"
   image: "tractusx/policy-hub-service:0.1.0"
@@ -88,12 +90,12 @@ policyhub:
   logging:
     businessLogic: "Information"
     default: "Information"
-  keycloakClientId: "ClXX-CX-Policy-Hub"
   healthChecks:
     startup:
       tags:
       - name: "HEALTHCHECKS__0__TAGS__1"
         value: "policyhubdb"
+  swaggerEnabled: false
 
 policyhubmigrations:
   name: "policy-hub-migrations"
@@ -135,7 +137,7 @@ postgresql:
     # -- Extended PostgreSQL Primary configuration (increase of max_connections recommended - default is 100)
     extendedConfiguration: ""
     initdb:
-      scriptsConfigMap: "configmap-postgres-init"
+      scriptsConfigMap: "policy-hub-configmap-postgres-init"
   readReplicas:
   # -- Extended PostgreSQL read only replicas configuration (increase of max_connections recommended - default is 100)
     extendedConfiguration: ""

@@ -24,12 +24,12 @@ metadata:
 spec:
   destination:
     name: ''
-    namespace: product-policy-hub
+    namespace: product-portal
     server: 'https://kubernetes.default.svc'
   source:
     path: ''
     repoURL: 'https://eclipse-tractusx.github.io/charts/dev'
-    targetRevision: 1.7.0-RC1
+    targetRevision: policy-hub-0.1.0
     plugin:
       env:
         - name: HELM_VALUES
