@@ -74,4 +74,4 @@ spec:
                     replicationPassword: "<path:policy-hub/data/stable/policy-hub-postgres#replication-password>"
     chart: policy-hub
   sources: []
-  project: project-policy-hub
+  project: project-portal

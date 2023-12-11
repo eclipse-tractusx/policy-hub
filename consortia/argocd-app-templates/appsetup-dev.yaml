@@ -35,7 +35,7 @@ spec:
           value: vault-secret
         - name: helm_args
           value: '-f values.yaml -f ../../consortia/environments/values-dev.yaml'
-  project: project-policy-hub
+  project: project-portal
   syncPolicy:
     automated:
       prune: true

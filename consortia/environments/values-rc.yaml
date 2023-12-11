@@ -52,6 +52,6 @@ secrets:
   postgresql:
     auth:
       existingSecret:
-        postgrespassword: "<path:policy-hub/data/dev/postgres#postgres-password>"
-        password: "<path:policy-hub/data/dev/postgres#password>"
-        replicationPassword: "<path:policy-hub/data/dev/postgres#replication-password>"
+        postgrespassword: "<path:portal/data/policy-hub/dev/postgres#postgres-password>"
+        password: "<path:portal/data/policy-hub/dev/postgres#password>"
+        replicationPassword: "<path:portal/data/policy-hub/dev/postgres#replication-password>"

@@ -52,6 +52,6 @@ secrets:
   postgresql:
     auth:
       existingSecret:
-        postgrespassword: "<path:policy-hub/data/beta/postgres#postgres-password>"
-        password: "<path:policy-hub/data/beta/postgres#password>"
-        replicationPassword: "<path:policy-hub/data/beta/postgres#replication-password>"
+        postgrespassword: "<path:portal/data/policy-hub/beta/postgres#postgres-password>"
+        password: "<path:portal/data/policy-hub/beta/postgres#password>"
+        replicationPassword: "<path:portal/data/policy-hub/beta/postgres#replication-password>"
