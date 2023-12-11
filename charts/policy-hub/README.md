@@ -38,7 +38,7 @@ dependencies:
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | postgrespolicyhub(postgresql) | 12.12.x |
+| https://charts.bitnami.com/bitnami | postgresql | 12.12.x |
 
 ## Values
 
@@ -65,10 +65,10 @@ dependencies:
 | ingress.annotations."nginx.ingress.kubernetes.io/use-regex" | string | `"true"` |  |
 | ingress.className | string | `"nginx"` |  |
 | ingress.enabled | bool | `false` | Policy Hub ingress parameters, enable ingress record generation for policy-hub. |
-| ingress.hosts[0] | object | `{"host":"policy-hub.example.org","paths":[{"backend":{"port":8080,"service":"policy-hub-service"},"path":"/api/hub","pathType":"Prefix"}]}` | Provide default path for the ingress record. |
+| ingress.hosts[0] | object | `{"host":"policy-hub.example.org","paths":[{"backend":{"port":8080,"service":"policy-hub-service"},"path":"/api/policy-hub","pathType":"Prefix"}]}` | Provide default path for the ingress record. |
 | ingress.name | string | `"policy-hub"` |  |
-| ingress.tls[0] | object | `{"hosts":[""],"secretName":""}` | Provide tls secret. |
-| ingress.tls[0].hosts | list | `[""]` | Provide host for tls secret. |
+| ingress.tls[0] | object | `{"hosts":["policy-hub.example.org"],"secretName":""}` | Provide tls secret. |
+| ingress.tls[0].hosts | list | `["policy-hub.example.org"]` | Provide host for tls secret. |
 | keycloak.central.authRealm | string | `"CX-Central"` |  |
 | keycloak.central.jwtBearerOptions.metadataPath | string | `"/auth/realms/CX-Central/.well-known/openid-configuration"` |  |
 | keycloak.central.jwtBearerOptions.refreshInterval | string | `"00:00:30"` |  |
@@ -87,11 +87,11 @@ dependencies:
 | policyhub.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
 | policyhub.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
 | policyhub.image | string | `"tractusx/policy-hub-service:0.1.0"` |  |
-| policyhub.keycloakClientId | string | `"ClXX-CX-Policy-Hub"` |  |
 | policyhub.logging.businessLogic | string | `"Information"` |  |
 | policyhub.logging.default | string | `"Information"` |  |
 | policyhub.name | string | `"policy-hub-service"` |  |
 | policyhub.resources | object | `{"requests":{"cpu":"15m","memory":"300M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
+| policyhub.swaggerEnabled | bool | `false` |  |
 | policyhubmigrations.image | string | `"tractusx/policy-hub-migrations:0.1.0"` |  |
 | policyhubmigrations.logging.default | string | `"Information"` |  |
 | policyhubmigrations.name | string | `"policy-hub-migrations"` |  |
@@ -108,7 +108,7 @@ dependencies:
 | postgresql.auth.username | string | `"hub"` | Non-root username. |
 | postgresql.enabled | bool | `true` | PostgreSQL chart configuration; default configurations: host: "policy-hub-postgresql-primary", port: 5432; Switch to enable or disable the PostgreSQL helm chart. |
 | postgresql.primary.extendedConfiguration | string | `""` | Extended PostgreSQL Primary configuration (increase of max_connections recommended - default is 100) |
-| postgresql.primary.initdb.scriptsConfigMap | string | `"configmap-postgres-init"` |  |
+| postgresql.primary.initdb.scriptsConfigMap | string | `"policy-hub-configmap-postgres-init"` |  |
 | postgresql.readReplicas.extendedConfiguration | string | `""` | Extended PostgreSQL read only replicas configuration (increase of max_connections recommended - default is 100) |
 | readinessProbe.failureThreshold | int | `3` |  |
 | readinessProbe.initialDelaySeconds | int | `10` |  |
