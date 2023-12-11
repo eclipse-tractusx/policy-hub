@@ -44,7 +44,7 @@ ingress:
     # -- Provide default path for the ingress record.
     - host: "policy-hub.example.org"
       paths:
-        - path: "/api"
+        - path: "/api/policy-hub"
           pathType: "Prefix"
           backend:
             service: "policy-hub-service"

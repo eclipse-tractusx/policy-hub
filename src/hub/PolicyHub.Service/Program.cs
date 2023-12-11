@@ -27,7 +27,7 @@ using System.Text.Json.Serialization;
 const string Version = "v2";
 
 WebApplicationBuildRunner
-    .BuildAndRunWebApplication<Program, KeycloakClaimsTransformation>(args, string.Empty, Version, ".Hub",
+    .BuildAndRunWebApplication<Program, KeycloakClaimsTransformation>(args, "policy-hub", Version, ".Hub",
         builder =>
         {
             builder.Services.AddEndpointsApiExplorer();
