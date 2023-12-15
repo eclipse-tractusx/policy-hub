@@ -1,0 +1,646 @@
+{
+	"info": {
+		"_postman_id": "664c9cb3-c8fc-433f-bbdc-912bd2122052",
+		"name": "Policy Hub",
+		"description": "Hey there 👋\n\nthis collection gives you an overview of the policy hub api and some example requests.\n\nTo use the collection please set a environment variable called `baseUrl` with the url you want to test, e.g. [https://localhost:5001](https://localhost:5001) to test locally or https://policy-hub.dev.demo.catena-x.net\n\nto test the policy hub on dev.\n\nTo be able to test the api you need a valid token from the respective keycloak instance. Set the keyloak token within a variable called `hubToken`",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2223943"
+	},
+	"item": [
+		{
+			"name": "Get PolicyTypes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/policy-hub/policy-types",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"policy-hub",
+						"policy-types"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get PolicyTypes With Type Filter",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-types?type=Access",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-types"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Access"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get PolicyTypes With UseCase Filter",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-types?useCase=Traceability",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-types"
+							],
+							"query": [
+								{
+									"key": "useCase",
+									"value": "Traceability"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Get PolicyContent",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/policy-hub/policy-content?type=Usage&credential=FrameworkAgreement.traceability&operatorId=Equals",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"policy-hub",
+						"policy-content"
+					],
+					"query": [
+						{
+							"key": "useCase",
+							"value": "Traceability",
+							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "Usage"
+						},
+						{
+							"key": "credential",
+							"value": "FrameworkAgreement.traceability"
+						},
+						{
+							"key": "operatorId",
+							"value": "Equals"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Membership Content",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content?type=Usage&credential=Membership&operatorId=Equals",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Usage"
+								},
+								{
+									"key": "credential",
+									"value": "Membership"
+								},
+								{
+									"key": "operatorId",
+									"value": "Equals"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get BPN Content",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content?type=Usage&credential=BusinessPartnerNumber&operatorId=Equals&value=BPNL00000003CRHK",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Usage"
+								},
+								{
+									"key": "credential",
+									"value": "BusinessPartnerNumber"
+								},
+								{
+									"key": "operatorId",
+									"value": "Equals"
+								},
+								{
+									"key": "value",
+									"value": "BPNL00000003CRHK"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get Framework Content",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content?type=Usage&credential=FrameworkAgreement.traceability&operatorId=Equals",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							],
+							"query": [
+								{
+									"key": "useCase",
+									"value": "Traceability",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "Usage"
+								},
+								{
+									"key": "credential",
+									"value": "FrameworkAgreement.traceability"
+								},
+								{
+									"key": "operatorId",
+									"value": "Equals"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get Dismantler Content",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content?type=Usage&credential=companyRole.dismantler&operatorId=In",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Usage"
+								},
+								{
+									"key": "credential",
+									"value": "companyRole.dismantler"
+								},
+								{
+									"key": "operatorId",
+									"value": "In"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get Purpose TraceBattery",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content?useCase=Traceability&type=Usage&credential=purpose.trace.v1.TraceBattery&operatorId=Equals",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							],
+							"query": [
+								{
+									"key": "useCase",
+									"value": "Traceability"
+								},
+								{
+									"key": "type",
+									"value": "Usage"
+								},
+								{
+									"key": "credential",
+									"value": "purpose.trace.v1.TraceBattery"
+								},
+								{
+									"key": "operatorId",
+									"value": "Equals"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get Purpose Trace Aspects",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content?useCase=Traceability&type=Usage&credential=purpose.trace.v1.aspects&operatorId=Equals",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							],
+							"query": [
+								{
+									"key": "useCase",
+									"value": "Traceability"
+								},
+								{
+									"key": "type",
+									"value": "Usage"
+								},
+								{
+									"key": "credential",
+									"value": "purpose.trace.v1.aspects"
+								},
+								{
+									"key": "operatorId",
+									"value": "Equals"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get Purpose QualityAnalysis",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content?useCase=Traceability&type=Usage&credential=purpose.trace.v1.qualityanalysis&operatorId=Equals",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							],
+							"query": [
+								{
+									"key": "useCase",
+									"value": "Traceability"
+								},
+								{
+									"key": "type",
+									"value": "Usage"
+								},
+								{
+									"key": "credential",
+									"value": "purpose.trace.v1.qualityanalysis"
+								},
+								{
+									"key": "operatorId",
+									"value": "Equals"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get PolicyContent",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content?type=Usage&credential=companyRole.dismantler&operatorId=In",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Usage"
+								},
+								{
+									"key": "credential",
+									"value": "companyRole.dismantler"
+								},
+								{
+									"key": "operatorId",
+									"value": "In"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 14 Nov 2023 21:53:59 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"content\": {\n        \"@context\": [\n            \"https://www.w3.org/ns/odrl.jsonld\",\n            {\n                \"cx\": \"https://w3id.org/catenax/v0.0.1/ns/\"\n            }\n        ],\n        \"@type\": \"Offer\",\n        \"@id\": \"....\",\n        \"permission\": {\n            \"action\": \"use\",\n            \"constraint\": {\n                \"leftOperand\": \"Dismantler.activityType\",\n                \"operator\": \"in\",\n                \"rightOperand\": [\n                    \"Audi\",\n                    \"BMW\",\n                    \"VW\"\n                ]\n            }\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get PolicyContent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"PolicyType\": \"Usage\",\r\n    \"ConstraintOperand\": \"And\",\r\n    \"Constraints\": [\r\n        {\r\n            \"Key\": \"FrameworkAgreement.traceability\",\r\n            \"Operator\": \"Equals\"\r\n        },\r\n        {\r\n            \"Key\": \"companyRole.dismantler\",\r\n            \"Operator\": \"In\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/policy-hub/policy-content",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"policy-hub",
+						"policy-content"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Content with AND",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"PolicyType\": \"Usage\",\r\n    \"ConstraintOperand\": \"And\",\r\n    \"Constraints\": [\r\n        {\r\n            \"Key\": \"FrameworkAgreement.traceability\",\r\n            \"Operator\": \"Equals\"\r\n        },\r\n        {\r\n            \"Key\": \"companyRole.dismantler\",\r\n            \"Operator\": \"In\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get with multiple constraints",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"PolicyType\": \"Usage\",\r\n    \"ConstraintOperand\": \"And\",\r\n    \"Constraints\": [\r\n        {\r\n            \"Key\": \"FrameworkAgreement.traceability\",\r\n            \"Operator\": \"Equals\"\r\n        },\r\n        {\r\n            \"Key\": \"companyRole.dismantler\",\r\n            \"Operator\": \"In\"\r\n        },\r\n        {\r\n            \"Key\": \"BusinessPartnerNumber\",\r\n            \"Operator\": \"Equals\",\r\n            \"Value\": \"BPNL00000003CRHK\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Get Content with OR",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"PolicyType\": \"Usage\",\r\n    \"ConstraintOperand\": \"Or\",\r\n    \"Constraints\": [\r\n        {\r\n            \"Key\": \"FrameworkAgreement.traceability\",\r\n            \"Operator\": \"Equals\"\r\n        },\r\n        {\r\n            \"Key\": \"companyRole.dismantler\",\r\n            \"Operator\": \"In\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/policy-hub/policy-content",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"policy-hub",
+								"policy-content"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Get Attributes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/policy-hub/policy-attributes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"policy-hub",
+						"policy-attributes"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{hubToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
