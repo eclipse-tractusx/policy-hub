@@ -78,20 +78,7 @@ public class PolicyHubBusinessLogicTests
         var result = await _sut.GetPolicyTypes(null, null).ToListAsync().ConfigureAwait(false);
 
         // Assert
-        result.Should().HaveCount(3);
-    }
-
-    [Fact]
-    public async Task GetPolicyTypes_WithPolicyTypeFilter_ReturnsExpected()
-    {
-        // Arrange
-        Setup_GetPolicyTypes();
-
-        // Act
-        var result = await _sut.GetPolicyTypes(PolicyTypeId.Purpose, null).ToListAsync().ConfigureAwait(false);
-
-        // Assert
-        result.Should().ContainSingle();
+        result.Should().HaveCount(2);
     }
 
     [Fact]
@@ -104,7 +91,7 @@ public class PolicyHubBusinessLogicTests
         var result = await _sut.GetPolicyTypes(null, UseCaseId.Sustainability).ToListAsync().ConfigureAwait(false);
 
         // Assert
-        result.Should().HaveCount(2);
+        result.Should().ContainSingle();
     }
 
     #endregion
@@ -410,17 +397,11 @@ public class PolicyHubBusinessLogicTests
             .With(x => x.UseCase, Enumerable.Repeat(UseCaseId.Traceability, 1))
             .With(x => x.Type, Enumerable.Repeat(PolicyTypeId.Access, 1))
             .Create();
-        var susPurpose = _fixture.Build<PolicyTypeResponse>()
-            .With(x => x.UseCase, Enumerable.Repeat(UseCaseId.Sustainability, 1))
-            .With(x => x.Type, Enumerable.Repeat(PolicyTypeId.Purpose, 1))
-            .Create();
 
         A.CallTo(() => _policyRepository.GetPolicyTypes(null, null))
-            .Returns(new[] { susAccess, traceAccess, susPurpose }.ToAsyncEnumerable());
-        A.CallTo(() => _policyRepository.GetPolicyTypes(PolicyTypeId.Purpose, null))
-            .Returns(new[] { susPurpose }.ToAsyncEnumerable());
+            .Returns(new[] { susAccess, traceAccess }.ToAsyncEnumerable());
         A.CallTo(() => _policyRepository.GetPolicyTypes(null, UseCaseId.Sustainability))
-            .Returns(new[] { susAccess, susPurpose }.ToAsyncEnumerable());
+            .Returns(new[] { susAccess }.ToAsyncEnumerable());
     }
 
     #endregion

@@ -22,6 +22,5 @@ namespace Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 public enum PolicyTypeId
 {
     Access = 1,
-    Usage = 2,
-    Purpose = 3
+    Usage = 2
 }

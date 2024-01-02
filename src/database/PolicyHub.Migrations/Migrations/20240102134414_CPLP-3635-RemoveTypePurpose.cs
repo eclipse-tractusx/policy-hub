@@ -17,25 +17,33 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
+#nullable disable
 
-public static class JsonGenerationExtensions
+namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
-    public static string TypeToJsonString(this PolicyTypeId type) =>
-        type switch
+    /// <inheritdoc />
+    public partial class CPLP3635RemoveTypePurpose : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
         {
-            PolicyTypeId.Access => "access",
-            PolicyTypeId.Usage => "use",
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, $"{type} is not a valid value")
-        };
+            migrationBuilder.DeleteData(
+                schema: "policy-hub",
+                table: "policy_types",
+                keyColumn: "id",
+                keyValue: 3);
+        }
 
-    public static string OperatorToJsonString(this OperatorId type) =>
-        type switch
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
-            OperatorId.Equals => "eq",
-            OperatorId.In => "in",
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, $"{type} is not a valid value")
-        };
+            migrationBuilder.InsertData(
+                schema: "policy-hub",
+                table: "policy_types",
+                columns: new[] { "id", "is_active", "label" },
+                values: new object[] { 3, true, "Purpose" });
+        }
+    }
 }
