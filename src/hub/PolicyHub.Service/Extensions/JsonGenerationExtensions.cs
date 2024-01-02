@@ -28,7 +28,6 @@ public static class JsonGenerationExtensions
         {
             PolicyTypeId.Access => "access",
             PolicyTypeId.Usage => "use",
-            PolicyTypeId.Purpose => "use",
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, $"{type} is not a valid value")
         };
 

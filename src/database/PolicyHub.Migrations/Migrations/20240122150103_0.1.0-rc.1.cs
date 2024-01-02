@@ -250,8 +250,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                 values: new object[,]
                 {
                     { 1, true, "Access" },
-                    { 2, true, "Usage" },
-                    { 3, true, "Purpose" }
+                    { 2, true, "Usage" }
                 });
 
             migrationBuilder.InsertData(

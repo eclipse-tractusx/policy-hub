@@ -79,5 +79,13 @@
     "description": "Company role defining a dismantler. Companies holding the credential are dismantler certified companies.",
     "is_active": true,
     "attribute_key_id": 4
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "kind_id": 4,
+    "technical_key": "purpose",
+    "description": "",
+    "is_active": true,
+    "attribute_key_id": 3
   }
 ]
