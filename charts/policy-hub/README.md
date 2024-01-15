@@ -1,8 +1,8 @@
 # Helm chart for Catena-X Policy Hub
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square) 
+![Version: 0.1.0-rc1](https://img.shields.io/badge/Version-0.1.0-rc1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0-rc1](https://img.shields.io/badge/AppVersion-0.1.0-rc1-informational?style=flat-square) 
 
-This helm chart installs the Catena-X Policy Hub application v1.0.0.
+This helm chart installs the Catena-X Policy Hub application v0.1.0-rc1.
 
 For information on how to upgrade from previous versions please refer to [Version Upgrade](./docs/developer/Technical-Documentation/version-upgrade).
 
@@ -31,7 +31,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 0.1.0
+    version: 0.1.0-rc1
 ```
 
 ## Requirements
@@ -86,13 +86,13 @@ dependencies:
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | policyhub.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
 | policyhub.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
-| policyhub.image | string | `"tractusx/policy-hub-service:0.1.0"` |  |
+| policyhub.image | string | `"tractusx/policy-hub-service:0.1.0-rc1"` |  |
 | policyhub.logging.businessLogic | string | `"Information"` |  |
 | policyhub.logging.default | string | `"Information"` |  |
 | policyhub.name | string | `"policy-hub-service"` |  |
 | policyhub.resources | object | `{"requests":{"cpu":"15m","memory":"300M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
 | policyhub.swaggerEnabled | bool | `false` |  |
-| policyhubmigrations.image | string | `"tractusx/policy-hub-migrations:0.1.0"` |  |
+| policyhubmigrations.image | string | `"tractusx/policy-hub-migrations:0.1.0-rc1"` |  |
 | policyhubmigrations.logging.default | string | `"Information"` |  |
 | policyhubmigrations.name | string | `"policy-hub-migrations"` |  |
 | policyhubmigrations.resources | object | `{"requests":{"cpu":"15m","memory":"105M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
