@@ -38,7 +38,7 @@ on:
       upgrade_from:
         description: 'policyhub chart version to upgrade from'
         # tbd
-        default: '0.1.0-rc1'
+        default: '0.1.0-rc.1'
         required: false
         type: string
 

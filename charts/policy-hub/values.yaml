@@ -62,7 +62,7 @@ keycloak:
       metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
       tokenValidationParameters:
         validIssuerPath: "/auth/realms/CX-Central"
-        validAudience: "ClXX-CX-Policy-Hub"
+        validAudience: "Cl23-CX-Policy-Hub"
       refreshInterval: "00:00:30"
     tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
     # -- Flag if the api should be used with an leading /auth path
@@ -77,7 +77,7 @@ healthChecks:
 
 policyhub:
   name: "policy-hub-service"
-  image: "tractusx/policy-hub-service:0.1.0-rc1"
+  image: "tractusx/policy-hub-service:0.1.0-rc.1"
   # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
   # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
   resources:
@@ -99,7 +99,7 @@ policyhub:
 
 policyhubmigrations:
   name: "policy-hub-migrations"
-  image: "tractusx/policy-hub-migrations:0.1.0-rc1"
+  image: "tractusx/policy-hub-migrations:0.1.0-rc.1"
   # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
   # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
   resources:

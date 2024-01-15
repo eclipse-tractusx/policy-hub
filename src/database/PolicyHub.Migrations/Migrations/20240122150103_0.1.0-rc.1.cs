@@ -18,7 +18,6 @@
  ********************************************************************************/
 
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 
 #nullable disable
 
@@ -27,7 +26,7 @@ using System;
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
     /// <inheritdoc />
-    public partial class _010 : Migration
+    public partial class _010rc1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

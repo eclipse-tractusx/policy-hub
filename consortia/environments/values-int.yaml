@@ -45,7 +45,7 @@ keycloak:
   central:
     jwtBearerOptions:
       tokenValidationParameters:
-        validAudience: "Cl2-CX-Portal"
+        validAudience: "Cl23-CX-Policy-Hub"
 
 policyhub:
   swaggerEnabled: true
