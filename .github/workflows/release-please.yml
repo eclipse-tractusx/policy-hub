@@ -22,8 +22,7 @@ name: Release Please
 on:
   push:
     branches:
-      - dev
-      - release/v*.*.*-RC*
+      - release/v*.*.*-*
 permissions:
     contents: write
     pull-requests: write
