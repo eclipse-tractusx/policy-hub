@@ -9,13 +9,13 @@ The release process for a new version can roughly be divided into the following 
 - [Merge release branch](#merge-release-branch)
 - [RC: provide successive RC branch and change base of open PRs](#rc-provide-successive-rc-branch-and-change-base-of-open-prs)
 
-The process builds on the development flow which, usually, takes place within forks and leads to merged pull pull requests in the repositories of the eclipse-tractusx organization.
+The process builds on the development flow which, usually, takes place within forks and leads to merged pull requests in the repositories of the eclipse-tractusx organization.
 
 For assigning and incrementing **version** numbers [Semantic Versioning](https://semver.org) is followed.
 
 ## Preparations on the release branch
 
-Checking out from the dev branch (or main for portal-assets) a release branch (release/{to be released version} e.g. release/v1.2.0, or respectively release/v1.2.0-RC1 for a release candidate).
+Checking out from the dev branch a release branch (release/{to be released version} e.g. release/v1.2.0, or respectively release/v1.2.0-RC1 for a release candidate).
 On the release branch the following steps are executed:
 
 ### 1. Aggregate migrations
@@ -70,7 +70,7 @@ _v0.1.0_
 
 Examples for tag messages:
 
-_Version 0.1.0: Policy-Hub for the Catena-X_
+_Version 0.1.0: Policy-Hub for Catena-X_
 
 ## Create releases from tags
 
@@ -78,11 +78,11 @@ Create the release from the tag available in repository.
 
 Examples for release messages:
 
-_Version 0.1.0: Policy-Hub for the Catena-X_
+_Version 0.1.0: Policy-Hub for Catena-X_
 
 ## Merge release branch
 
-The release branch must be is merged into main.
+The release branch must be merged into main.
 Afterwards, main into dev.
 Those merges need to happen via PRs.
 
@@ -99,7 +99,7 @@ This tag is used to install (with the convenience of the argocd-app-templates) o
 
 ## RC: provide successive RC branch and change base of open PRs
 
-During a release candidate phase, checkout the successive 'RC' branch and push it to the server, so that it can it used for further bugfixes.
+During a release candidate phase, checkout the successive 'RC' branch and push it to the server, so that it can be used for further bugfixes.
 
 Example:
 
