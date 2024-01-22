@@ -23,7 +23,6 @@ on:
   push:
     tags:
       - 'v*.*.*'
-      - '!v*.*.*-RC*'
   workflow_dispatch:
 
 env:
