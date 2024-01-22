@@ -59,8 +59,8 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME_SERVICE }}
           tags: |
-            type=raw,value=latest
-            type=raw,value=${{ github.ref_name }}
+            type=raw,value=rc
+            type=raw,value=${{ github.sha }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -111,8 +111,8 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME_MIGRATIONS }}
           tags: |
-            type=raw,value=latest
-            type=raw,value=${{ github.ref_name }}
+            type=raw,value=rc
+            type=raw,value=${{ github.sha }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
