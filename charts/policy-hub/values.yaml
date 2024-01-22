@@ -17,8 +17,6 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-name: "policy-hub"
-
 # -- Provide centralidp base address (CX IAM), without trailing '/auth'.
 centralidpAddress: "https://centralidp.example.org"
 
@@ -47,7 +45,6 @@ ingress:
         - path: "/api/policy-hub"
           pathType: "Prefix"
           backend:
-            service: "policy-hub-service"
             port: 8080
 dotnetEnvironment: "Production"
 dbConnection:
@@ -76,7 +73,6 @@ healthChecks:
     path: "/ready"
 
 policyhub:
-  name: "policy-hub-service"
   image: "tractusx/policy-hub-service:0.1.0-rc.1"
   # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
   # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
@@ -98,7 +94,6 @@ policyhub:
   swaggerEnabled: false
 
 policyhubmigrations:
-  name: "policy-hub-migrations"
   image: "tractusx/policy-hub-migrations:0.1.0-rc.1"
   # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
   # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.

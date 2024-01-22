@@ -38,7 +38,6 @@ ingress:
         - path: "/api/policy-hub"
           pathType: "Prefix"
           backend:
-            service: "policy-hub-service"
             port: 8080
 
 policyhub:

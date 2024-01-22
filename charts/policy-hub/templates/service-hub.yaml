@@ -20,11 +20,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ .Release.Name }}-{{ .Values.policyhub.name }}"
+  name: {{ include "phub.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "phub.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
   - port: {{ .Values.portService }}
     targetPort: {{ .Values.portContainer }}
   selector:
-    app: {{ .Values.policyhub.name }}
+    {{- include "phub.selectorLabels" . | nindent 4 }}
