@@ -20,7 +20,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Values.policyhubmigrations.name }}
+  name: {{ .Release.Name }}-{{ .Values.policyhubmigrations.name }}
   annotations:
     "batch.kubernetes.io/job-tracking": "true"
     "helm.sh/hook": post-install,post-upgrade
@@ -48,7 +48,7 @@ spec:
           - name: "POLICY_HUB_PASSWORD"
             valueFrom:
               secretKeyRef:
-                name: "{{ .Values.postgresql.auth.existingSecret }}"
+                name: "{{ .Release.Name }}-phub-postgres"
                 key: "password"
           - name: "CONNECTIONSTRINGS__POLICYHUBDB"
             value: "Server={{ template "postgresql.primary.fullname" . }};Database={{ .Values.postgresql.auth.database }};Port={{ .Values.postgresql.auth.port }};User Id={{ .Values.postgresql.auth.username }};Password=$(POLICY_HUB_PASSWORD);Ssl Mode={{ .Values.dbConnection.sslMode }};"
