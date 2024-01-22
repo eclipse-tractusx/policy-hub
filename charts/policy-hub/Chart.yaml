@@ -20,8 +20,8 @@
 apiVersion: v2
 name: policy-hub
 type: application
-version: 0.1.0
-appVersion: 0.1.0
+version: 0.1.0-rc.1
+appVersion: 0.1.0-rc.1
 description: Helm chart for Catena-X Policy Hub
 home: https://github.com/eclipse-tractusx/policy-hub
 dependencies:

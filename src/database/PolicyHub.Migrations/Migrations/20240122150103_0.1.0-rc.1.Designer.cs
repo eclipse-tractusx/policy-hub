@@ -31,8 +31,8 @@ using Org.Eclipse.TractusX.PolicyHub.Entities;
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
     [DbContext(typeof(PolicyHubContext))]
-    [Migration("20231211154805_0.1.0")]
-    partial class _010
+    [Migration("20240122150103_0.1.0-rc.1")]
+    partial class _010rc1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
