@@ -128,7 +128,7 @@ postgresql:
     # -- Database name.
     database: policy-hub
     # -- Secret containing the passwords for root usernames postgres and non-root username hub.
-    existingSecret: "policy-hub-postgres"
+    existingSecret: "{{ .Release.Name }}-phub-postgres"
   architecture: replication
   audit:
     pgAuditLog: "write, ddl"
@@ -137,7 +137,7 @@ postgresql:
     # -- Extended PostgreSQL Primary configuration (increase of max_connections recommended - default is 100)
     extendedConfiguration: ""
     initdb:
-      scriptsConfigMap: "policy-hub-configmap-postgres-init"
+      scriptsConfigMap: "{{ .Release.Name }}-phub-cm-postgres"
   readReplicas:
   # -- Extended PostgreSQL read only replicas configuration (increase of max_connections recommended - default is 100)
     extendedConfiguration: ""
@@ -146,7 +146,7 @@ externalDatabase:
   # -- External PostgreSQL configuration
   # IMPORTANT: non-root db user needs needs to be created beforehand on external database.
   # Database host ('-primary' is added as postfix).
-  host: "policy-hub-postgresql-external-db"
+  host: "{{ .Release.Name }}-phub-postgres-ext"
   # -- Database port number.
   port: 5432
   # -- Non-root username for policy-hub.

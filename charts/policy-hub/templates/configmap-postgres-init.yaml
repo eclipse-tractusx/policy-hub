@@ -21,7 +21,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.postgresql.primary.initdb.scriptsConfigMap }}
+  name: {{ .Release.Name }}-phub-cm-postgres
   namespace: {{ .Release.Namespace }}
 data:
   02-init-db.sql: |
