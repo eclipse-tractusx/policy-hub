@@ -148,7 +148,7 @@ externalDatabase:
   # And the init script (02-init-db.sql) available in templates/configmap-postgres-init.yaml
   # needs to be executed beforehand.
   # Database host ('-primary' is added as postfix).
-  host: "{{ .Release.Name }}-phub-postgres-ext"
+  host: "phub-postgres-ext"
   # -- Database port number.
   port: 5432
   # -- Non-root username for policy-hub.
