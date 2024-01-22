@@ -28,11 +28,12 @@ metadata:
 spec:
   template:
     metadata:
-      name: {{ .Values.policyhubmigrations.name }}
+      labels:
+        {{- include "phub.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: Never
       containers:
-      - name: {{ .Values.policyhubmigrations.name }}
+      - name: {{ include "phub.fullname" . }}-migrations
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
