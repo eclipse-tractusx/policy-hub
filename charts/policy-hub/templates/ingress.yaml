@@ -18,7 +18,7 @@
 */}}
 
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := .Values.ingress.name -}}
+{{- $fullName := include "phub.fullname" . -}}
 {{- $svcPort := .Values.portService -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
@@ -34,9 +34,9 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-{{ $fullName }}
+  name: {{ $fullName }}
   labels:
-    {{- include "chart.labels" . | nindent 4 }}
+    {{- include "phub.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -68,11 +68,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ .backend.service }}
+                name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
               {{- else }}
-              serviceName: {{ .backend.service }}
+              serviceName: {{ $fullName }}
               servicePort: {{ .backend.port }}
               {{- end }}
           {{- end }}
