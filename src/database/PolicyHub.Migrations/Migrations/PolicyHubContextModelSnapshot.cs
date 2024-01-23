@@ -23,8 +23,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Org.Eclipse.TractusX.PolicyHub.Entities;
 
-#nullable disable
-
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
     [DbContext(typeof(PolicyHubContext))]
@@ -303,12 +301,6 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                             Id = 2,
                             IsActive = true,
                             Label = "Usage"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IsActive = true,
-                            Label = "Purpose"
                         });
                 });
 

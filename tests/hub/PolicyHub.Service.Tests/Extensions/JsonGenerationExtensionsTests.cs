@@ -27,7 +27,6 @@ public class JsonGenerationExtensionsTests
     [Theory]
     [InlineData(PolicyTypeId.Access, "access")]
     [InlineData(PolicyTypeId.Usage, "use")]
-    [InlineData(PolicyTypeId.Purpose, "use")]
     public void TypeToJsonString_WithValidData_ReturnsExpected(PolicyTypeId policyTypeId, string result)
     {
         // Act

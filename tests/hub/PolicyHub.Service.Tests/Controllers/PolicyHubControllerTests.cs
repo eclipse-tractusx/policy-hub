@@ -78,7 +78,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(10).And.Satisfy(
+            .And.HaveCount(11).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement.traceability",
@@ -88,7 +88,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
                 x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
                 x => x.TechnicalKey == "purpose.trace.v1.aspects",
                 x => x.TechnicalKey == "companyRole.dismantler",
-                x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis"
+                x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis",
+                x => x.TechnicalKey == "purpose"
             );
     }
 
@@ -115,14 +116,15 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(7).And.Satisfy(
+            .And.HaveCount(8).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement.traceability",
                 x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
                 x => x.TechnicalKey == "purpose.trace.v1.aspects",
                 x => x.TechnicalKey == "companyRole.dismantler",
-                x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis"
+                x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis",
+                x => x.TechnicalKey == "purpose"
             );
     }
 
