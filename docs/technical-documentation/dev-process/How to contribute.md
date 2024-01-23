@@ -1,6 +1,6 @@
 # Contribution details
 
-To contribute to the portal as part of the open source community, please read the details defined below.
+To contribute to the policy hub as part of the open source community, please read the details defined below.
 Besides a generic "how to", some commit and pull request (PR) guidelines are defined to ensure readability and make newly created PRs easier to review. Additionally, changelogs can get validated as well as written with more ease. Moreover, similar patterns are in use across the contributor community.
 
 **Content**:
@@ -101,3 +101,11 @@ The suggested naming convention is '{type}{(function)}: {short summary}'
 
 Add details to the change, fix or feature in the PR description.
 What was changed, why was it changed (e.g. which issue was fixed or which requirement was implemented), and how was it changed.
+
+## NOTICE
+
+This work is licensed under the [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+- SPDX-License-Identifier: Apache-2.0
+- SPDX-FileCopyrightText: 2021-2023 Contributors to the Eclipse Foundation
+- Source URL: https://github.com/eclipse-tractusx/policy-hub

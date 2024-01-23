@@ -17,4 +17,33 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-Host.CreateDefaultBuilder(args).Build().Run();
+using Org.Eclipse.TractusX.PolicyHub.DbAccess.DependencyInjection;
+using Org.Eclipse.TractusX.PolicyHub.Service.Authentication;
+using Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.Web;
+using System.Text.Json.Serialization;
+
+const string Version = "v2";
+
+WebApplicationBuildRunner
+    .BuildAndRunWebApplication<Program, KeycloakClaimsTransformation>(args, "policy-hub", Version, ".Hub",
+        builder =>
+        {
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddHubRepositories(builder.Configuration);
+            builder.Services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+            builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+        },
+        (app, _) =>
+        {
+            app.MapGroup("/api")
+                .WithOpenApi()
+                .MapPolicyHubApi();
+        },
+        null);

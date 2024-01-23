@@ -31,15 +31,15 @@ on:
   # Trigger manually
   workflow_dispatch:
   # Triggered once a week
-  # schedule:
-  #  - cron: "0 0 * * 0"
+  schedule:
+   - cron: "0 0 * * 0"
 
 
 env:
   DOTNET_VERSION: '7.0' # The .NET SDK version to use
 
 jobs:
-  analyze-administration-service:
+  analyze-policy-hub-service:
     runs-on: ubuntu-latest
     permissions:
       actions: read
