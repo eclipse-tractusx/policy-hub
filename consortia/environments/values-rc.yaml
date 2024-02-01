@@ -41,9 +41,13 @@ ingress:
             port: 8080
 
 policyhub:
+  image: "tractusx/policy-hub-service:rc"
+  imagePullPolicy: "Always"
   swaggerEnabled: true
 
 policyhubmigrations:
+  image: "tractusx/policy-hub-migrations:rc"
+  imagePullPolicy: "Always"
   logging:
     default: "Debug"
 
