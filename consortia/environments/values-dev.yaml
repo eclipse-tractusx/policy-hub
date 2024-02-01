@@ -47,12 +47,12 @@ keycloak:
         validAudience: "Cl23-CX-Policy-Hub"
 
 policyhub:
-  image: "tractusx/policy-hub-service:dev"
+  image: "docker.io/tractusx/policy-hub-service:dev"
   imagePullPolicy: "Always"
   swaggerEnabled: true
 
 policyhubmigrations:
-  image: "tractusx/policy-hub-migrations:dev"
+  image: "docker.io/tractusx/policy-hub-migrations:dev"
   imagePullPolicy: "Always"
   logging:
     default: "Debug"
