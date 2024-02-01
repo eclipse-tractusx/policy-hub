@@ -43,6 +43,7 @@ spec:
           capabilities:
             drop:
             - ALL
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
         image: "{{ .Values.policyhub.image }}"
         imagePullPolicy: "Always"
