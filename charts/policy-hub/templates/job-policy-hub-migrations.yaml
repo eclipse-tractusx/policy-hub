@@ -42,7 +42,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
         image: "{{ .Values.policyhubmigrations.image }}"
-        imagePullPolicy: "Always"
+        imagePullPolicy: "{{ .Values.policyhubmigrations.imagePullPolicy }}"
         env:
           - name: DOTNET_ENVIRONMENT
             value: "{{ .Values.dotnetEnvironment }}"

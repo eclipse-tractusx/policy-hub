@@ -48,10 +48,12 @@ keycloak:
 
 policyhub:
   image: "tractusx/policy-hub-service:dev"
+  imagePullPolicy: "Always"
   swaggerEnabled: true
 
 policyhubmigrations:
   image: "tractusx/policy-hub-migrations:dev"
+  imagePullPolicy: "Always"
   logging:
     default: "Debug"
 
