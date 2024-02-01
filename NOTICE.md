@@ -30,11 +30,6 @@ This project leverages the following third party content.
 
 See DEPENDENCIES file.
 
-This project uses the following image content:
-
-* Image: Catena-X Logo
-* Source URL: https://catena-x.net
-
 ## Cryptography
 
 Content may contain encryption software. The country in which you are currently
