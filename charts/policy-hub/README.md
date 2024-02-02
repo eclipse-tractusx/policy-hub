@@ -27,7 +27,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 0.1.0-rc.1
+    version: 0.1.0-rc.2
 ```
 
 ## Requirements
@@ -65,14 +65,16 @@ dependencies:
 | healthChecks.startup.path | string | `"/health/startup"` |  |
 | healthChecks.liveness.path | string | `"/healthz"` |  |
 | healthChecks.readyness.path | string | `"/ready"` |  |
-| policyhub.image | string | `"tractusx/policy-hub-service:0.1.0-rc.1"` |  |
+| policyhub.image | string | `"docker.io/tractusx/policy-hub-service:0.1.0-rc.2"` |  |
+| policyhub.imagePullPolicy | string | `"IfNotPresent"` |  |
 | policyhub.resources | object | `{"requests":{"cpu":"15m","memory":"300M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
 | policyhub.logging.businessLogic | string | `"Information"` |  |
 | policyhub.logging.default | string | `"Information"` |  |
 | policyhub.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
 | policyhub.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
 | policyhub.swaggerEnabled | bool | `false` |  |
-| policyhubmigrations.image | string | `"tractusx/policy-hub-migrations:0.1.0-rc.1"` |  |
+| policyhubmigrations.image | string | `"docker.io/tractusx/policy-hub-migrations:0.1.0-rc.2"` |  |
+| policyhubmigrations.imagePullPolicy | string | `"IfNotPresent"` |  |
 | policyhubmigrations.resources | object | `{"requests":{"cpu":"15m","memory":"105M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
 | policyhubmigrations.seeding.testDataEnvironments | string | `""` |  |
 | policyhubmigrations.seeding.testDataPaths | string | `"Seeder/Data"` |  |
