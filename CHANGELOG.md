@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v0.1.0-rc.1...v0.2.0-rc.1) (2024-02-02)
+
+
+### Features
+
+* make imagePullPolicy configurable, default set to IfNotPresent ([1586de5](https://github.com/eclipse-tractusx/policy-hub/commit/1586de5d6322a92db28dc2f1e3457091087b965c))
+* **trg-4.07:** enable readOnlyRootFilesystem for containers ([9fcc10e](https://github.com/eclipse-tractusx/policy-hub/commit/9fcc10ec743ea3cbeb5a3026e7161789ceee7339))
+
 ## 0.1.0-rc.1 (2024-01-23)
 
 
