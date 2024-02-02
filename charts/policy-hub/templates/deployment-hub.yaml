@@ -43,9 +43,10 @@ spec:
           capabilities:
             drop:
             - ALL
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
         image: "{{ .Values.policyhub.image }}"
-        imagePullPolicy: "Always"
+        imagePullPolicy: "{{ .Values.policyhub.imagePullPolicy }}"
         env:
         - name: DOTNET_ENVIRONMENT
           value: "{{ .Values.dotnetEnvironment }}"
