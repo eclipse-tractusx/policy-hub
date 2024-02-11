@@ -23,7 +23,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
-using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
 using System.Text.RegularExpressions;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
