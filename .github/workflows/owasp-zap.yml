@@ -125,7 +125,7 @@ jobs:
           docker pull ghcr.io/zaproxy/zaproxy:stable -q
 
           echo "Starting ZAP Docker container..."
-          docker run -v ${GITHUB_WORKSPACE}:/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t http://$IP_ADDR:8080/api/policy-hub/swagger/swagger/v2/swagger.json -f openapi -w report_md.md -r report_html.html -T 1
+          docker run -v ${GITHUB_WORKSPACE}:/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t http://$IP_ADDR:8080/api/policy-hub/swagger/v2/swagger.json -f openapi -w report_md.md -r report_html.html -T 1
           
           echo "... done."
 
@@ -137,7 +137,7 @@ jobs:
 
       - name: Upload HTML report
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           name: ZAP scan report
           path: ./report_html.html
