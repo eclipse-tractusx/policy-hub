@@ -33,10 +33,12 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
+    paths:
+      - 'src/**'
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [main, dev]
+    paths:
+      - 'src/**'
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
