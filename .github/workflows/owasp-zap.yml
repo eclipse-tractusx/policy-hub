@@ -21,16 +21,16 @@ name: "OWASP ZAP (DAST Scan)"
 
 on:
   push:
-    branches: [main, dev, chore/introduce-owasp-zap]
+    branches: [main]
     paths:
       - 'src/**'
   pull_request:
-    branches: [main, dev]
+    branches: [dev, release/v*.*.*-rc*]
     paths:
       - 'src/**'
-  # schedule:
-  #   # Once a day
-  #   - cron: "0 0 * * *"
+  schedule:
+    # Once a day
+    - cron: "0 0 * * *"
   workflow_dispatch:
   # Trigger manually
     inputs:
