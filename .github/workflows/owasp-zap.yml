@@ -44,7 +44,7 @@ jobs:
           fetch-depth: 0
 
       - name: Kubernetes KinD Cluster
-        uses: container-tools/kind-action@v2
+        uses: container-tools/kind-action@0fc957b58d9a5bc9ca57a1b419324a2074c7653b # v2.0.3
         with:
           node_image: 'kindest/node:v1.27.3'
           version: v0.20.0
@@ -61,7 +61,7 @@ jobs:
 
       - name: Build migration image
         id: build-migration-image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
         with:
           context: .
           file: docker/Dockerfile-policy-hub-migrations
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build service image
         id: build-service-image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
         with:
           context: .
           file: docker/Dockerfile-policy-hub-service
@@ -103,12 +103,6 @@ jobs:
           echo "Port-forwarding 0.0.0.0:8080 to $POD_NAME:$CONTAINER_PORT..."
 
           kubectl --namespace apps port-forward $POD_NAME 8080:$CONTAINER_PORT --address 0.0.0.0 &
-
-        # Sleep for 4 seconds to ensure, that the port-forward is established
-      - name: Sleep for 4s
-        uses: juliangruber/sleep-action@v1
-        with:
-          time: 4s
 
       - name: Generating report skeletons
         if: success() || failure()
