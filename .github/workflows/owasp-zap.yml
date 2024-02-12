@@ -21,18 +21,25 @@ name: "OWASP ZAP (DAST Scan)"
 
 on:
   push:
-    branches: [ chore/introduce-owasp-zap ]
-  # pull_request:
-  # The branches below must be a subset of the branches above
-  # branches: [ main, master ]
-  # paths-ignore:
-  #   - "**/*.md"
-  #   - "**/*.txt"
-  schedule:
-    # Once a day
-    - cron: "0 0 * * *"
+    branches: [main, dev, chore/introduce-owasp-zap]
+    paths:
+      - 'src/**'
+  pull_request:
+    branches: [main, dev]
+    paths:
+      - 'src/**'
+  # schedule:
+  #   # Once a day
+  #   - cron: "0 0 * * *"
   workflow_dispatch:
   # Trigger manually
+    inputs:
+      node_image:
+        description: 'kindest/node image for k8s kind cluster'
+        # k8s version from 3.1 release as default
+        default: 'kindest/node:v1.27.3'
+        required: false
+        type: string
 
 jobs:
   owasp-zap-scan:
@@ -46,18 +53,13 @@ jobs:
       - name: Kubernetes KinD Cluster
         uses: container-tools/kind-action@0fc957b58d9a5bc9ca57a1b419324a2074c7653b # v2.0.3
         with:
-          node_image: 'kindest/node:v1.27.3'
+          node_image: ${{ github.event.inputs.node_image || 'kindest/node:v1.27.3' }}
           version: v0.20.0
 
       - name: Set up Helm
         uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3.5
         with:
           version: v3.5.0
-
-      # - uses: actions/setup-java@v3
-      #   with:
-      #     distribution: 'temurin'
-      #     java-version: '17'
 
       - name: Build migration image
         id: build-migration-image
