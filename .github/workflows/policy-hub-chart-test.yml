@@ -112,7 +112,7 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add tractusx-dev https://eclipse-tractusx.github.io/charts/dev
-          helm install policy-hub tractusx-dev/policy-hub --set policyhub.image=kind-registry:5000/policy-hub-service:testing --set=policyhubmigrations.image=kind-registry:5000/policy-hub-migrations:testing --version ${{ github.event.inputs.upgrade_from || '0.1.0-rc.2' }} --namespace upgrade --create-namespace
+          helm install policy-hub tractusx-dev/policy-hub --namespace upgrade --create-namespace
           helm dependency update charts/policy-hub
-          helm upgrade policy-hub charts/policy-hub --namespace upgrade
+          helm upgrade policy-hub charts/policy-hub --set policyhub.image=kind-registry:5000/policy-hub-service:testing --set=policyhubmigrations.image=kind-registry:5000/policy-hub-migrations:testing --namespace upgrade
         if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
