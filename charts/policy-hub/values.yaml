@@ -125,6 +125,7 @@ postgresql:
     # -- Database name.
     database: policy-hub
     # -- Secret containing the passwords for root usernames postgres and non-root username hub.
+    # Should not be changed without changing the "phub-postgresSecretName" template as well.
     existingSecret: "{{ .Release.Name }}-phub-postgres"
   architecture: replication
   audit:
