@@ -73,7 +73,7 @@ healthChecks:
     path: "/ready"
 
 policyhub:
-  image: "docker.io/tractusx/policy-hub-service:0.1.0-rc.2"
+  image: "docker.io/tractusx/policy-hub-service:0.1.0-rc.3"
   imagePullPolicy: "IfNotPresent"
   # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
   # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
@@ -95,7 +95,7 @@ policyhub:
   swaggerEnabled: false
 
 policyhubmigrations:
-  image: "docker.io/tractusx/policy-hub-migrations:0.1.0-rc.2"
+  image: "docker.io/tractusx/policy-hub-migrations:0.1.0-rc.3"
   imagePullPolicy: "IfNotPresent"
   # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
   # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
@@ -125,6 +125,7 @@ postgresql:
     # -- Database name.
     database: policy-hub
     # -- Secret containing the passwords for root usernames postgres and non-root username hub.
+    # Should not be changed without changing the "phub-postgresSecretName" template as well.
     existingSecret: "{{ .Release.Name }}-phub-postgres"
   architecture: replication
   audit:
