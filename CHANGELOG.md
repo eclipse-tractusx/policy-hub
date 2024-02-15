@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0-rc-2](https://github.com/eclipse-tractusx/policy-hub/compare/v0.1.0-rc.1...v0.1.0-rc-2) (2024-02-02)
+## [0.1.0-rc.2](https://github.com/eclipse-tractusx/policy-hub/compare/v0.1.0-rc.1...v0.1.0-rc.2) (2024-02-02)
 
 
 ### Features
