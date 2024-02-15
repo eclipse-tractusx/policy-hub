@@ -27,7 +27,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 0.1.0-rc.2
+    version: 0.1.0-rc.3
 ```
 
 ## Requirements
@@ -65,7 +65,7 @@ dependencies:
 | healthChecks.startup.path | string | `"/health/startup"` |  |
 | healthChecks.liveness.path | string | `"/healthz"` |  |
 | healthChecks.readyness.path | string | `"/ready"` |  |
-| policyhub.image | string | `"docker.io/tractusx/policy-hub-service:0.1.0-rc.2"` |  |
+| policyhub.image | string | `"docker.io/tractusx/policy-hub-service:0.1.0-rc.3"` |  |
 | policyhub.imagePullPolicy | string | `"IfNotPresent"` |  |
 | policyhub.resources | object | `{"requests":{"cpu":"15m","memory":"300M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
 | policyhub.logging.businessLogic | string | `"Information"` |  |
@@ -73,7 +73,7 @@ dependencies:
 | policyhub.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
 | policyhub.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
 | policyhub.swaggerEnabled | bool | `false` |  |
-| policyhubmigrations.image | string | `"docker.io/tractusx/policy-hub-migrations:0.1.0-rc.2"` |  |
+| policyhubmigrations.image | string | `"docker.io/tractusx/policy-hub-migrations:0.1.0-rc.3"` |  |
 | policyhubmigrations.imagePullPolicy | string | `"IfNotPresent"` |  |
 | policyhubmigrations.resources | object | `{"requests":{"cpu":"15m","memory":"105M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
 | policyhubmigrations.seeding.testDataEnvironments | string | `""` |  |
@@ -82,7 +82,7 @@ dependencies:
 | postgresql.enabled | bool | `true` | PostgreSQL chart configuration; default configurations: host: "policy-hub-postgresql-primary", port: 5432; Switch to enable or disable the PostgreSQL helm chart. |
 | postgresql.auth.username | string | `"hub"` | Non-root username. |
 | postgresql.auth.database | string | `"policy-hub"` | Database name. |
-| postgresql.auth.existingSecret | string | `"{{ .Release.Name }}-phub-postgres"` | Secret containing the passwords for root usernames postgres and non-root username hub. |
+| postgresql.auth.existingSecret | string | `"{{ .Release.Name }}-phub-postgres"` | Secret containing the passwords for root usernames postgres and non-root username hub. Should not be changed without changing the "phub-postgresSecretName" template as well. |
 | postgresql.architecture | string | `"replication"` |  |
 | postgresql.audit.pgAuditLog | string | `"write, ddl"` |  |
 | postgresql.audit.logLinePrefix | string | `"%m %u %d "` |  |
