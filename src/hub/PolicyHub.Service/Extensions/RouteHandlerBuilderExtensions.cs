@@ -17,7 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Library;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Service;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Extensions;

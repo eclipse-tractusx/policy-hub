@@ -31,6 +31,13 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Define secret name of postgres dependency.
+*/}}
+{{- define "phub.postgresSecretName" -}}
+{{- printf "%s-%s" .Release.Name "phub-postgres" }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "phub.labels" -}}

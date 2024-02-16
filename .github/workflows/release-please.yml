@@ -38,3 +38,4 @@ jobs:
           with:
             target-branch: ${{ github.ref_name }}
             release-type: simple
+            skip-github-release: true
