@@ -57,14 +57,30 @@ jobs:
           helm dependency update
 
       - name: Run chart-releaser
-        id: chart-release
         uses: helm/chart-releaser-action@v1.4.1
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           CR_SKIP_EXISTING: "true"
 
+      - name: Get current helm chart version
+        id: chart-version
+        run: |
+          current=$(cat ./charts/policy-hub/Chart.yaml | grep "version:" | head -1 | cut -d ":" -d " " -f2)
+          echo "current=$current" >> $GITHUB_OUTPUT
+          echo "Exported $current helm chart version"
+
+      - name: Check for previous version
+        id: version-check
+        run: |
+          exists=$(git tag -l "v${{ steps.chart-version.outputs.current }}")
+          if [[ -n "$exists" ]]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Push git tag for release workflow to be triggered
         uses: rickstaa/action-create-tag@a1c7777fcb2fee4f19b0f283ba888afa11678b72 # v1.7.2
         with:
-          tag: v${{ steps.chart-release.outputs.chart_version }}
-        if: ${{ steps.chart-release.outputs.changed_charts }}
+          tag: v${{ steps.chart-version.outputs.current }}
+        if: steps.version-check.outputs.exists == 'false'
