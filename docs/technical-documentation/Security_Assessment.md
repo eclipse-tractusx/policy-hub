@@ -26,12 +26,6 @@ flowchart LR
     NC1("Potential new company (admin)")
     CU-Shared1(Company user)
 
-    NC2("Potential new company (admin)")
-    CU-Shared2(Company user)
-
-    NC3("Potential new company (admin)")
-    CU-Shared3(Company user)
-
     K("Keycloak (REST API)")
 
     PH(Policy Hub API)
@@ -47,14 +41,7 @@ flowchart LR
         NC1
         CU-Shared1
         end
-        subgraph companyrealm2[Company realm]
-        NC2
-        CU-Shared2
-        end
-        subgraph companyrealm3[Company realm]
-        NC3
-        CU-Shared3
-        end
+
       end
     
 
@@ -64,11 +51,9 @@ flowchart LR
     
     end
         NC1-->|"IAM with OIDC \n [HTTPS]"|K
-        NC2-->|"IAM with OIDC \n [HTTPS]"|K
-        NC3-->|"IAM with OIDC \n [HTTPS]"|K
+
         CU-Shared1-->|"IAM with OIDC \n [HTTPS]"|K
-        CU-Shared2-->|"IAM with OIDC \n [HTTPS]"|K
-        CU-Shared3-->|"IAM with OIDC \n [HTTPS]"|K
+
         CU-Own-->|"IAM with OIDC \n [HTTPS]"|K
 
     subgraph Policy-Hub Product
@@ -80,11 +65,9 @@ flowchart LR
     K-->|"Authentication & Authorization Data \n (Using JWT)"|PH
             
         NC1-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
-        NC2-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
-        NC3-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
+
         CU-Shared1-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
-        CU-Shared2-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
-        CU-Shared3-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
+
         CU-Own-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
 ```
 
