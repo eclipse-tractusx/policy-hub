@@ -23,6 +23,8 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-phub-cm-postgres
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "phub.labels" . | nindent 4 }}
 data:
   02-init-db.sql: |
     CREATE SCHEMA hub;
