@@ -24,7 +24,6 @@ ingress:
   # -- Policy Hub ingress parameters,
   # enable ingress record generation for policy-hub.
   enabled: false
-  name: "policy-hub"
   className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -44,9 +43,9 @@ ingress:
       paths:
         - path: "/api/policy-hub"
           pathType: "Prefix"
-          backend:
-            port: 8080
+
 dotnetEnvironment: "Production"
+
 dbConnection:
   schema: "hub"
   sslMode: "Disable"
