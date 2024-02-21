@@ -21,6 +21,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "phub.fullname" . }}-migrations
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "phub.labels" . | nindent 4 }}
   annotations:
     "batch.kubernetes.io/job-tracking": "true"
     "helm.sh/hook": post-install,post-upgrade
