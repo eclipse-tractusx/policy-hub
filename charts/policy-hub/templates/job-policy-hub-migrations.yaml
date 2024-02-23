@@ -31,8 +31,7 @@ metadata:
 spec:
   template:
     metadata:
-      labels:
-        {{- include "phub.selectorLabels" . | nindent 8 }}
+      name: {{ .Values.policyhubmigrations.name }}-migrations
     spec:
       restartPolicy: Never
       containers:
