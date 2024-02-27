@@ -4,10 +4,9 @@
 | ------------------------- | ---------------------------------------------------------------------------------------------- |
 | Contact for product       | [@evegufy](https://github.com/evegufy) <br> [@jjeroch](https://github.com/jjeroch)             |
 | Security responsible      | [Szymon Kowalczyk](szymon.kowalczyk@zf.com) |
-| Version number of product |                                                                                           |
+| Version number of product | 0.1.0                                                                                          |
 | Dates of assessment       | 2024-02-16: Assessment                                                                      |
 | Status of assessment      | ASSESSMENT DRAFT                                                                            |
-
 
 ## Product Description
 
@@ -24,13 +23,7 @@ The policy hub is using following key frameworks:
 
 - .Net
 - Entity Framework
-
-Please find more details about architecture & development concept- https://github.com/eclipse-tractusx/policy-hub/blob/main/docs/technical-documentation/architecture/Development%20Concept.md
-
-### Important Links
-
-Latest released version: 0.1.0-rc.3
-Leading product repository: https://github.com/eclipse-tractusx/policy-hub
+[architecture & development concept](https://github.com/eclipse-tractusx/policy-hub/blob/main/docs/technical-documentation/architecture/Development%20Concept.md)
 
 ## Data Flow Diagram
 
@@ -40,7 +33,7 @@ flowchart LR
     CU(Company user)
     K("Keycloak (REST API)")
     PH(Policy Hub API)
-    PHD[("Postgres Database \n \n (Data created with \nApplication seeding)")]
+    PHD[("Postgres Database \n \n (Data created with \n application seeding)")]
 
     subgraph centralidp[centralidp Keycloak]
      K
@@ -57,7 +50,7 @@ flowchart LR
 
     K-->|"Authentication & Authorization Data \n (Using JWT)"|PH     
     CU-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
-    PH-->|"Data Read \n (Policy Data, use cases, credential types, policy rules)"|PHD
+    PH-->|"Read policies, use cases, credential types, policy rules"|PHD
     CU-->|"IAM with OIDC \n [HTTPS]"|K
 ```
 
@@ -87,15 +80,10 @@ N/A
 - Infrastructure as Code - KICS
 - Securing code, dependencies, containers, IaC and Cloud Deployments - SNYK
 
-
-
-
 ## NOTICE
 
 This work is licensed under the [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 - SPDX-License-Identifier: Apache-2.0
-- SPDX-FileCopyrightText: 2021-2023 Contributors to the Eclipse Foundation
+- SPDX-FileCopyrightText: 2024 Contributors to the Eclipse Foundation
 - Source URL: https://github.com/eclipse-tractusx/policy-hub
-
-
