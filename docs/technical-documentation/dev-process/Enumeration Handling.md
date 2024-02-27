@@ -12,7 +12,6 @@ List of used enums in the policy hub application that are stored in the database
 ### Add Enums
 
 New enums can get added easily be enhancing the enumeration table (via the seeding data). With the next deployment; the new enum is getting auto deployed to the respective env.
-Since enums have an enhanced impact on the system functionality; it is mandatorily needed to test (FE wise) the impacted screens / flows before releasing new enums. It is likely that the enum has an enhanced impact on the user journey / flow and break the system if not well tested.
 
 ### Change Enums
 

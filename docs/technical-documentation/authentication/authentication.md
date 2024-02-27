@@ -2,7 +2,7 @@
 
 The authentication process for the Policy Hub involves interaction with the central IAM (Identity and Access Management). The configuration for IAM can be customized either locally during development through secrets or within the chart for the Docker image.
 
-Currently, the Policy Hub performs a basic validation by checking for a valid token in the request. However, it's important to note that no permission checks are conducted at this stage.
+Currently, the Policy Hub performs a basic validation by checking for a valid token with a configurable Audience in the request. However, it's important to note that no permission checks are conducted at this stage.
 
 ## NOTICE
 
