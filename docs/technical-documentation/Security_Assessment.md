@@ -50,7 +50,7 @@ flowchart LR
 
     K-->|"Authentication & Authorization Data \n (Using JWT)"|PH     
     CU-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
-    PH-->|"Read policies, use cases, credential types, policy rules"|PHD
+    PH-->|"Read policies, use cases, \n credential types, policy rules"|PHD
     CU-->|"IAM with OIDC \n [HTTPS]"|K
 ```
 
