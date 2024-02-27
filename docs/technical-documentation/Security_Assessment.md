@@ -6,7 +6,7 @@
 | Security responsible      | [Szymon Kowalczyk](szymon.kowalczyk@zf.com) |
 | Version number of product | 0.1.0                                                                                          |
 | Dates of assessment       | 2024-02-16: Assessment                                                                      |
-| Status of assessment      | ASSESSMENT DRAFT                                                                            |
+| Status of assessment      | Assessment Report                                                                            |
 
 ## Product Description
 
