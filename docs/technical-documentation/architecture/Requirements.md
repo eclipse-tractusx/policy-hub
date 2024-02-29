@@ -10,8 +10,8 @@ For Catena-X Member Companies
 |ID|Title|Requirement|
 |--------|--------|--------|
 |REQ-C-004|Identity Integration|Authentication is done vis IdP Federation to minimize administration overhead and to simplify logins. Authorization not included, this must be done Catena-X specific by the Central-IdP|
-|REQ|Single-Point-Of-Thruth of the current supported, allowed and defined policy rules.|
-|REQ|Share joint efforts by supporting stakeholders with one solution which can run anywhere. Maintenance efforts can get reduced.|
+|REQ|Single-Point-Of-Thruth of the current supported, allowed and defined policy rules.||
+|REQ|Share joint efforts by supporting stakeholders with one solution which can run anywhere. Maintenance efforts can get reduced.||
 
 ## NOTICE
 

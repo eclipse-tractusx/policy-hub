@@ -19,14 +19,15 @@
 ## Code analysis, linting and code coverage
 
 As part of the standard reviews, following code analysis and security checks have been executed:
-* SonarCloud Code Analysis
-* Thread Modelling Analysis
-* Static Application Security Testing (SAST)
-* Dynamic Application Security Testing (DAST)
-* Secret Scans
-* Software Composition Analysis (SCA)
-* Container Scans
-*  Infrastructure as Code (IaC)
+
+- SonarCloud Code Analysis
+- Thread Modelling Analysis
+- Static Application Security Testing (SAST)
+- Dynamic Application Security Testing (DAST)
+- Secret Scans
+- Software Composition Analysis (SCA)
+- Container Scans
+- Infrastructure as Code (IaC)
 
 ## NOTICE
 
