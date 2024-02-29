@@ -2,7 +2,7 @@
 
 ## General
 
-- This project provides an readonly API, there is no plan to implement an UI yet.
+- This project provides an readonly API, there is no plan to implement an UI at the current stage.
 
 - Run anywhere: can be deployed as a docker image, e. g. on Kubernetes (platform-independent, cloud, on prem or local).
 
@@ -18,8 +18,16 @@
 
 ## Code analysis, linting and code coverage
 
---comming soon---
-(Veracode; Eslinter, Sonarcloud, etc.)
+As part of the standard reviews, following code analysis and security checks have been executed:
+
+- SonarCloud Code Analysis
+- Thread Modelling Analysis
+- Static Application Security Testing (SAST)
+- Dynamic Application Security Testing (DAST)
+- Secret Scans
+- Software Composition Analysis (SCA)
+- Container Scans
+- Infrastructure as Code (IaC)
 
 ## NOTICE
 
