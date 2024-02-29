@@ -2,7 +2,8 @@
 
 ## Business Context
 
-TODO (PS): add description
+The policy hub is created to enable data provider, consumer as well as app provider to get via a single-point-of-truth a statement of the current CX existing policies, their attributes as well as the policy key and structure.
+Additionally the user can receive a complete policy template (based on Catena-X dataspace rules) to use the same for stored company rules; making offers inside the dataspace, etc.
 
 ## Technical Context
 
