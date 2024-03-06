@@ -1,5 +1,5 @@
 {{- /*
-* Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+* Copyright (c) 2023 Contributors to the Eclipse Foundation
 *
 * See the NOTICE file(s) distributed with this work for additional
 * information regarding copyright ownership.
@@ -35,6 +35,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "phub.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -73,7 +74,7 @@ spec:
                   number: {{ $svcPort }}
               {{- else }}
               serviceName: {{ $fullName }}
-              servicePort: {{ .backend.port }}
+              servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
     {{- end }}

@@ -72,19 +72,19 @@ Create the name of the service account to use
 Determine database hostname for subchart
 */}}
 
-{{- define "postgresql.primary.fullname" -}}
+{{- define "phub.postgresql.primary.fullname" -}}
 {{- if eq .Values.postgresql.architecture "replication" }}
-{{- printf "%s-primary" (include "chart-name-postgresql-dependency" .) | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-primary" (include "phub.chart.name.postgresql.dependency" .) | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-    {{- include "chart-name-postgresql-dependency" . -}}
+    {{- include "phub.chart.name.postgresql.dependency" . -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "postgresql.readReplica.fullname" -}}
-{{- printf "%s-read" (include "chart-name-postgresql-dependency" .) | trunc 63 | trimSuffix "-" -}}
+{{- define "phub.postgresql.readReplica.fullname" -}}
+{{- printf "%s-read" (include "phub.chart.name.postgresql.dependency" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "chart-name-postgresql-dependency" -}}
+{{- define "phub.chart.name.postgresql.dependency" -}}
 {{- if .Values.postgresql.fullnameOverride -}}
 {{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

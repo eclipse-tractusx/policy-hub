@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.0](https://github.com/eclipse-tractusx/policy-hub/compare/v0.1.0-rc.3...v0.1.0) (2024-03-06)
+
+
+### Features
+
+* **helm-chart:** define templates for db hostname uniquely ([#41](https://github.com/eclipse-tractusx/policy-hub/issues/41)) ([b4d0d79](https://github.com/eclipse-tractusx/policy-hub/commit/b4d0d79feca3ff0238d22f1f8ba9b8addb461023))
+* **helm-chart:** improve ingress, labels and namespace setting ([#45](https://github.com/eclipse-tractusx/policy-hub/issues/45)) ([1789336](https://github.com/eclipse-tractusx/policy-hub/commit/178933624765f7849b2253d24076e58dbac49224))
+
+### Miscellaneous Chores
+
+* release 0.1.0 ([c00c513](https://github.com/eclipse-tractusx/policy-hub/commit/c00c513e7a614245805ca55b63bc76d4eb35b055))
+
 ## [0.1.0-rc.3](https://github.com/eclipse-tractusx/policy-hub/compare/v0.1.0-rc.2...v0.1.0-rc.3) (2024-02-15)
 
 

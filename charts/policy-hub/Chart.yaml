@@ -1,5 +1,5 @@
 ###############################################################
-# Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -20,9 +20,9 @@
 apiVersion: v2
 name: policy-hub
 type: application
-version: 0.1.0-rc.3
-appVersion: 0.1.0-rc.3
-description: Helm chart for Catena-X Policy Hub
+version: 0.1.0
+appVersion: 0.1.0
+description: Helm chart for Policy Hub
 home: https://github.com/eclipse-tractusx/policy-hub
 dependencies:
   - condition: postgresql.enabled

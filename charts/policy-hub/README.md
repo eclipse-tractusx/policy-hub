@@ -1,8 +1,8 @@
-# Helm chart for Catena-X Policy Hub
+# Helm chart for Policy Hub
 
 This helm chart installs the Catena-X Policy Hub application.
 
-For further information please refer to [Technical Documentation](./docs/technical-documentation).
+For further information please refer to [Technical Documentation](../../docs/technical-documentation/).
 
 The referenced container images are for demonstration purposes only.
 
@@ -27,7 +27,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 0.1.0-rc.3
+    version: 0.1.0
 ```
 
 ## Requirements
@@ -42,7 +42,6 @@ dependencies:
 |-----|------|---------|-------------|
 | centralidpAddress | string | `"https://centralidp.example.org"` | Provide centralidp base address (CX IAM), without trailing '/auth'. |
 | ingress.enabled | bool | `false` | Policy Hub ingress parameters, enable ingress record generation for policy-hub. |
-| ingress.name | string | `"policy-hub"` |  |
 | ingress.className | string | `"nginx"` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/use-regex" | string | `"true"` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/enable-cors" | string | `"true"` |  |
@@ -50,7 +49,7 @@ dependencies:
 | ingress.annotations."nginx.ingress.kubernetes.io/cors-allow-origin" | string | `"https://*.example.org"` | Provide CORS allowed origin. |
 | ingress.tls[0] | object | `{"hosts":["policy-hub.example.org"],"secretName":""}` | Provide tls secret. |
 | ingress.tls[0].hosts | list | `["policy-hub.example.org"]` | Provide host for tls secret. |
-| ingress.hosts[0] | object | `{"host":"policy-hub.example.org","paths":[{"backend":{"port":8080},"path":"/api/policy-hub","pathType":"Prefix"}]}` | Provide default path for the ingress record. |
+| ingress.hosts[0] | object | `{"host":"policy-hub.example.org","paths":[{"path":"/api/policy-hub","pathType":"Prefix"}]}` | Provide default path for the ingress record. |
 | dotnetEnvironment | string | `"Production"` |  |
 | dbConnection.schema | string | `"hub"` |  |
 | dbConnection.sslMode | string | `"Disable"` |  |
@@ -65,7 +64,7 @@ dependencies:
 | healthChecks.startup.path | string | `"/health/startup"` |  |
 | healthChecks.liveness.path | string | `"/healthz"` |  |
 | healthChecks.readyness.path | string | `"/ready"` |  |
-| policyhub.image | string | `"docker.io/tractusx/policy-hub-service:0.1.0-rc.3"` |  |
+| policyhub.image | string | `"docker.io/tractusx/policy-hub-service:0.1.0"` |  |
 | policyhub.imagePullPolicy | string | `"IfNotPresent"` |  |
 | policyhub.resources | object | `{"requests":{"cpu":"15m","memory":"300M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
 | policyhub.logging.businessLogic | string | `"Information"` |  |
@@ -73,7 +72,7 @@ dependencies:
 | policyhub.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
 | policyhub.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
 | policyhub.swaggerEnabled | bool | `false` |  |
-| policyhubmigrations.image | string | `"docker.io/tractusx/policy-hub-migrations:0.1.0-rc.3"` |  |
+| policyhubmigrations.image | string | `"docker.io/tractusx/policy-hub-migrations:0.1.0"` |  |
 | policyhubmigrations.imagePullPolicy | string | `"IfNotPresent"` |  |
 | policyhubmigrations.resources | object | `{"requests":{"cpu":"15m","memory":"105M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
 | policyhubmigrations.seeding.testDataEnvironments | string | `""` |  |

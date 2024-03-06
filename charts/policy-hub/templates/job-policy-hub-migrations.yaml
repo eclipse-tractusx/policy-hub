@@ -1,5 +1,5 @@
 ###############################################################
-# Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -21,6 +21,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "phub.fullname" . }}-migrations
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "phub.labels" . | nindent 4 }}
   annotations:
     "batch.kubernetes.io/job-tracking": "true"
     "helm.sh/hook": post-install,post-upgrade
@@ -28,8 +31,7 @@ metadata:
 spec:
   template:
     metadata:
-      labels:
-        {{- include "phub.selectorLabels" . | nindent 8 }}
+      name: {{ .Values.policyhubmigrations.name }}-migrations
     spec:
       restartPolicy: Never
       containers:
@@ -53,7 +55,7 @@ spec:
                 name: "{{ template "phub.postgresSecretName" . }}"
                 key: "password"
           - name: "CONNECTIONSTRINGS__POLICYHUBDB"
-            value: "Server={{ template "postgresql.primary.fullname" . }};Database={{ .Values.postgresql.auth.database }};Port={{ .Values.postgresql.auth.port }};User Id={{ .Values.postgresql.auth.username }};Password=$(POLICY_HUB_PASSWORD);Ssl Mode={{ .Values.dbConnection.sslMode }};"
+            value: "Server={{ template "phub.postgresql.primary.fullname" . }};Database={{ .Values.postgresql.auth.database }};Port={{ .Values.postgresql.auth.port }};User Id={{ .Values.postgresql.auth.username }};Password=$(POLICY_HUB_PASSWORD);Ssl Mode={{ .Values.dbConnection.sslMode }};"
           {{- end }}
           {{- if not .Values.postgresql.enabled }}
           - name: "POLICY_HUB_PASSWORD"
