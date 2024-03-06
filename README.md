@@ -2,9 +2,11 @@
 
 This repository contains the backend code for the Policy-Hub written in C#.
 
+For **installation** details, please refer to the [README.md](./charts/policy-hub/README.md) of the provided helm chart.
+
 ## How to build and run
 
-Install [the .NET 7.0 SDK](https://www.microsoft.com/net/download).
+Install the [.NET 7.0 SDK](https://www.microsoft.com/net/download).
 
 Run the following command from the CLI:
 
@@ -23,24 +25,10 @@ dotnet run
 
 This application provides container images for demonstration purposes.
 
-### DockerHub
+See Docker notice files for more information:
 
-* [https://hub.docker.com/r/tractusx/policy-hub-service](https://hub.docker.com/r/tractusx/policy-hub-service)
-* [https://hub.docker.com/r/tractusx/policy-hub-migrations](https://hub.docker.com/r/tractusx/policy-hub-migrations)
-
-### Base images
-
-mcr.microsoft.com/dotnet/aspnet:7.0-alpine:
-
-* Dockerfile: [mcr.microsoft.com/dotnet/aspnet:7.0-alpine](https://github.com/dotnet/dotnet-docker/blob/main/src/aspnet/7.0/alpine3.17/amd64/Dockerfile)
-* GitHub project: [https://github.com/dotnet/dotnet-docker](https://github.com/dotnet/dotnet-docker)
-* DockerHub: [https://hub.docker.com/_/microsoft-dotnet-aspnet](https://hub.docker.com/_/microsoft-dotnet-aspnet)
-
-mcr.microsoft.com/dotnet/runtime:7.0-alpine:
-
-* Dockerfile: [mcr.microsoft.com/dotnet/runtime:7.0-alpine](https://github.com/dotnet/dotnet-docker/blob/main/src/runtime/7.0/alpine3.17/amd64/Dockerfile)
-* GitHub project: [https://github.com/dotnet/dotnet-docker](https://github.com/dotnet/dotnet-docker)
-* DockerHub: [https://hub.docker.com/_/microsoft-dotnet-runtime](https://hub.docker.com/_/microsoft-dotnet-runtime)
+* [policy-hub-service](./docker/notice-policy-hub-service.md)
+* [policy-hub-migrations](./docker/notice-policy-hub-migrations.md)
 
 ## License
 
