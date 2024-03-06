@@ -79,8 +79,8 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Push git tag for release workflow to be triggered
-        uses: rickstaa/action-create-tag@a1c7777fcb2fee4f19b0f283ba888afa11678b72 # v1.7.2
-        with:
-          tag: v${{ steps.chart-version.outputs.current }}
+      - name: Create and push git tag for release workflow to be triggered
+        run: |
+          git tag v${{ steps.chart-version.outputs.current }}
+          git push origin v${{ steps.chart-version.outputs.current }}
         if: steps.version-check.outputs.exists == 'false'
