@@ -22,7 +22,7 @@ name: policy-hub
 type: application
 version: 0.1.0
 appVersion: 0.1.0
-description: Helm chart for Catena-X Policy Hub
+description: Helm chart for Policy Hub
 home: https://github.com/eclipse-tractusx/policy-hub
 dependencies:
   - condition: postgresql.enabled
