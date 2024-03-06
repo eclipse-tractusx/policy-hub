@@ -1,5 +1,5 @@
 ###############################################################
-# Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -28,7 +28,7 @@ spec:
   source:
     path: charts/policy-hub
     repoURL: 'https://github.com/eclipse-tractusx/policy-hub.git'
-    targetRevision: policy-hub-0.1.0-rc.3
+    targetRevision: policy-hub-0.1.0
     plugin:
       env:
         - name: AVP_SECRET

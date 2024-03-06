@@ -1,5 +1,5 @@
 ###############################################################
-# Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -24,7 +24,6 @@ ingress:
   # -- Policy Hub ingress parameters,
   # enable ingress record generation for policy-hub.
   enabled: false
-  name: "policy-hub"
   className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -44,9 +43,9 @@ ingress:
       paths:
         - path: "/api/policy-hub"
           pathType: "Prefix"
-          backend:
-            port: 8080
+
 dotnetEnvironment: "Production"
+
 dbConnection:
   schema: "hub"
   sslMode: "Disable"
@@ -73,7 +72,7 @@ healthChecks:
     path: "/ready"
 
 policyhub:
-  image: "docker.io/tractusx/policy-hub-service:0.1.0-rc.3"
+  image: "docker.io/tractusx/policy-hub-service:0.1.0"
   imagePullPolicy: "IfNotPresent"
   # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
   # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
@@ -95,7 +94,7 @@ policyhub:
   swaggerEnabled: false
 
 policyhubmigrations:
-  image: "docker.io/tractusx/policy-hub-migrations:0.1.0-rc.3"
+  image: "docker.io/tractusx/policy-hub-migrations:0.1.0"
   imagePullPolicy: "IfNotPresent"
   # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
   # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
