@@ -49,10 +49,8 @@ policyhubmigrations:
   logging:
     default: "Debug"
 
-secrets:
-  postgresql:
-    auth:
-      existingSecret:
-        postgrespassword: "<path:portal/data/policy-hub/dev/postgres#postgres-password>"
-        password: "<path:portal/data/policy-hub/dev/postgres#password>"
-        replicationPassword: "<path:portal/data/policy-hub/dev/postgres#replication-password>"
+postgresql:
+  auth:
+    postgrespassword: "<path:portal/data/policy-hub/dev/postgres#postgres-password>"
+    password: "<path:portal/data/policy-hub/dev/postgres#password>"
+    replicationPassword: "<path:portal/data/policy-hub/dev/postgres#replication-password>"
