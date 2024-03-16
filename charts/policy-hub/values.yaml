@@ -126,6 +126,12 @@ postgresql:
     # -- Secret containing the passwords for root usernames postgres and non-root username hub.
     # Should not be changed without changing the "phub-postgresSecretName" template as well.
     existingSecret: "{{ .Release.Name }}-phub-postgres"
+    # -- Password for the root username 'postgres'. Secret-key 'postgres-password'.
+    postgrespassword: ""
+    # -- Password for the non-root username 'hub'. Secret-key 'password'.
+    password: ""
+    # -- Password for the non-root username 'repl_user'. Secret-key 'replication-password'.
+    replicationPassword: ""
   architecture: replication
   audit:
     pgAuditLog: "write, ddl"
@@ -158,17 +164,6 @@ externalDatabase:
   existingSecret: "policy-hub-external-db"
   # -- Name of an existing secret key containing the database credentials.
   existingSecretPasswordKey: "password"
-
-secrets:
-  postgresql:
-    auth:
-      existingSecret:
-        # -- Password for the root username 'postgres'. Secret-key 'postgres-password'.
-        postgrespassword: ""
-        # -- Password for the non-root username 'hub'. Secret-key 'password'.
-        password: ""
-        # -- Password for the non-root username 'repl_user'. Secret-key 'replication-password'.
-        replicationPassword: ""
 
 portContainer: 8080
 
