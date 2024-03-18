@@ -18,7 +18,8 @@
 ###############################################################
 
 policyHubAddress: "https://policy-hub.int.demo.catena-x.net"
-centralidpAddress: "https://centralidp.int.demo.catena-x.net"
+centralidp:
+  address: "https://centralidp.int.demo.catena-x.net"
 
 ingress:
   enabled: true
