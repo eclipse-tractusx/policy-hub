@@ -118,6 +118,11 @@ postgresql:
   # port: 5432;
   # Switch to enable or disable the PostgreSQL helm chart.
   enabled: true
+  # -- Setting image tag to major to get latest minor updates
+  image:
+    tag: "15-debian-11"
+  commonLabels:
+    app.kubernetes.io/version: "15"
   auth:
     # -- Non-root username.
     username: hub
