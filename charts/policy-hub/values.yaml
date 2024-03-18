@@ -64,13 +64,6 @@ keycloak:
     tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
     # -- Flag if the api should be used with an leading /auth path
     useAuthTrail: true
-healthChecks:
-  startup:
-    path: "/health/startup"
-  liveness:
-    path: "/healthz"
-  readyness:
-    path: "/ready"
 
 policyhub:
   image: "docker.io/tractusx/policy-hub-service:0.1.0"
@@ -88,9 +81,14 @@ policyhub:
     default: "Information"
   healthChecks:
     startup:
+      path: "/health/startup"
       tags:
       - name: "HEALTHCHECKS__0__TAGS__1"
         value: "policyhubdb"
+    liveness:
+      path: "/healthz"
+    readyness:
+      path: "/ready"
   swaggerEnabled: false
 
 policyhubmigrations:
