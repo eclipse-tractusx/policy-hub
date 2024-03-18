@@ -75,15 +75,14 @@ healthChecks:
 policyhub:
   image: "docker.io/tractusx/policy-hub-service:0.1.0"
   imagePullPolicy: "IfNotPresent"
-  # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
-  # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
+  # -- We recommend to review the default resource limits as this should a conscious choice.
   resources:
     requests:
       cpu: 15m
       memory: 300M
-    # limits:
-    #   cpu: 45m
-    #   memory: 400M
+    limits:
+      cpu: 45m
+      memory: 300M
   logging:
     businessLogic: "Information"
     default: "Information"
@@ -97,15 +96,14 @@ policyhub:
 policyhubmigrations:
   image: "docker.io/tractusx/policy-hub-migrations:0.1.0"
   imagePullPolicy: "IfNotPresent"
-  # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
-  # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
+  # -- We recommend to review the default resource limits as this should a conscious choice.
   resources:
     requests:
       cpu: 15m
       memory: 105M
-    # limits:
-    #   cpu: 45m
-    #   memory: 105M
+    limits:
+      cpu: 45m
+      memory: 105M
   seeding:
     testDataEnvironments: ""
     testDataPaths: "Seeder/Data"
