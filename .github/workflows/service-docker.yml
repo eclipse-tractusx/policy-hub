@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-name: PolicyHub-Service
+name: Build Service Image
 
 on:
   push:
