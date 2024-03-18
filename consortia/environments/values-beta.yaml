@@ -18,7 +18,8 @@
 ###############################################################
 
 policyHubBackendAddress: "https://policy-hub.beta.demo.catena-x.net"
-centralidpAddress: "https://centralidp.beta.demo.catena-x.net"
+centralidp:
+  address: "https://centralidp.beta.demo.catena-x.net"
 
 ingress:
   enabled: true

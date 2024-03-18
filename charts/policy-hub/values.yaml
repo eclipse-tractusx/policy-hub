@@ -125,22 +125,21 @@ externalDatabase:
   # -- Name of an existing secret key containing the database credentials.
   existingSecretPasswordKey: "password"
 
-# -- Provide centralidp base address (CX IAM), without trailing '/auth'.
-centralidpAddress: "https://centralidp.example.org"
-
-keycloak:
-  central:
-    authRealm: "CX-Central"
-    jwtBearerOptions:
-      requireHttpsMetadata: "true"
-      metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
-      tokenValidationParameters:
-        validIssuerPath: "/auth/realms/CX-Central"
-        validAudience: "Cl23-CX-Policy-Hub"
-      refreshInterval: "00:00:30"
-    tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
-    # -- Flag if the api should be used with an leading /auth path
-    useAuthTrail: true
+# -- Provide details about centralidp (CX IAM) Keycloak instance.
+centralidp:
+  # -- Provide centralidp base address (CX IAM), without trailing '/auth'.
+  address: "https://centralidp.example.org"
+  authRealm: "CX-Central"
+  jwtBearerOptions:
+    requireHttpsMetadata: "true"
+    metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
+    tokenValidationParameters:
+      validIssuerPath: "/auth/realms/CX-Central"
+      validAudience: "Cl23-CX-Policy-Hub"
+    refreshInterval: "00:00:30"
+  tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
+  # -- Flag if the api should be used with an leading /auth path
+  useAuthTrail: true
 
 ingress:
   # -- Policy Hub ingress parameters,
