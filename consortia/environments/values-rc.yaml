@@ -40,12 +40,14 @@ ingress:
           pathType: "Prefix"
 
 policyhub:
-  image: "docker.io/tractusx/policy-hub-service:rc"
+  image:
+    tag: "rc"
   imagePullPolicy: "Always"
   swaggerEnabled: true
 
 policyhubmigrations:
-  image: "docker.io/tractusx/policy-hub-migrations:rc"
+  image:
+    tag: "rc"
   imagePullPolicy: "Always"
   logging:
     default: "Debug"
