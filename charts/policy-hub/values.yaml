@@ -17,54 +17,6 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-# -- Provide centralidp base address (CX IAM), without trailing '/auth'.
-centralidpAddress: "https://centralidp.example.org"
-
-ingress:
-  # -- Policy Hub ingress parameters,
-  # enable ingress record generation for policy-hub.
-  enabled: false
-  # className: "nginx"
-  ## Optional annotations when using the nginx ingress class
-  # annotations:
-  #   nginx.ingress.kubernetes.io/use-regex: "true"
-  #   nginx.ingress.kubernetes.io/enable-cors: "true"
-  #   nginx.ingress.kubernetes.io/proxy-body-size: "8m"
-  #   # -- Provide CORS allowed origin.
-  #   nginx.ingress.kubernetes.io/cors-allow-origin: "https://*.example.org"
-  tls:
-    # -- Provide tls secret.
-    - secretName: ""
-      # -- Provide host for tls secret.
-      hosts:
-        - ""
-  hosts:
-    # -- Provide default path for the ingress record.
-    - host: ""
-      paths:
-        - path: "/api/policy-hub"
-          pathType: "Prefix"
-
-dotnetEnvironment: "Production"
-
-dbConnection:
-  schema: "hub"
-  sslMode: "Disable"
-
-keycloak:
-  central:
-    authRealm: "CX-Central"
-    jwtBearerOptions:
-      requireHttpsMetadata: "true"
-      metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
-      tokenValidationParameters:
-        validIssuerPath: "/auth/realms/CX-Central"
-        validAudience: "Cl23-CX-Policy-Hub"
-      refreshInterval: "00:00:30"
-    tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
-    # -- Flag if the api should be used with an leading /auth path
-    useAuthTrail: true
-
 policyhub:
   image: "docker.io/tractusx/policy-hub-service:0.1.0"
   imagePullPolicy: "IfNotPresent"
@@ -107,6 +59,12 @@ policyhubmigrations:
     testDataPaths: "Seeder/Data"
   logging:
     default: "Information"
+
+dotnetEnvironment: "Production"
+
+dbConnection:
+  schema: "hub"
+  sslMode: "Disable"
 
 postgresql:
   # -- PostgreSQL chart configuration;
@@ -166,6 +124,48 @@ externalDatabase:
   existingSecret: "policy-hub-external-db"
   # -- Name of an existing secret key containing the database credentials.
   existingSecretPasswordKey: "password"
+
+# -- Provide centralidp base address (CX IAM), without trailing '/auth'.
+centralidpAddress: "https://centralidp.example.org"
+
+keycloak:
+  central:
+    authRealm: "CX-Central"
+    jwtBearerOptions:
+      requireHttpsMetadata: "true"
+      metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
+      tokenValidationParameters:
+        validIssuerPath: "/auth/realms/CX-Central"
+        validAudience: "Cl23-CX-Policy-Hub"
+      refreshInterval: "00:00:30"
+    tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
+    # -- Flag if the api should be used with an leading /auth path
+    useAuthTrail: true
+
+ingress:
+  # -- Policy Hub ingress parameters,
+  # enable ingress record generation for policy-hub.
+  enabled: false
+  # className: "nginx"
+  ## Optional annotations when using the nginx ingress class
+  # annotations:
+  #   nginx.ingress.kubernetes.io/use-regex: "true"
+  #   nginx.ingress.kubernetes.io/enable-cors: "true"
+  #   nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+  #   # -- Provide CORS allowed origin.
+  #   nginx.ingress.kubernetes.io/cors-allow-origin: "https://*.example.org"
+  tls:
+    # -- Provide tls secret.
+    - secretName: ""
+      # -- Provide host for tls secret.
+      hosts:
+        - ""
+  hosts:
+    # -- Provide default path for the ingress record.
+    - host: ""
+      paths:
+        - path: "/api/policy-hub"
+          pathType: "Prefix"
 
 portContainer: 8080
 
