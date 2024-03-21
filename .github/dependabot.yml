@@ -30,6 +30,9 @@ updates:
       - "dependencies"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   # Github Actions
   -
@@ -52,3 +55,6 @@ updates:
       - "docker"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
