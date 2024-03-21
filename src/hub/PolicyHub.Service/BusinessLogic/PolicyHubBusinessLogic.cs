@@ -55,7 +55,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             GetRightOperand(operatorId, attributes, rightOperands, value, leftOperand) :
             (rightOperandValue!, null);
 
-        return new PolicyResponse(CreateFileContent(type, operatorId, leftOperand, rightOperand), additionalAttribute == null ? null : Enumerable.Repeat(additionalAttribute, 1));
+        return new PolicyResponse(CreateFileContent(type, operatorId, "cx-policy:" + leftOperand, rightOperand), additionalAttribute == null ? null : Enumerable.Repeat(additionalAttribute, 1));
     }
 
     private static (object rightOperand, AdditionalAttributes? additionalAttribute) GetRightOperand(OperatorId operatorId, (AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand) =>
@@ -173,7 +173,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
 
             constraints.Add(new Constraint(null,
                 null,
-                policy.LeftOperand,
+                "cx-policy:" + policy.LeftOperand,
                 constraint.Operator.OperatorToJsonString(),
                 rightOperand
             ));

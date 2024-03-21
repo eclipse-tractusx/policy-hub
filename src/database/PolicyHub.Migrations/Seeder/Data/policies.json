@@ -62,6 +62,38 @@
     "technical_key": "purpose",
     "description": "",
     "is_active": true,
-    "attribute_key_id": 2
+    "attribute_key_id": 3
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c3",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement.circulareconomy",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c4",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement.demandcapacity",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c5",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement.puris",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c6",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement.businesspartner",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
   }
 ]
