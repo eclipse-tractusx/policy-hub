@@ -119,7 +119,7 @@ externalDatabase:
   # -- Database port number.
   port: 5432
   # -- Non-root username for policy-hub.
-  user: "hub"
+  username: "hub"
   # -- Database name.
   database: "policy-hub"
   # -- Password for the non-root username (default 'hub'). Secret-key 'password'.
