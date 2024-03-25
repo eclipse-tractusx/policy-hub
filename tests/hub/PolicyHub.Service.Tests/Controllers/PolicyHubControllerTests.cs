@@ -136,7 +136,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_WithRegexWithIncorrectValue_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&credential=BusinessPartnerNumber&operatorId={OperatorId.Equals}&value=notmatching").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}&value=notmatching").ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
@@ -150,7 +150,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_WithRegexWithoutValue_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&credential=BusinessPartnerNumber&operatorId={OperatorId.Equals}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}").ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
@@ -164,7 +164,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_BpnWithValue_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&credential=BusinessPartnerNumber&operatorId={OperatorId.Equals}&value=BPNL00000003CRHK").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}&value=BPNL00000003CRHK").ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
@@ -178,7 +178,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_UsageFrameworkEquals_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&credential=FrameworkAgreement.traceability&operatorId={OperatorId.Equals}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=FrameworkAgreement.traceability&operatorType={OperatorId.Equals}").ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
@@ -192,7 +192,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_UsageDismantlerIn_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&credential=companyRole.dismantler&operatorId={OperatorId.In}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=companyRole.dismantler&operatorType={OperatorId.In}").ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
@@ -206,7 +206,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_TraceabilityUsagePurposeEquals_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Traceability}&type={PolicyTypeId.Usage}&credential=purpose.trace.v1.TraceBattery&operatorId={OperatorId.Equals}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Traceability}&type={PolicyTypeId.Usage}&policyName=purpose.trace.v1.TraceBattery&operatorType={OperatorId.Equals}").ConfigureAwait(false);
 
         // Assert
         response.Should().NotBeNull();
