@@ -126,6 +126,13 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
             throw new ControllerArgumentException($"Keys {string.Join(",", multipleDefinedKey.Select(x => x.Key).Distinct())} have been defined multiple times");
         }
 
+        var IsTechnicalKeyExists = await _hubRepositories.GetInstance<IPolicyRepository>().CheckPolicyByTechnicalKeys(requestData.PolicyType, requestData.Constraints.Select(x => x.Key)).ConfigureAwait(false);
+        if (!IsTechnicalKeyExists)
+        {
+            var technicalKeys = await _hubRepositories.GetInstance<IPolicyRepository>().GetAllTechnicalKeys().ToListAsync().ConfigureAwait(false);
+            throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested technicalKeys does not exists. TechnicalKeys {string.Join(",", technicalKeys)} are allowed");
+        }
+
         var policies = await _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyForOperandContent(requestData.PolicyType, requestData.Constraints.Select(x => x.Key)).ToListAsync().ConfigureAwait(false);
         if (policies.Count != requestData.Constraints.Count())
         {
