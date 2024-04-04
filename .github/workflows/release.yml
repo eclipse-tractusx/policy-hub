@@ -20,88 +20,91 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
   workflow_dispatch:
-
-env:
-  IMAGE_NAMESPACE: "tractusx"
-  IMAGE_NAME_SERVICE: "policy-hub-service"
-  IMAGE_NAME_MIGRATIONS: "policy-hub-migrations"
+  push:
+    paths:
+      - 'charts/**'
+    branches:
+      - main
 
 jobs:
-  policy-hub-service-release:
-    runs-on: ubuntu-latest
+  release-helm-chart:
+    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-
-      - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # v3.1.0
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3.2.0
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
-
-      # Create SemVer or ref tags dependent of trigger event
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
-        with:
-           images: |
-              ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME_SERVICE }}
-           # Automatically prepare image tags; See action docs for more examples. 
-           # semver patter will generate tags like these for example :1 :1.2 :1.2.3
-           tags: |
-              type=ref,event=branch
-              type=ref,event=pr
-              type=raw,value=latest
-              type=semver,pattern={{version}}
-              type=semver,pattern={{major}}
-              type=semver,pattern={{major}}.{{minor}}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
-        with:
-          context: .
-          file: docker/Dockerfile-policy-hub-service
-          platforms: linux/amd64, linux/arm64
-          pull: true
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      # https://github.com/peter-evans/dockerhub-description
-      - name: Update Docker Hub description
-        if: github.event_name != 'pull_request'
-        uses: peter-evans/dockerhub-description@e98e4d1628a5f3be2be7c231e50981aee98723ae # v4.0.0
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-          repository: ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME_SERVICE }}
-          readme-filepath: "./docker/notice-policy-hub-service.md"
-
-  policy-hub-migrations-release:
+      contents: write
     runs-on: ubuntu-latest
+    outputs:
+      app-version: ${{ steps.app-version.outputs.current }}
+      version-check: ${{ steps.version-check.outputs.exists }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@b7246b12e77f7134dc2d460a3d5bad15bbe29390 # v4
+
+      - name: Update helm dependencies for policy-hub
+        run: |
+          cd charts/policy-hub
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm dependency update
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.1
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_SKIP_EXISTING: "true"
+
+      - name: Get current appVersion
+        id: app-version
+        run: |
+          current=$(cat ./charts/policy-hub/Chart.yaml | grep "appVersion:" | head -1 | cut -d ":" -d " " -f2)
+          echo "current=$current" >> $GITHUB_OUTPUT
+          echo "Exported $current appVersion"
+
+      - name: Check for previous version
+        id: version-check
+        run: |
+          exists=$(git tag -l "v${{ steps.app-version.outputs.current }}")
+          if [[ -n "$exists" ]]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+  release-images:
+    needs: release-helm-chart
+    if: needs.release-helm-chart.outputs.version-check == 'false'
     permissions:
       contents: read
-
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - image: tractusx/policy-hub-service
+            dockerfile: ./docker/Dockerfile-policy-hub-service
+            dockernotice: ./docker/notice-policy-hub-service.md
+          - image: tractusx/policy-hub-migrations
+            dockerfile: ./docker/Dockerfile-policy-hub-migrations
+            dockernotice: ./docker/notice-policy-hub-migrations.md
+    outputs:
+      app-version: ${{ steps.app-version.outputs.current }}
+      version-check: ${{ steps.version-check.outputs.exists }}
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
 
       - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
         uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # v3.1.0
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
@@ -118,23 +121,22 @@ jobs:
         id: meta
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
         with:
-           images: |
-              ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME_MIGRATIONS }}
+           images: ${{ matrix.image }}
            # Automatically prepare image tags; See action docs for more examples. 
            # semver patter will generate tags like these for example :1 :1.2 :1.2.3
            tags: |
-              type=ref,event=branch
-              type=ref,event=pr
-              type=raw,value=latest
-              type=semver,pattern={{version}}
-              type=semver,pattern={{major}}
-              type=semver,pattern={{major}}.{{minor}}
+             type=ref,event=branch
+             type=ref,event=pr
+             type=raw,value=latest
+             type=semver,pattern={{version}},value=${{ needs.release-helm-chart.outputs.app-version }}
+             type=semver,pattern={{major}},value=${{ needs.release-helm-chart.outputs.app-version }}
+             type=semver,pattern={{major}}.{{minor}},value=${{ needs.release-helm-chart.outputs.app-version }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
+      - name: Build and push Docker images
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           context: .
-          file: docker/Dockerfile-policy-hub-migrations
+          file: {{ matrix.dockerfile }}
           platforms: linux/amd64, linux/arm64
           pull: true
           push: ${{ github.event_name != 'pull_request' }}
@@ -143,10 +145,26 @@ jobs:
 
       # https://github.com/peter-evans/dockerhub-description
       - name: Update Docker Hub description
-        if: github.event_name != 'pull_request'
         uses: peter-evans/dockerhub-description@e98e4d1628a5f3be2be7c231e50981aee98723ae # v4.0.0
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-          repository: ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME_MIGRATIONS }}
-          readme-filepath: "./docker/notice-policy-hub-migrations.md"
+          repository: ${{ matrix.image }}
+          readme-filepath: ${{ matrix.dockernotice }}
+
+  create-tag:
+    needs: [release-helm-chart, release-images]
+    if: needs.release-helm-chart.outputs.version-check == 'false'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Create and push git tag
+        run: |
+          git tag v${{ needs.release-helm-chart.outputs.app-version }}
+          git push origin v${{ needs.release-helm-chart.outputs.app-version }}
