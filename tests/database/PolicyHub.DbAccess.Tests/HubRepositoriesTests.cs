@@ -8,7 +8,9 @@ public class HubRepositoriesTests : IAssemblyFixture<TestDbFixture>
 {
     private readonly TestDbFixture _dbTestDbFixture;
 
+#pragma warning disable xUnit1041 // Fixture arguments to test classes must have fixture sources
     public HubRepositoriesTests(TestDbFixture testDbFixture)
+#pragma warning restore xUnit1041 // Fixture arguments to test classes must have fixture sources
     {
         _dbTestDbFixture = testDbFixture;
     }
@@ -18,7 +20,7 @@ public class HubRepositoriesTests : IAssemblyFixture<TestDbFixture>
     [Fact]
     public async Task GetInstance_WithValid_ReturnsExpected()
     {
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         var repo = sut.GetInstance<IPolicyRepository>();
 

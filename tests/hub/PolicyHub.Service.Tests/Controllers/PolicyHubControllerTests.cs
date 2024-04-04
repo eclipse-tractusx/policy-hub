@@ -21,7 +21,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.PolicyHub.Service.Tests.Setup;
-using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Service;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Web;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -54,7 +54,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetAttributes()
     {
         // Act
-        var attributes = await _client.GetFromJsonAsync<IEnumerable<string>>($"{BaseUrl}/policy-attributes").ConfigureAwait(false);
+        var attributes = await _client.GetFromJsonAsync<IEnumerable<string>>($"{BaseUrl}/policy-attributes");
 
         // Assert
         attributes.Should().NotBeNull().And.HaveCount(5).And.Satisfy(
@@ -74,7 +74,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithoutFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types", JsonOptions).ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types", JsonOptions);
 
         // Assert
         policies.Should().NotBeNull()
@@ -97,7 +97,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithTypeFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?type={PolicyTypeId.Access.ToString()}", JsonOptions).ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?type={PolicyTypeId.Access}", JsonOptions);
 
         // Assert
         policies.Should().NotBeNull()
@@ -112,7 +112,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyTypes_WithUseCaseFilter_ReturnsExpected()
     {
         // Act
-        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?useCase={UseCaseId.Traceability.ToString()}", JsonOptions).ConfigureAwait(false);
+        var policies = await _client.GetFromJsonAsync<IEnumerable<PolicyTypeResponse>>($"{BaseUrl}/policy-types?useCase={UseCaseId.Traceability}", JsonOptions);
 
         // Assert
         policies.Should().NotBeNull()
@@ -136,12 +136,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_WithRegexWithIncorrectValue_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}&value=notmatching").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}&value=notmatching");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions).ConfigureAwait(false);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions);
         error!.Errors.Should().ContainSingle().And.Satisfy(
             x => x.Value.Single() == @"The provided value notmatching does not match the regex pattern ^BPNL[\w|\d]{12}$ (Parameter 'value')");
     }
@@ -150,12 +150,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_WithRegexWithoutValue_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Access}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions).ConfigureAwait(false);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions);
         error!.Errors.Should().ContainSingle().And.Satisfy(
             x => x.Value.Single() == "you must provide a value for the regex (Parameter 'value')");
     }
@@ -164,12 +164,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_BpnWithValue_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}&value=BPNL00000003CRHK").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=BusinessPartnerNumber&operatorType={OperatorId.Equals}&value=BPNL00000003CRHK");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+        (await response.Content.ReadAsStringAsync())
             .Should()
             .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"}}}}");
     }
@@ -178,12 +178,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_UsageFrameworkEquals_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=FrameworkAgreement.traceability&operatorType={OperatorId.Equals}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=FrameworkAgreement.traceability&operatorType={OperatorId.Equals}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+        (await response.Content.ReadAsStringAsync())
             .Should()
             .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
     }
@@ -192,12 +192,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_UsageDismantlerIn_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=companyRole.dismantler&operatorType={OperatorId.In}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=companyRole.dismantler&operatorType={OperatorId.In}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+        (await response.Content.ReadAsStringAsync())
             .Should()
             .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]}}}}");
     }
@@ -206,12 +206,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_TraceabilityUsagePurposeEquals_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Traceability}&type={PolicyTypeId.Usage}&policyName=purpose.trace.v1.TraceBattery&operatorType={OperatorId.Equals}").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Traceability}&type={PolicyTypeId.Usage}&policyName=purpose.trace.v1.TraceBattery&operatorType={OperatorId.Equals}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+        (await response.Content.ReadAsStringAsync())
             .Should()
             .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"purpose.trace.v1.TraceBattery\",\"operator\":\"eq\",\"rightOperand\":\"purpose.trace.v1.TraceBattery\"}}}}");
     }
@@ -234,12 +234,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             });
 
         // Act
-        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions);
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+        (await response.Content.ReadAsStringAsync())
             .Should()
             .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"},{\"leftOperand\":\"Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
     }
@@ -259,12 +259,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             });
 
         // Act
-        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions);
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+        (await response.Content.ReadAsStringAsync())
             .Should()
             .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"},{\"leftOperand\":\"Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
     }
@@ -283,12 +283,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             });
 
         // Act
-        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions);
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+        (await response.Content.ReadAsStringAsync())
             .Should()
             .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:or\":[{\"leftOperand\":\"FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"},{\"leftOperand\":\"Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
     }
@@ -307,12 +307,12 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             });
 
         // Act
-        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions);
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions).ConfigureAwait(false);
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions);
         error!.Errors.Should().ContainSingle().And.Satisfy(
             x => x.Value.Single() == "Keys FrameworkAgreement.traceability have been defined multiple times");
     }
@@ -325,7 +325,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task CheckSwagger_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/swagger/v2/swagger.json").ConfigureAwait(false);
+        var response = await _client.GetAsync($"{BaseUrl}/swagger/v2/swagger.json");
 
         // Assert
         response.Should().NotBeNull();
