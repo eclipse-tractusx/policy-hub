@@ -31,7 +31,9 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
 {
     private readonly TestDbFixture _dbTestDbFixture;
 
+#pragma warning disable xUnit1041 // Fixture arguments to test classes must have fixture sources
     public PolicyRepositoryTests(TestDbFixture testDbFixture)
+#pragma warning restore xUnit1041 // Fixture arguments to test classes must have fixture sources
     {
         _dbTestDbFixture = testDbFixture;
     }
@@ -42,10 +44,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetAttributeKeys_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetAttributeKeys().ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetAttributeKeys().ToListAsync();
 
         // Assert
         result.Should().NotBeEmpty().And.HaveCount(5).And.Satisfy(
@@ -64,10 +66,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyTypes_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyTypes(null, null).ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetPolicyTypes(null, null).ToListAsync();
 
         // Assert
         result.Should().NotBeEmpty().And.HaveCount(11).And.Satisfy(
@@ -89,10 +91,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyTypes_WithTypeFilter_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyTypes(PolicyTypeId.Access, null).ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetPolicyTypes(PolicyTypeId.Access, null).ToListAsync();
 
         // Assert
         result.Should().NotBeEmpty().And.HaveCount(3).And.Satisfy(
@@ -106,10 +108,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyTypes_WithUseCase_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyTypes(null, UseCaseId.Sustainability).ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetPolicyTypes(null, UseCaseId.Sustainability).ToListAsync();
 
         // Assert
         result.Should().NotBeEmpty().And.HaveCount(3).And.Satisfy(
@@ -127,10 +129,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyContentAsync_WithoutRightOperand_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "purpose.trace.v1.TraceBattery").ConfigureAwait(false);
+        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "purpose.trace.v1.TraceBattery");
 
         // Assert
         result.Exists.Should().BeTrue();
@@ -145,10 +147,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyContentAsync_WithRightOperand_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "FrameworkAgreement.behavioraltwin").ConfigureAwait(false);
+        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "FrameworkAgreement.behavioraltwin");
 
         // Assert
         result.Exists.Should().BeTrue();
@@ -167,10 +169,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyForOperandContent__ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyForOperandContent(PolicyTypeId.Usage, Enumerable.Repeat("purpose.trace.v1.TraceBattery", 1)).ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetPolicyForOperandContent(PolicyTypeId.Usage, Enumerable.Repeat("purpose.trace.v1.TraceBattery", 1)).ToListAsync();
 
         // Assert
         result.Should().ContainSingle()
