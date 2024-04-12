@@ -232,7 +232,7 @@ public class PolicyHubBusinessLogicTests
         async Task Act() => await _sut.GetPolicyContentAsync(data);
 
         // Act
-        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
         ex.Message.Should().Be($"Policy for type {data.PolicyType} and requested technicalKeys does not exists. TechnicalKeys  are allowed");
