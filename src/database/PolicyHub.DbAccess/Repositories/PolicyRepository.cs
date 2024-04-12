@@ -83,8 +83,8 @@ public class PolicyRepository : IPolicyRepository
     Task<bool> IPolicyRepository.CheckPolicyByTechnicalKeys(PolicyTypeId type, IEnumerable<string> technicalKeys) =>
         _dbContext.Policies
             .Where(p =>
-                p.Types.Any(t => t.IsActive && t.Id == type) &&
-                technicalKeys.Contains(p.TechnicalKey))
+                   p.Types.Any(t => t.IsActive && t.Id == type) &&
+                   technicalKeys.Contains(p.TechnicalKey))
             .AnyAsync();
 
     public IAsyncEnumerable<string> GetAllTechnicalKeys() =>
