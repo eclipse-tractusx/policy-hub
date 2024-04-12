@@ -288,7 +288,7 @@ public class PolicyHubBusinessLogicTests
         async Task Act() => await _sut.GetPolicyContentAsync(data);
 
         // Act
-        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
         ex.Message.Should().Be(@"The support of OR constraintOperand for Usage constraints are not supported for now");
