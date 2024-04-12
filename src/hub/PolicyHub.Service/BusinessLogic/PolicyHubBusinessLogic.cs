@@ -112,6 +112,11 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
 
     public async Task<PolicyResponse> GetPolicyContentAsync(PolicyContentRequest requestData)
     {
+        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.ConstraintOperand == ConstraintOperandId.Or)
+        {
+            throw new ControllerArgumentException($"The support of OR constraintOperand for Usage constraints are not supported for now");
+        }
+
         var keyCounts = requestData.Constraints
             .GroupBy(pair => pair.Key)
             .ToDictionary(group => group.Key, group => group.Count());

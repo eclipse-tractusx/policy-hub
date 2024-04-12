@@ -276,6 +276,25 @@ public class PolicyHubBusinessLogicTests
     }
 
     [Fact]
+    public async Task GetPolicyContentAsync_WithUsageConstraintNotAllowedWithOR_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.Equals, "testRegValue"),
+            });
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+
+        // Assert
+        ex.Message.Should().Be(@"The support of OR constraintOperand for Usage constraints are not supported for now");
+    }
+
+    [Fact]
     public async Task GetPolicyContentAsync_WithMultipleDefinedKeys_ThrowsNotFoundException()
     {
         // Arrange
