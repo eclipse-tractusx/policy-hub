@@ -350,6 +350,8 @@ public class PolicyHubBusinessLogicTests
             {
                 new Constraints("test", OperatorId.Equals, "testRegValue"),
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+              .Returns(true);
 
         async Task Act() => await _sut.GetPolicyContentAsync(data);
 
