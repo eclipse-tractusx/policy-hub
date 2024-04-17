@@ -72,17 +72,14 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var result = await sut.GetPolicyTypes(null, null).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(11).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(8).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber",
             x => x.TechnicalKey == "Membership",
             x => x.TechnicalKey == "FrameworkAgreement.traceability",
             x => x.TechnicalKey == "FrameworkAgreement.quality",
             x => x.TechnicalKey == "FrameworkAgreement.pcf",
             x => x.TechnicalKey == "FrameworkAgreement.behavioraltwin",
-            x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
-            x => x.TechnicalKey == "purpose.trace.v1.aspects",
             x => x.TechnicalKey == "companyRole.dismantler",
-            x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis",
             x => x.TechnicalKey == "purpose"
         );
     }
@@ -132,14 +129,14 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "purpose.trace.v1.TraceBattery");
+        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "Membership");
 
         // Assert
         result.Exists.Should().BeTrue();
         result.Attributes.Key.Should().Be(AttributeKeyId.Static);
         result.Attributes.Values.Should().ContainSingle()
-            .And.Satisfy(x => x == "purpose.trace.v1.TraceBattery");
-        result.LeftOperand.Should().Be("purpose.trace.v1.TraceBattery");
+            .And.Satisfy(x => x == "active");
+        result.LeftOperand.Should().Be("Membership");
         result.RightOperandValue.Should().BeNull();
     }
 
@@ -172,15 +169,15 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyForOperandContent(PolicyTypeId.Usage, Enumerable.Repeat("purpose.trace.v1.TraceBattery", 1)).ToListAsync();
+        var result = await sut.GetPolicyForOperandContent(PolicyTypeId.Usage, Enumerable.Repeat("Membership", 1)).ToListAsync();
 
         // Assert
         result.Should().ContainSingle()
             .And.Satisfy(
-                x => x.TechnicalKey == "purpose.trace.v1.TraceBattery" &&
+                x => x.TechnicalKey == "Membership" &&
                      x.Attributes.Key == AttributeKeyId.Static &&
-                     x.Attributes.Values.Single() == "purpose.trace.v1.TraceBattery" &&
-                     x.LeftOperand == "purpose.trace.v1.TraceBattery" &&
+                     x.Attributes.Values.Single() == "active" &&
+                     x.LeftOperand == "Membership" &&
                      x.RightOperandValue == null);
     }
 
