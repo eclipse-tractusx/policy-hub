@@ -28,8 +28,5 @@ public interface IPolicyRepository
     IAsyncEnumerable<PolicyTypeResponse> GetPolicyTypes(PolicyTypeId? type, UseCaseId? useCase);
     Task<(bool Exists, string LeftOperand, (AttributeKeyId? Key, IEnumerable<string> Values) Attributes, string? RightOperandValue)> GetPolicyContentAsync(UseCaseId? useCase, PolicyTypeId type, string credential);
     IAsyncEnumerable<(string TechnicalKey, string LeftOperand, (AttributeKeyId? Key, IEnumerable<string> Values) Attributes, string? RightOperandValue)> GetPolicyForOperandContent(PolicyTypeId type, IEnumerable<string> technicalKeys);
-    Task<bool> CheckPolicyByTechnicalKeys(PolicyTypeId type, IEnumerable<string> technicalKeys);
-    IAsyncEnumerable<string> GetAllTechnicalKeys();
-    Task<bool> CheckPolicyAttributeValue(PolicyTypeId type, IEnumerable<string> values);
-
+    Task<List<(string TechnicalKey, AttributeKeyId? AttributeKey, IEnumerable<string> Values)>> GetAttributeValuesForTechnicalKeys(PolicyTypeId type, IEnumerable<string> technicalKeys);
 }

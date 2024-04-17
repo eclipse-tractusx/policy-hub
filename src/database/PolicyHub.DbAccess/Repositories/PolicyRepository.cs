@@ -24,22 +24,16 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 
 namespace Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
 
-public class PolicyRepository : IPolicyRepository
+public class PolicyRepository(PolicyHubContext dbContext)
+    : IPolicyRepository
 {
-    private readonly PolicyHubContext _dbContext;
-
-    public PolicyRepository(PolicyHubContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public IAsyncEnumerable<string> GetAttributeKeys() =>
-        _dbContext.AttributeKeys
+        dbContext.AttributeKeys
             .Select(x => x.Label)
             .AsAsyncEnumerable();
 
     public IAsyncEnumerable<PolicyTypeResponse> GetPolicyTypes(PolicyTypeId? type, UseCaseId? useCase) =>
-        _dbContext.Policies
+        dbContext.Policies
             .Where(p =>
                 (type == null || p.Types.Any(x => x.Id == type)) &&
                 (useCase == null || p.UseCases.Any(x => x.Id == useCase)))
@@ -54,7 +48,7 @@ public class PolicyRepository : IPolicyRepository
             .AsAsyncEnumerable();
 
     public Task<(bool Exists, string LeftOperand, (AttributeKeyId? Key, IEnumerable<string> Values) Attributes, string? RightOperandValue)> GetPolicyContentAsync(UseCaseId? useCase, PolicyTypeId type, string credential) =>
-        _dbContext.Policies
+        dbContext.Policies
             .Where(p =>
                 p.Types.Any(t => t.IsActive && t.Id == type) &&
                 (useCase == null || p.UseCases.Any(x => x.Id == useCase)) &&
@@ -68,7 +62,7 @@ public class PolicyRepository : IPolicyRepository
             .FirstOrDefaultAsync();
 
     public IAsyncEnumerable<(string TechnicalKey, string LeftOperand, (AttributeKeyId? Key, IEnumerable<string> Values) Attributes, string? RightOperandValue)> GetPolicyForOperandContent(PolicyTypeId type, IEnumerable<string> technicalKeys) =>
-        _dbContext.Policies
+        dbContext.Policies
             .Where(p =>
                 p.Types.Any(t => t.IsActive && t.Id == type) &&
                 technicalKeys.Contains(p.TechnicalKey))
@@ -80,24 +74,15 @@ public class PolicyRepository : IPolicyRepository
                 ))
             .AsAsyncEnumerable();
 
-    Task<bool> IPolicyRepository.CheckPolicyByTechnicalKeys(PolicyTypeId type, IEnumerable<string> technicalKeys) =>
-        _dbContext.Policies
+    public Task<List<(string TechnicalKey, AttributeKeyId? AttributeKey, IEnumerable<string> Values)>> GetAttributeValuesForTechnicalKeys(PolicyTypeId type, IEnumerable<string> technicalKeys) =>
+        dbContext.Policies
             .Where(p =>
-                   p.Types.Any(t => t.IsActive && t.Id == type) &&
-                   technicalKeys.Contains(p.TechnicalKey))
-            .AnyAsync();
-
-    public IAsyncEnumerable<string> GetAllTechnicalKeys() =>
-        _dbContext.Policies
-            .Where(x => x.IsActive)
-            .Select(x => x.TechnicalKey)
-            .AsAsyncEnumerable();
-
-    public Task<bool> CheckPolicyAttributeValue(PolicyTypeId type, IEnumerable<string> values) =>
-        _dbContext.PolicyAttributes
-            .Where(p =>
-                   p.IsActive &&
-                   p.Policy!.Types.Any(t => t.IsActive && t.Id == type) &&
-                   values.Contains(p.AttributeValue)).AnyAsync();
-
+                p.IsActive &&
+                p.Types.Any(t => t.IsActive && t.Id == type) &&
+                technicalKeys.Contains(p.TechnicalKey))
+            .Select(x => new ValueTuple<string, AttributeKeyId?, IEnumerable<string>>(
+                x.TechnicalKey,
+                x.AttributeKeyId,
+                x.Attributes.Select(a => a.AttributeValue)))
+            .ToListAsync();
 }

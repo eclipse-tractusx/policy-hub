@@ -28,24 +28,18 @@ using System.Text.RegularExpressions;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 
-public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
+public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
+    : IPolicyHubBusinessLogic
 {
-    private readonly IHubRepositories _hubRepositories;
-
-    public PolicyHubBusinessLogic(IHubRepositories hubRepositories)
-    {
-        _hubRepositories = hubRepositories;
-    }
-
     public IAsyncEnumerable<string> GetAttributeKeys() =>
-        _hubRepositories.GetInstance<IPolicyRepository>().GetAttributeKeys();
+        hubRepositories.GetInstance<IPolicyRepository>().GetAttributeKeys();
 
     public IAsyncEnumerable<PolicyTypeResponse> GetPolicyTypes(PolicyTypeId? type, UseCaseId? useCase) =>
-        _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyTypes(type, useCase);
+        hubRepositories.GetInstance<IPolicyRepository>().GetPolicyTypes(type, useCase);
 
     public async Task<PolicyResponse> GetPolicyContentWithFiltersAsync(UseCaseId? useCase, PolicyTypeId type, string credential, OperatorId operatorId, string? value)
     {
-        var (exists, leftOperand, attributes, rightOperandValue) = await _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyContentAsync(useCase, type, credential).ConfigureAwait(false);
+        var (exists, leftOperand, attributes, rightOperandValue) = await hubRepositories.GetInstance<IPolicyRepository>().GetPolicyContentAsync(useCase, type, credential).ConfigureAwait(false);
         if (!exists)
         {
             throw new NotFoundException($"Policy for type {type} and technicalKey {credential} does not exists");
@@ -112,12 +106,6 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
 
     public async Task<PolicyResponse> GetPolicyContentAsync(PolicyContentRequest requestData)
     {
-        var IsAttributeValueExists = await _hubRepositories.GetInstance<IPolicyRepository>().CheckPolicyAttributeValue(requestData.PolicyType, requestData.Constraints.Select(x => x.Value)).ConfigureAwait(false);
-        if (!IsAttributeValueExists)
-        {
-            throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested attribute values does not exists.");
-        }
-
         if (requestData.PolicyType == PolicyTypeId.Usage && requestData.ConstraintOperand == ConstraintOperandId.Or)
         {
             throw new ControllerArgumentException($"The support of OR constraintOperand for Usage constraints are not supported for now");
@@ -132,17 +120,35 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
             throw new ControllerArgumentException($"Keys {string.Join(",", multipleDefinedKey.Select(x => x.Key).Distinct())} have been defined multiple times");
         }
 
-        var IsTechnicalKeyExists = await _hubRepositories.GetInstance<IPolicyRepository>().CheckPolicyByTechnicalKeys(requestData.PolicyType, requestData.Constraints.Select(x => x.Key)).ConfigureAwait(false);
-        if (!IsTechnicalKeyExists)
+        var technicalKeys = requestData.Constraints.Select(x => x.Key);
+        var attributeValuesForTechnicalKeys = await hubRepositories.GetInstance<IPolicyRepository>().GetAttributeValuesForTechnicalKeys(requestData.PolicyType, technicalKeys).ConfigureAwait(false);
+        if (technicalKeys.Except(attributeValuesForTechnicalKeys.Select(a => a.TechnicalKey)).Any())
         {
-            var technicalKeys = await _hubRepositories.GetInstance<IPolicyRepository>().GetAllTechnicalKeys().ToListAsync().ConfigureAwait(false);
-            throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested technicalKeys does not exists. TechnicalKeys {string.Join(",", technicalKeys)} are allowed");
+            throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested technicalKeys does not exists. TechnicalKeys {string.Join(",", attributeValuesForTechnicalKeys.Select(x => x.TechnicalKey))} are allowed");
         }
 
-        var policies = await _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyForOperandContent(requestData.PolicyType, requestData.Constraints.Select(x => x.Key)).ToListAsync().ConfigureAwait(false);
+        IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> keyValues = requestData.Constraints.GroupBy(x => x.Key).Select(x => new ValueTuple<string, IEnumerable<string>>(x.Key, x.Where(y => y.Value != null).Select(y => y.Value!)));
+        IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> missingValues = keyValues
+            .Join(attributeValuesForTechnicalKeys, secondItem => secondItem.TechnicalKey, firstItem => firstItem.TechnicalKey,
+                (secondItem, firstItem) => new { secondItem, firstItem })
+            .Select(t => new { t, missing = t.secondItem.Values.Except(t.firstItem.Values) })
+            .Where(t => t.missing.Any())
+            .Select(t => (Key: t.t.secondItem.TechnicalKey, MissingValues: t.missing));
+
+        var attributesToIgnore = new[] { AttributeKeyId.Regex, AttributeKeyId.DynamicValue };
+        var technicalKeysToIgnore = attributeValuesForTechnicalKeys.Where(x => x.AttributeKey != null && attributesToIgnore.Any(y => y == x.AttributeKey)).Select(x => x.TechnicalKey);
+        var invalidValues = missingValues.Select(x => x.TechnicalKey).Except(technicalKeysToIgnore);
+        if (invalidValues.Any())
+        {
+            var x = missingValues.Where(x => invalidValues.Contains(x.TechnicalKey)).Select(x =>
+                $"Key: {x.TechnicalKey}, invalid values: {string.Join(',', x.Values)}");
+            throw new ControllerArgumentException($"Invalid values set for {string.Join(',', x)}");
+        }
+
+        var policies = await hubRepositories.GetInstance<IPolicyRepository>().GetPolicyForOperandContent(requestData.PolicyType, technicalKeys).ToListAsync().ConfigureAwait(false);
         if (policies.Count != requestData.Constraints.Count())
         {
-            throw new NotFoundException($"Policy for type {requestData.PolicyType} and technicalKeys {string.Join(",", requestData.Constraints.Select(x => x.Key).Except(policies.Select(x => x.TechnicalKey)))} does not exists");
+            throw new NotFoundException($"Policy for type {requestData.PolicyType} and technicalKeys {string.Join(",", technicalKeys.Except(policies.Select(x => x.TechnicalKey)))} does not exists");
         }
 
         var constraints = new List<Constraint>();

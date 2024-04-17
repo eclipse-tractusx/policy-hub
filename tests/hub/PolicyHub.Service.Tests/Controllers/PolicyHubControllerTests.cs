@@ -239,6 +239,27 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     }
 
     [Fact]
+    public async Task GetPolicyContentWithFiltersAsync_WithWrongValue_ReturnsBadRequest()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(
+            PolicyTypeId.Usage,
+            ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, "1.0"),
+                new Constraints("purpose", OperatorId.In, "By accepting this policy you have to pay 1K BC")
+            });
+
+        // Act
+        var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions);
+
+        // Assert
+        response.Should().NotBeNull();
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task GetPolicyContentWithFiltersAsync_MultipleConstraintsEqualsAndOperand_ReturnsExpected()
     {
         // Arrange
