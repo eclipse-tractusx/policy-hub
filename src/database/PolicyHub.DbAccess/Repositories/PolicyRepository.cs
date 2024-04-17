@@ -92,4 +92,12 @@ public class PolicyRepository : IPolicyRepository
             .Where(x => x.IsActive)
             .Select(x => x.TechnicalKey)
             .AsAsyncEnumerable();
+
+    public Task<bool> CheckPolicyAttributeValue(PolicyTypeId type, IEnumerable<string> values) =>
+        _dbContext.PolicyAttributes
+            .Where(p =>
+                   p.IsActive &&
+                   p.Policy!.Types.Any(t => t.IsActive && t.Id == type) &&
+                   values.Contains(p.AttributeValue)).AnyAsync();
+
 }

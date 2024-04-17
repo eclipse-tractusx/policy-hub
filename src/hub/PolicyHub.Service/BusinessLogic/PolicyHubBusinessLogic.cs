@@ -112,6 +112,12 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
 
     public async Task<PolicyResponse> GetPolicyContentAsync(PolicyContentRequest requestData)
     {
+        var IsAttributeValueExists = await _hubRepositories.GetInstance<IPolicyRepository>().CheckPolicyAttributeValue(requestData.PolicyType, requestData.Constraints.Select(x => x.Value)).ConfigureAwait(false);
+        if (!IsAttributeValueExists)
+        {
+            throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested attribute values does not exists.");
+        }
+
         if (requestData.PolicyType == PolicyTypeId.Usage && requestData.ConstraintOperand == ConstraintOperandId.Or)
         {
             throw new ControllerArgumentException($"The support of OR constraintOperand for Usage constraints are not supported for now");

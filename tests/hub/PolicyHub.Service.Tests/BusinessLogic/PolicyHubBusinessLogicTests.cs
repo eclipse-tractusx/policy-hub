@@ -202,6 +202,8 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("test", OperatorId.In, null),
                 new Constraints("abc", OperatorId.Equals, null)
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(true);
         A.CallTo(() => _policyRepository.CheckPolicyByTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(true);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
@@ -225,6 +227,8 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("test", OperatorId.In, null),
                 new Constraints("abc", OperatorId.Equals, null)
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(true);
         A.CallTo(() => _policyRepository.CheckPolicyByTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(false);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
@@ -239,6 +243,31 @@ public class PolicyHubBusinessLogicTests
     }
 
     [Fact]
+    public async Task GetPolicyContentAsync_WithUnmatchingAttributeValues_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.In, null),
+                new Constraints("abc", OperatorId.Equals, null)
+            });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(false);
+        A.CallTo(() => _policyRepository.CheckPolicyByTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(false);
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", default, null), 1).ToAsyncEnumerable());
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be($"Policy for type {data.PolicyType} and requested attribute values does not exists.");
+    }
+
+    [Fact]
     public async Task GetPolicyContentAsync_WithAttributeAndRightOperandNull_ThrowsUnexpectedConditionException()
     {
         // Arrange
@@ -247,6 +276,8 @@ public class PolicyHubBusinessLogicTests
             {
                 new Constraints("test", OperatorId.In, null),
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+        .Returns(true);
         A.CallTo(() => _policyRepository.CheckPolicyByTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(true);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
@@ -269,6 +300,8 @@ public class PolicyHubBusinessLogicTests
             {
                 new Constraints("test", OperatorId.Equals, null),
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(true);
         A.CallTo(() => _policyRepository.CheckPolicyByTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(true);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
@@ -292,6 +325,8 @@ public class PolicyHubBusinessLogicTests
             {
                 new Constraints("test", OperatorId.Equals, "testRegValue"),
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(true);
         A.CallTo(() => _policyRepository.CheckPolicyByTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(true);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
@@ -335,6 +370,8 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("test", OperatorId.In, null),
                 new Constraints("test", OperatorId.Equals, null)
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+        .Returns(true);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(new[]
             {
@@ -361,6 +398,8 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("dynamicWithoutValue", OperatorId.Equals, null),
                 new Constraints("dynamicWithValue", OperatorId.Equals, "test")
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(true);
         A.CallTo(() => _policyRepository.CheckPolicyByTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(true);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
@@ -399,6 +438,8 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("multipleAdditionalValues", OperatorId.Equals, null),
                 new Constraints("test", OperatorId.In, null)
             });
+        A.CallTo(() => _policyRepository.CheckPolicyAttributeValue(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(true);
         A.CallTo(() => _policyRepository.CheckPolicyByTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(true);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))

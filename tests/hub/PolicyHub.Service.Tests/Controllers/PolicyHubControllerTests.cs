@@ -78,17 +78,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(11).And.Satisfy(
+            .And.HaveCount(8).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement.traceability",
                 x => x.TechnicalKey == "FrameworkAgreement.quality",
                 x => x.TechnicalKey == "FrameworkAgreement.pcf",
                 x => x.TechnicalKey == "FrameworkAgreement.behavioraltwin",
-                x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
-                x => x.TechnicalKey == "purpose.trace.v1.aspects",
                 x => x.TechnicalKey == "companyRole.dismantler",
-                x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis",
                 x => x.TechnicalKey == "purpose"
             );
     }
@@ -116,14 +113,11 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(8).And.Satisfy(
+            .And.HaveCount(5).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement.traceability",
-                x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
-                x => x.TechnicalKey == "purpose.trace.v1.aspects",
                 x => x.TechnicalKey == "companyRole.dismantler",
-                x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis",
                 x => x.TechnicalKey == "purpose"
             );
     }
@@ -206,14 +200,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_TraceabilityUsagePurposeEquals_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Traceability}&type={PolicyTypeId.Usage}&policyName=purpose.trace.v1.TraceBattery&operatorType={OperatorId.Equals}");
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase={UseCaseId.Traceability}&type={PolicyTypeId.Usage}&policyName=Membership&operatorType={OperatorId.Equals}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"purpose.trace.v1.TraceBattery\",\"operator\":\"eq\",\"rightOperand\":\"purpose.trace.v1.TraceBattery\"}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"Membership\",\"operator\":\"eq\",\"rightOperand\":\"active\"}}}}");
     }
 
     #endregion
@@ -229,8 +223,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
-                new Constraints("companyRole.dismantler", OperatorId.In, null)
+                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, "1.0"),
+                new Constraints("companyRole.dismantler", OperatorId.In, "Audi")
             });
 
         // Act
@@ -253,8 +247,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
-                new Constraints("companyRole.dismantler", OperatorId.In, null),
+                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, "1.0"),
+                new Constraints("companyRole.dismantler", OperatorId.In, "Audi"),
                 new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK")
             });
 
@@ -281,14 +275,26 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     //             new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
     //             new Constraints("companyRole.dismantler", OperatorId.In, null),
     //         });
+    // [Fact]
+    // public async Task GetPolicyContentWithFiltersAsync_MultipleConstraintsEqualsOrOperand_ReturnsExpected()
+    // {
+    //     // Arrange
+    //     var data = new PolicyContentRequest(
+    //         PolicyTypeId.Usage,
+    //         ConstraintOperandId.Or,
+    //         new[]
+    //         {
+    //             new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
+    //             new Constraints("companyRole.dismantler", OperatorId.In, null),
+    //         });
 
     //     // Act
-    //     var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
+    //     var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions);
 
     //     // Assert
     //     response.Should().NotBeNull();
     //     response.StatusCode.Should().Be(HttpStatusCode.OK);
-    //     (await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+    //     (await response.Content.ReadAsStringAsync())
     //         .Should()
     //         .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:or\":[{\"leftOperand\":\"FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"},{\"leftOperand\":\"Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
     // }
@@ -305,14 +311,26 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     //             new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
     //             new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
     //         });
+    // [Fact]
+    // public async Task GetPolicyContentWithFiltersAsync_WithSameConstraintKeys_ReturnsError()
+    // {
+    //     // Arrange
+    //     var data = new PolicyContentRequest(
+    //         PolicyTypeId.Usage,
+    //         ConstraintOperandId.Or,
+    //         new[]
+    //         {
+    //             new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
+    //             new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, null),
+    //         });
 
     //     // Act
-    //     var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions).ConfigureAwait(false);
+    //     var response = await _client.PostAsJsonAsync($"{BaseUrl}/policy-content", data, JsonOptions);
 
     //     // Assert
     //     response.Should().NotBeNull();
     //     response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    //     var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions).ConfigureAwait(false);
+    //     var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions);
     //     error!.Errors.Should().ContainSingle().And.Satisfy(
     //         x => x.Value.Single() == "Keys FrameworkAgreement.traceability have been defined multiple times");
     // }
