@@ -64,6 +64,7 @@ public class BatchInsertSeeder : ICustomSeeder
         await SeedTable<PolicyKindConfiguration>("policy_kind_configurations", x => x.PolicyKindId, cancellationToken).ConfigureAwait(false);
         await SeedTable<PolicyAssignedTypes>("policy_assigned_types", x => new { x.PolicyId, x.PolicyTypeId }, cancellationToken).ConfigureAwait(false);
         await SeedTable<PolicyAssignedUseCases>("policy_assigned_use_cases", x => new { x.PolicyId, x.UseCaseId }, cancellationToken).ConfigureAwait(false);
+        await SeedTable<PolicyAttributeAssignedUseCases>("policy_attribute_assigned_use_cases", x => new { x.Id, x.UseCaseId }, cancellationToken).ConfigureAwait(false);
 
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }

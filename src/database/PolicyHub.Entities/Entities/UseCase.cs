@@ -43,4 +43,6 @@ public class UseCase
 
     // Navigation properties
     public virtual ICollection<Policy> Policies { get; private set; }
+
+    public virtual ICollection<PolicyAttributeAssignedUseCases> PolicyAttributeAssignedUseCases { get; private set; }
 }
