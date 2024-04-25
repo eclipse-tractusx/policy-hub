@@ -52,7 +52,7 @@ public class BatchUpdateSeeder : ICustomSeeder
 
         await SeedTable<PolicyAttribute>(
             "policy_attributes",
-            x => new { x.PolicyId, x.Key, x.AttributeValue },
+            x => new { x.Id, x.PolicyId, x.Key, x.AttributeValue },
             x => x.dbEntity.IsActive != x.dataEntity.IsActive,
             (dbEntry, entry) =>
             {

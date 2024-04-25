@@ -181,7 +181,7 @@ public class PolicyHubBusinessLogicTests
                 x => x == "value2",
                 x => x == "value3"
             );
-        result.Content.Permission.Constraint.RightOperandValue.Should().Be("@multipleAdditionalValues-Static");
+        result.Content.Permission.Constraint.RightOperandValue.Should().Be("@multipleAdditionalValues.Traceability-Static");
         result.Content.Permission.Constraint.LeftOperand.Should().Be("cx-policy:multipleAdditionalValues");
         result.Content.Permission.Constraint.Operator.Should().Be("eq");
         result.Content.Permission.Constraint.AndOperands.Should().BeNull();

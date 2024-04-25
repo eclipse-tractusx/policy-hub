@@ -56,7 +56,7 @@ public class PolicyRepository(PolicyHubContext dbContext)
             .Select(p => new ValueTuple<bool, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(
                 true,
                 p.LeftOperandValue ?? p.TechnicalKey,
-                new ValueTuple<AttributeKeyId?, IEnumerable<string>>(p.AttributeKeyId, p.AttributeKey!.PolicyAttributes.Where(pa => pa.IsActive && pa.PolicyId == p.Id).Select(a => a.AttributeValue)),
+                new ValueTuple<AttributeKeyId?, IEnumerable<string>>(p.AttributeKeyId, p.AttributeKey!.PolicyAttributes.Where(pa => pa.IsActive && pa.PolicyId == p.Id && (useCase == null || pa.PolicyAttributeAssignedUseCases.Any(x => x.UseCaseId == useCase))).Select(a => a.AttributeValue)),
                 p.PolicyKind!.Configuration!.RightOperandValue
             ))
             .FirstOrDefaultAsync();

@@ -78,13 +78,10 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(8).And.Satisfy(
+            .And.HaveCount(5).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
-                x => x.TechnicalKey == "FrameworkAgreement.traceability",
-                x => x.TechnicalKey == "FrameworkAgreement.quality",
-                x => x.TechnicalKey == "FrameworkAgreement.pcf",
-                x => x.TechnicalKey == "FrameworkAgreement.behavioraltwin",
+                x => x.TechnicalKey == "FrameworkAgreement",
                 x => x.TechnicalKey == "companyRole.dismantler",
                 x => x.TechnicalKey == "purpose"
             );
@@ -116,7 +113,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             .And.HaveCount(5).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
-                x => x.TechnicalKey == "FrameworkAgreement.traceability",
+                x => x.TechnicalKey == "FrameworkAgreement",
                 x => x.TechnicalKey == "companyRole.dismantler",
                 x => x.TechnicalKey == "purpose"
             );
@@ -172,14 +169,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_UsageFrameworkEquals_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=FrameworkAgreement.traceability&operatorType={OperatorId.Equals}");
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?useCase=Traceability&type={PolicyTypeId.Usage}&policyName=FrameworkAgreement&operatorType={OperatorId.Equals}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.Traceability-Version\"}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.Traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
     }
 
     [Fact]
@@ -207,7 +204,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"Membership\",\"operator\":\"eq\",\"rightOperand\":\"active\"}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:Membership\",\"operator\":\"eq\",\"rightOperand\":\"active\"}}}}");
     }
 
     #endregion
@@ -223,7 +220,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, "1.0"),
+                new Constraints("FrameworkAgreement", OperatorId.Equals, "1.0"),
                 new Constraints("companyRole.dismantler", OperatorId.In, "Audi")
             });
 
@@ -235,7 +232,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"},{\"leftOperand\":\"Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\",\"active:Behavioraltwin:1.0\",\"active:Businesspartner:1.0\",\"active:Circulareconomy:1.0\",\"active:Demandcapacity:1.0\",\"active:PCF:1.0\",\"active:Puris:1.0\",\"active:Quality:1.0\"]}]}");
     }
 
     [Fact]
@@ -268,7 +265,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, "1.0"),
+                new Constraints("FrameworkAgreement", OperatorId.Equals, "1.0"),
                 new Constraints("companyRole.dismantler", OperatorId.In, "Audi"),
                 new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK")
             });
@@ -281,7 +278,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:FrameworkAgreement.traceability\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.traceability-Version\"},{\"leftOperand\":\"cx-policy:Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.traceability-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"Audi\",\"BMW\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"active:1.0\",\"active:1.1\",\"active:1.2\",\"active:Behavioraltwin:1.0\",\"active:Businesspartner:1.0\",\"active:Circulareconomy:1.0\",\"active:Demandcapacity:1.0\",\"active:PCF:1.0\",\"active:Puris:1.0\",\"active:Quality:1.0\"]}]}");
     }
 
     // [Fact]
