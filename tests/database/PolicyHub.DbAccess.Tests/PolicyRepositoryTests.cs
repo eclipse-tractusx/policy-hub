@@ -150,9 +150,20 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         // Assert
         result.Exists.Should().BeTrue();
         result.Attributes.Key.Should().Be(AttributeKeyId.Version);
-        result.Attributes.Values.Should().Contain("1.1");
+        result.Attributes.Values.Should().Satisfy(
+            x => x == "Traceability:1.0",
+            x => x == "Traceability:1.1",
+            x => x == "Traceability:1.2",
+            x => x == "Quality:1.0",
+            x => x == "PCF:1.0",
+            x => x == "Behavioraltwin:1.0",
+            x => x == "Circulareconomy:1.0",
+            x => x == "Demandcapacity:1.0",
+            x => x == "Puris:1.0",
+            x => x == "Businesspartner:1.0"
+        );
         result.LeftOperand.Should().Be("FrameworkAgreement");
-        result.RightOperandValue.Should().Be("active:{0}");
+        result.RightOperandValue.Should().BeNull();
     }
 
     #endregion

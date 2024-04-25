@@ -18,15 +18,14 @@
  ********************************************************************************/
 
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
-
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
     /// <inheritdoc />
-    public partial class feat25policyseeding : Migration
+    public partial class _25policyseeding : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,11 +40,10 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                 schema: "policy-hub",
                 table: "policy_attributes");
 
-            migrationBuilder.DeleteData(
+            migrationBuilder.DropPrimaryKey(
+                name: "pk_policy_attributes",
                 schema: "policy-hub",
-                table: "policy_types",
-                keyColumn: "id",
-                keyValue: 3);
+                table: "policy_attributes");
 
             migrationBuilder.AddColumn<Guid>(
                 name: "id",
@@ -53,10 +51,10 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                 table: "policy_attributes",
                 type: "uuid",
                 nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                defaultValueSql: "gen_random_uuid()");
 
-            migrationBuilder.AddUniqueConstraint(
-                name: "ak_policy_attributes_id",
+            migrationBuilder.AddPrimaryKey(
+                name: "pk_policy_attributes",
                 schema: "policy-hub",
                 table: "policy_attributes",
                 column: "id");
@@ -66,16 +64,16 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                 schema: "policy-hub",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    attribute_id = table.Column<Guid>(type: "uuid", nullable: false),
                     use_case_id = table.Column<int>(type: "integer", nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_policy_attribute_assigned_use_cases", x => new { x.id, x.use_case_id });
+                    table.PrimaryKey("pk_policy_attribute_assigned_use_cases", x => new { x.attribute_id, x.use_case_id });
                     table.ForeignKey(
-                        name: "fk_policy_attribute_assigned_use_cases_policy_attributes_id",
-                        column: x => x.id,
+                        name: "fk_policy_attribute_assigned_use_cases_policy_attributes_attri",
+                        column: x => x.attribute_id,
                         principalSchema: "policy-hub",
                         principalTable: "policy_attributes",
                         principalColumn: "id",
@@ -88,6 +86,12 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_policy_attributes_policy_id",
+                schema: "policy-hub",
+                table: "policy_attributes",
+                column: "policy_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_policy_attribute_assigned_use_cases_use_case_id",
@@ -132,8 +136,13 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                 name: "policy_attribute_assigned_use_cases",
                 schema: "policy-hub");
 
-            migrationBuilder.DropUniqueConstraint(
-                name: "ak_policy_attributes_id",
+            migrationBuilder.DropPrimaryKey(
+                name: "pk_policy_attributes",
+                schema: "policy-hub",
+                table: "policy_attributes");
+
+            migrationBuilder.DropIndex(
+                name: "ix_policy_attributes_policy_id",
                 schema: "policy-hub",
                 table: "policy_attributes");
 
@@ -142,11 +151,11 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                 schema: "policy-hub",
                 table: "policy_attributes");
 
-            migrationBuilder.InsertData(
+            migrationBuilder.AddPrimaryKey(
+                name: "pk_policy_attributes",
                 schema: "policy-hub",
-                table: "policy_types",
-                columns: new[] { "id", "is_active", "label" },
-                values: new object[] { 3, true, "Purpose" });
+                table: "policy_attributes",
+                columns: new[] { "policy_id", "key", "attribute_value" });
 
             migrationBuilder.AddForeignKey(
                 name: "fk_policies_policy_kinds_policy_kind_id",

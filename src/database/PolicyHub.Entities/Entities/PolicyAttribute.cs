@@ -21,11 +21,12 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Entities.Entities;
 
-public class PolicyAttribute
+public class PolicyAttribute : IActiveEntity
 {
     private PolicyAttribute()
     {
         AttributeValue = null!;
+        PolicyAttributeAssignedUseCases = new HashSet<PolicyAttributeAssignedUseCases>();
     }
 
     public PolicyAttribute(Guid id, Guid policyId, AttributeKeyId key, string attributeValue)
@@ -38,11 +39,11 @@ public class PolicyAttribute
     }
 
     public Guid Id { get; set; }
-    public Guid PolicyId { get; private set; }
+    public Guid PolicyId { get; set; }
 
-    public AttributeKeyId Key { get; private set; }
+    public AttributeKeyId Key { get; set; }
 
-    public string AttributeValue { get; private set; }
+    public string AttributeValue { get; set; }
 
     public bool IsActive { get; set; }
 

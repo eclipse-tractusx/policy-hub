@@ -111,13 +111,10 @@ public class PolicyHubContext : DbContext
 
         modelBuilder.Entity<PolicyAttribute>(entity =>
         {
-            entity.Property(x => x.IsActive).HasDefaultValue(true);
-
             entity
                 .HasKey(x => new { x.Id });
 
-            entity
-                .HasKey(x => new { x.PolicyId, x.Key, x.AttributeValue });
+            entity.Property(x => x.IsActive).HasDefaultValue(true);
 
             entity
                 .HasOne(pa => pa.AttributeKey)
@@ -135,13 +132,12 @@ public class PolicyHubContext : DbContext
             entity.Property(x => x.IsActive).HasDefaultValue(true);
 
             entity
-                .HasKey(x => new { x.Id, x.UseCaseId });
+                .HasKey(x => new { x.AttributeId, x.UseCaseId });
 
             entity
                 .HasOne(pa => pa.PolicyAttribute)
                 .WithMany(p => p.PolicyAttributeAssignedUseCases)
-                .HasForeignKey(x => x.Id)
-                .HasPrincipalKey(x => x.Id);
+                .HasForeignKey(x => x.AttributeId);
 
             entity
                 .HasOne(pa => pa.UseCase)

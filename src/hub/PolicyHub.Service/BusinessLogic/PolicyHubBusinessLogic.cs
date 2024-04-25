@@ -65,7 +65,14 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             AttributeKeyId.DynamicValue => (value ?? "{dynamicValue}", null),
             AttributeKeyId.Regex => (GetRegexValue(attributes, value), null),
             _ => operatorId == OperatorId.Equals
-                ? rightOperands.Count() > 1 ? ($"@{leftOperand}{(useCase != null ? useCase.ToString().Insert(0, ".") : string.Empty)}-{attributes.Key}", new AdditionalAttributes($"@{leftOperand}{(useCase != null ? useCase.ToString().Insert(0, ".") : string.Empty)}-{attributes.Key}", rightOperands)) : (rightOperands.Single(), null)
+                ? rightOperands.Count() > 1 ?
+                    ($"@{leftOperand}{(useCase != null ?
+                        useCase.ToString().Insert(0, ".") :
+                        string.Empty)}-{attributes.Key}",
+                        new AdditionalAttributes($"@{leftOperand}{(useCase != null ?
+                            useCase.ToString().Insert(0, ".") :
+                            string.Empty)}-{attributes.Key}", rightOperands)) :
+                    (rightOperands.Single(), null)
                 : (rightOperands, null)
         };
 

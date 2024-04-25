@@ -21,15 +21,17 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Entities.Entities;
 
-public class UseCase
+public class UseCase : IActiveEntity
 {
     private UseCase()
     {
         Label = null!;
         Policies = new HashSet<Policy>();
+        PolicyAttributeAssignedUseCases = new HashSet<PolicyAttributeAssignedUseCases>();
     }
 
-    public UseCase(UseCaseId useCaseId, bool isActive) : this()
+    public UseCase(UseCaseId useCaseId, bool isActive)
+        : this()
     {
         Id = useCaseId;
         Label = useCaseId.ToString();

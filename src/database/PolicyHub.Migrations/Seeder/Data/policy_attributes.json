@@ -59,21 +59,21 @@
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300d9",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "1.0",
+    "attribute_value": "Traceability:1.0",
     "is_active": true
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300e1",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "1.1",
+    "attribute_value": "Traceability:1.1",
     "is_active": true
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300e2",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "1.2",
+    "attribute_value": "Traceability:1.2",
     "is_active": true
   },
   {

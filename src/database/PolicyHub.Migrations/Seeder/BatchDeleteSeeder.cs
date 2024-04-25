@@ -17,6 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Org.Eclipse.TractusX.PolicyHub.Entities;
@@ -28,10 +29,10 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Seeder;
 /// <summary>
 /// Seeder to seed the all configured entities
 /// </summary>
-public class BatchInsertSeeder : ICustomSeeder
+public class BatchDeleteSeeder : ICustomSeeder
 {
     private readonly PolicyHubContext _context;
-    private readonly ILogger<BatchInsertSeeder> _logger;
+    private readonly ILogger<BatchDeleteSeeder> _logger;
     private readonly SeederSettings _settings;
 
     /// <summary>
@@ -40,7 +41,7 @@ public class BatchInsertSeeder : ICustomSeeder
     /// <param name="context">The database context</param>
     /// <param name="logger">The logger</param>
     /// <param name="options">The options</param>
-    public BatchInsertSeeder(PolicyHubContext context, ILogger<BatchInsertSeeder> logger, IOptions<SeederSettings> options)
+    public BatchDeleteSeeder(PolicyHubContext context, ILogger<BatchDeleteSeeder> logger, IOptions<SeederSettings> options)
     {
         _context = context;
         _logger = logger;
@@ -48,7 +49,7 @@ public class BatchInsertSeeder : ICustomSeeder
     }
 
     /// <inheritdoc />
-    public int Order => 1;
+    public int Order => 3;
 
     /// <inheritdoc />
     public async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -75,17 +76,22 @@ public class BatchInsertSeeder : ICustomSeeder
         var additionalEnvironments = _settings.TestDataEnvironments ?? Enumerable.Empty<string>();
         var data = await SeederHelper.GetSeedData<T>(_logger, fileName, _settings.DataPaths, cancellationToken, additionalEnvironments.ToArray()).ConfigureAwait(false);
         _logger.LogDebug("Found {ElementCount} data", data.Count);
-        if (data.Any())
+        var isActiveEntity = typeof(T).IsAssignableTo(typeof(IActiveEntity));
+
+        // Identify entities in the database that are not present in the JSON data
+        var existingEntities = await _context.Set<T>().ToListAsync(cancellationToken).ConfigureAwait(false);
+        var entitiesToRemove = existingEntities.Where(dbEntity => data.All(jsonEntity => !keySelector(dbEntity).Equals(keySelector(jsonEntity)))).ToList();
+        if (isActiveEntity)
         {
-            var typeName = typeof(T).Name;
-            _logger.LogDebug("Started to Seed {TableName}", typeName);
-            data = data.GroupJoin(_context.Set<T>(), keySelector, keySelector, (d, dbEntry) => new { d, dbEntry })
-                .SelectMany(t => t.dbEntry.DefaultIfEmpty(), (t, x) => new { t, x })
-                .Where(t => t.x == null)
-                .Select(t => t.t.d).ToList();
-            _logger.LogDebug("Seeding {DataCount} {TableName}", data.Count, typeName);
-            await _context.Set<T>().AddRangeAsync(data, cancellationToken).ConfigureAwait(false);
-            _logger.LogDebug("Seeded {TableName}", typeName);
+            foreach (var entity in entitiesToRemove)
+            {
+                _context.Set<T>().Attach(entity);
+                (entity as IActiveEntity)!.IsActive = false;
+            }
+        }
+        else
+        {
+            _context.Set<T>().RemoveRange(entitiesToRemove);
         }
     }
 }

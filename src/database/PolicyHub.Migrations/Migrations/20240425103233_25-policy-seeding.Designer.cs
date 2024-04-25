@@ -31,8 +31,8 @@ using Org.Eclipse.TractusX.PolicyHub.Entities;
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
     [DbContext(typeof(PolicyHubContext))]
-    [Migration("20240424045703_feat-25-policy-seeding")]
-    partial class feat25policyseeding
+    [Migration("20240425103233_25-policy-seeding")]
+    partial class _25policyseeding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -177,21 +177,15 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 
             modelBuilder.Entity("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.PolicyAttribute", b =>
                 {
-                    b.Property<Guid>("PolicyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("policy_id");
-
-                    b.Property<int>("Key")
-                        .HasColumnType("integer")
-                        .HasColumnName("key");
-
-                    b.Property<string>("AttributeValue")
-                        .HasColumnType("text")
-                        .HasColumnName("attribute_value");
-
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<string>("AttributeValue")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("attribute_value");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -199,23 +193,31 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
-                    b.HasKey("PolicyId", "Key", "AttributeValue")
-                        .HasName("pk_policy_attributes");
+                    b.Property<int>("Key")
+                        .HasColumnType("integer")
+                        .HasColumnName("key");
 
-                    b.HasAlternateKey("Id")
-                        .HasName("ak_policy_attributes_id");
+                    b.Property<Guid>("PolicyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("policy_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_policy_attributes");
 
                     b.HasIndex("Key")
                         .HasDatabaseName("ix_policy_attributes_key");
+
+                    b.HasIndex("PolicyId")
+                        .HasDatabaseName("ix_policy_attributes_policy_id");
 
                     b.ToTable("policy_attributes", "policy-hub");
                 });
 
             modelBuilder.Entity("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.PolicyAttributeAssignedUseCases", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("AttributeId")
                         .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnName("attribute_id");
 
                     b.Property<int>("UseCaseId")
                         .HasColumnType("integer")
@@ -227,7 +229,7 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
-                    b.HasKey("Id", "UseCaseId")
+                    b.HasKey("AttributeId", "UseCaseId")
                         .HasName("pk_policy_attribute_assigned_use_cases");
 
                     b.HasIndex("UseCaseId")
@@ -479,11 +481,10 @@ namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
                 {
                     b.HasOne("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.PolicyAttribute", "PolicyAttribute")
                         .WithMany("PolicyAttributeAssignedUseCases")
-                        .HasForeignKey("Id")
-                        .HasPrincipalKey("Id")
+                        .HasForeignKey("AttributeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_policy_attribute_assigned_use_cases_policy_attributes_id");
+                        .HasConstraintName("fk_policy_attribute_assigned_use_cases_policy_attributes_attri");
 
                     b.HasOne("Org.Eclipse.TractusX.PolicyHub.Entities.Entities.UseCase", "UseCase")
                         .WithMany("PolicyAttributeAssignedUseCases")

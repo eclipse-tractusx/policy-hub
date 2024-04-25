@@ -29,14 +29,14 @@ public class PolicyAttributeAssignedUseCases
         UseCase = null!;
     }
 
-    public PolicyAttributeAssignedUseCases(Guid id, UseCaseId useCaseId)
+    public PolicyAttributeAssignedUseCases(Guid attributeId, UseCaseId useCaseId)
         : this()
     {
-        Id = id;
+        AttributeId = attributeId;
         UseCaseId = useCaseId;
     }
 
-    public Guid Id { get; set; }
+    public Guid AttributeId { get; set; }
 
     public UseCaseId UseCaseId { get; set; }
 

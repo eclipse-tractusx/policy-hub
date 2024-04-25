@@ -44,19 +44,23 @@ public class BatchUpdateSeeder : ICustomSeeder
         await SeedTable<Policy>(
             "policies",
             x => new { x.Id },
-            x => x.dbEntity.IsActive != x.dataEntity.IsActive,
+            x => x.dbEntity.IsActive != x.dataEntity.IsActive || x.dbEntity.TechnicalKey != x.dataEntity.TechnicalKey,
             (dbEntity, entity) =>
             {
                 dbEntity.IsActive = entity.IsActive;
+                dbEntity.TechnicalKey = entity.TechnicalKey;
             }, cancellationToken).ConfigureAwait(false);
 
         await SeedTable<PolicyAttribute>(
             "policy_attributes",
-            x => new { x.Id, x.PolicyId, x.Key, x.AttributeValue },
-            x => x.dbEntity.IsActive != x.dataEntity.IsActive,
+            x => new { x.Id },
+            x => x.dbEntity.IsActive != x.dataEntity.IsActive || x.dbEntity.AttributeValue != x.dataEntity.AttributeValue || x.dbEntity.Key != x.dataEntity.Key || x.dbEntity.PolicyId != x.dataEntity.PolicyId,
             (dbEntry, entry) =>
             {
                 dbEntry.IsActive = entry.IsActive;
+                dbEntry.AttributeValue = entry.AttributeValue;
+                dbEntry.Key = entry.Key;
+                dbEntry.PolicyId = entry.PolicyId;
             }, cancellationToken).ConfigureAwait(false);
 
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
