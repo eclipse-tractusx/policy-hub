@@ -16,42 +16,10 @@
     "attribute_key_id": 2
   },
   {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
-    "kind_id": 3,
-    "technical_key": "FrameworkAgreement.traceability",
-    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
-    "is_active": true,
-    "attribute_key_id": 5
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b4",
-    "kind_id": 3,
-    "technical_key": "FrameworkAgreement.quality",
-    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
-    "is_active": true,
-    "attribute_key_id": 5
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b5",
-    "kind_id": 3,
-    "technical_key": "FrameworkAgreement.pcf",
-    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
-    "is_active": true,
-    "attribute_key_id": 5
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b6",
-    "kind_id": 3,
-    "technical_key": "FrameworkAgreement.behavioraltwin",
-    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
-    "is_active": true,
-    "attribute_key_id": 5
-  },     
-  {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "kind_id": 5,
-    "technical_key": "companyRole.dismantler",
-    "left_operand_value": "Dismantler.activityType",
+    "technical_key": "Dismantler.allowedBrands",
+    "left_operand_value": null,
     "description": "Company role defining a dismantler. Companies holding the credential are dismantler certified companies.",
     "is_active": true,
     "attribute_key_id": 4
@@ -59,9 +27,25 @@
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "kind_id": 4,
-    "technical_key": "purpose",
+    "technical_key": "UsagePurpose",
     "description": "",
     "is_active": true,
-    "attribute_key_id": 2
+    "attribute_key_id": 3
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "kind_id": 3,
+    "technical_key": "FrameworkAgreement",
+    "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
+    "is_active": true,
+    "attribute_key_id": 5
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d1",
+    "kind_id": 5,
+    "technical_key": "Dismantler",
+    "description": "Companies holding the credential are dismantler certified companies.",
+    "is_active": true,
+    "attribute_key_id": 4
   }
 ]

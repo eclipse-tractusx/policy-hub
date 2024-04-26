@@ -20,6 +20,7 @@
 using Org.Eclipse.TractusX.PolicyHub.DbAccess;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
+using Org.Eclipse.TractusX.PolicyHub.Entities.Entities;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
@@ -52,19 +53,26 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
         }
 
         var (rightOperand, additionalAttribute) = attributes.Key != null ?
-            GetRightOperand(operatorId, attributes, rightOperands, value, leftOperand) :
+            GetRightOperand(operatorId, attributes, rightOperands, value, leftOperand, useCase) :
             (rightOperandValue!, null);
 
-        return new PolicyResponse(CreateFileContent(type, operatorId, leftOperand, rightOperand), additionalAttribute == null ? null : Enumerable.Repeat(additionalAttribute, 1));
+        return new PolicyResponse(CreateFileContent(type, operatorId, "cx-policy:" + leftOperand, rightOperand), additionalAttribute == null ? null : Enumerable.Repeat(additionalAttribute, 1));
     }
 
-    private static (object rightOperand, AdditionalAttributes? additionalAttribute) GetRightOperand(OperatorId operatorId, (AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand) =>
+    private static (object rightOperand, AdditionalAttributes? additionalAttribute) GetRightOperand(OperatorId operatorId, (AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand, UseCaseId? useCase) =>
         attributes.Key switch
         {
             AttributeKeyId.DynamicValue => (value ?? "{dynamicValue}", null),
             AttributeKeyId.Regex => (GetRegexValue(attributes, value), null),
             _ => operatorId == OperatorId.Equals
-                ? rightOperands.Count() > 1 ? ($"@{leftOperand}-{attributes.Key}", new AdditionalAttributes($"@{leftOperand}-{attributes.Key}", rightOperands)) : (rightOperands.Single(), null)
+                ? rightOperands.Count() > 1 ?
+                    ($"@{leftOperand}{(useCase != null ?
+                        useCase.ToString().Insert(0, ".") :
+                        string.Empty)}-{attributes.Key}",
+                        new AdditionalAttributes($"@{leftOperand}{(useCase != null ?
+                            useCase.ToString().Insert(0, ".") :
+                            string.Empty)}-{attributes.Key}", rightOperands)) :
+                    (rightOperands.Single(), null)
                 : (rightOperands, null)
         };
 
@@ -163,7 +171,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             }
 
             var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
-                GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, constraint.Value, policy.LeftOperand) :
+                GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, constraint.Value, policy.LeftOperand, null) :
                 (policy.RightOperandValue!, null);
             if (additionalAttribute != null)
             {
@@ -173,7 +181,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
 
             constraints.Add(new Constraint(null,
                 null,
-                policy.LeftOperand,
+                "cx-policy:" + policy.LeftOperand,
                 constraint.Operator.OperatorToJsonString(),
                 rightOperand
             ));

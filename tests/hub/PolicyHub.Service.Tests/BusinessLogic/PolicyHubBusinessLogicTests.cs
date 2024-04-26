@@ -181,8 +181,8 @@ public class PolicyHubBusinessLogicTests
                 x => x == "value2",
                 x => x == "value3"
             );
-        result.Content.Permission.Constraint.RightOperandValue.Should().Be("@multipleAdditionalValues-Static");
-        result.Content.Permission.Constraint.LeftOperand.Should().Be("multipleAdditionalValues");
+        result.Content.Permission.Constraint.RightOperandValue.Should().Be("@multipleAdditionalValues.Traceability-Static");
+        result.Content.Permission.Constraint.LeftOperand.Should().Be("cx-policy:multipleAdditionalValues");
         result.Content.Permission.Constraint.Operator.Should().Be("eq");
         result.Content.Permission.Constraint.AndOperands.Should().BeNull();
         result.Content.Permission.Constraint.OrOperands.Should().BeNull();
@@ -422,10 +422,10 @@ public class PolicyHubBusinessLogicTests
         result.Content.Permission.Constraint.AndOperands.Should().BeNull();
         result.Content.Permission.Constraint.OrOperands.Should().HaveCount(4)
             .And.Satisfy(
-                x => x.LeftOperand == "active" && x.Operator == "in" && ((x.RightOperandValue as IEnumerable<string>)!).Count() == 2,
-                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "BPNL00000001TEST",
-                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "{dynamicValue}",
-                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "test");
+                x => x.LeftOperand == "cx-policy:active" && x.Operator == "in" && ((x.RightOperandValue as IEnumerable<string>)!).Count() == 2,
+                x => x.LeftOperand == "cx-policy:active" && x.Operator == "eq" && x.RightOperandValue as string == "BPNL00000001TEST",
+                x => x.LeftOperand == "cx-policy:active" && x.Operator == "eq" && x.RightOperandValue as string == "{dynamicValue}",
+                x => x.LeftOperand == "cx-policy:active" && x.Operator == "eq" && x.RightOperandValue as string == "test");
     }
 
     [Fact]
@@ -461,8 +461,8 @@ public class PolicyHubBusinessLogicTests
         result.Content.Permission.Constraint.OrOperands.Should().BeNull();
         result.Content.Permission.Constraint.AndOperands.Should().HaveCount(2)
             .And.Satisfy(
-                x => x.LeftOperand == "multipleAdditionalValues" && x.Operator == "eq" && x.RightOperandValue as string == "@multipleAdditionalValues-Static",
-                x => x.LeftOperand == "test" && x.Operator == "in" && (x.RightOperandValue as IEnumerable<string>)!.Count() == 2);
+                x => x.LeftOperand == "cx-policy:multipleAdditionalValues" && x.Operator == "eq" && x.RightOperandValue as string == "@multipleAdditionalValues-Static",
+                x => x.LeftOperand == "cx-policy:test" && x.Operator == "in" && (x.RightOperandValue as IEnumerable<string>)!.Count() == 2);
         result.AdditionalAttributes.Should().ContainSingle()
             .And.Satisfy(x => x.Key == "@multipleAdditionalValues-Static");
         result.AdditionalAttributes!.Single().PossibleValues.Should().HaveCount(3)

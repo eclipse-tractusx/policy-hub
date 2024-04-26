@@ -21,7 +21,7 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Entities.Entities;
 
-public class Policy
+public class Policy : IActiveEntity
 {
     private Policy()
     {

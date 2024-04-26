@@ -35,8 +35,9 @@ public class PolicyRepository(PolicyHubContext dbContext)
     public IAsyncEnumerable<PolicyTypeResponse> GetPolicyTypes(PolicyTypeId? type, UseCaseId? useCase) =>
         dbContext.Policies
             .Where(p =>
-                (type == null || p.Types.Any(x => x.Id == type)) &&
-                (useCase == null || p.UseCases.Any(x => x.Id == useCase)))
+                p.IsActive &&
+                (type == null || p.Types.Any(x => x.Id == type && x.IsActive)) &&
+                (useCase == null || p.UseCases.Any(x => x.Id == useCase && x.IsActive)))
             .Select(p => new PolicyTypeResponse(
                 p.TechnicalKey,
                 p.Types.Where(t => t.IsActive).Select(t => t.Id),
@@ -50,13 +51,21 @@ public class PolicyRepository(PolicyHubContext dbContext)
     public Task<(bool Exists, string LeftOperand, (AttributeKeyId? Key, IEnumerable<string> Values) Attributes, string? RightOperandValue)> GetPolicyContentAsync(UseCaseId? useCase, PolicyTypeId type, string credential) =>
         dbContext.Policies
             .Where(p =>
+                p.IsActive &&
                 p.Types.Any(t => t.IsActive && t.Id == type) &&
-                (useCase == null || p.UseCases.Any(x => x.Id == useCase)) &&
+                (useCase == null || p.UseCases.Any(x => x.Id == useCase && x.IsActive)) &&
                 p.TechnicalKey == credential)
             .Select(p => new ValueTuple<bool, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(
                 true,
                 p.LeftOperandValue ?? p.TechnicalKey,
-                new ValueTuple<AttributeKeyId?, IEnumerable<string>>(p.AttributeKeyId, p.AttributeKey!.PolicyAttributes.Where(pa => pa.IsActive && pa.PolicyId == p.Id).Select(a => a.AttributeValue)),
+                new ValueTuple<AttributeKeyId?, IEnumerable<string>>(
+                    p.AttributeKeyId,
+                    p.AttributeKey!.PolicyAttributes.Where(pa =>
+                        pa.IsActive &&
+                        pa.PolicyId == p.Id &&
+                        pa.IsActive &&
+                        (useCase == null || pa.PolicyAttributeAssignedUseCases.Any(x => x.UseCaseId == useCase && x.IsActive))
+                ).Select(a => a.AttributeValue)),
                 p.PolicyKind!.Configuration!.RightOperandValue
             ))
             .FirstOrDefaultAsync();
@@ -64,6 +73,7 @@ public class PolicyRepository(PolicyHubContext dbContext)
     public IAsyncEnumerable<(string TechnicalKey, string LeftOperand, (AttributeKeyId? Key, IEnumerable<string> Values) Attributes, string? RightOperandValue)> GetPolicyForOperandContent(PolicyTypeId type, IEnumerable<string> technicalKeys) =>
         dbContext.Policies
             .Where(p =>
+                p.IsActive &&
                 p.Types.Any(t => t.IsActive && t.Id == type) &&
                 technicalKeys.Contains(p.TechnicalKey))
             .Select(p => new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(
