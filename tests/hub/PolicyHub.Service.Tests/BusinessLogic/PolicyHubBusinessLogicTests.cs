@@ -248,7 +248,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.In, "abc"),
+                new Constraints("test", OperatorId.In, ["abc"]),
                 new Constraints("abc", OperatorId.Equals, null)
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
@@ -274,7 +274,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.In, "test1"),
+                new Constraints("test", OperatorId.In, ["test1"]),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "test1" })]);
@@ -319,7 +319,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.Equals, "testRegValue"),
+                new Constraints("test", OperatorId.Equals, ["testRegValue"]),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
@@ -342,7 +342,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.Equals, "testRegValue"),
+                new Constraints("test", OperatorId.Equals, ["testRegValue"]),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
@@ -354,6 +354,69 @@ public class PolicyHubBusinessLogicTests
 
         // Assert
         ex.Message.Should().Be("The support of OR constraintOperand for Usage constraints are not supported for now");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithBPNLAllowingANDOperandWithSingleBPNL_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, ["BPNL00000003CRHK","BPNL00000004CRHK"]),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("Only a single value BPNL is allowed with an AND constraint");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithBPNLOperatorShouldEquals_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.In, ["BPNL00000003CRHK"]),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("The operator for BPNLs should always be Equals");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithUsagePolicyOnlySingleBPNLAllowed_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, ["BPNL00000003CRHK","BPNL00000004CRHK"]),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("For usage policies only a single BPNL is allowed");
     }
 
     [Fact]
@@ -390,9 +453,9 @@ public class PolicyHubBusinessLogicTests
             new[]
             {
                 new Constraints("inValues", OperatorId.In, null),
-                new Constraints("regValue", OperatorId.Equals, "BPNL00000001TEST"),
+                new Constraints("regValue", OperatorId.Equals, ["BPNL00000001TEST"]),
                 new Constraints("dynamicWithoutValue", OperatorId.Equals, null),
-                new Constraints("dynamicWithValue", OperatorId.Equals, "test")
+                new Constraints("dynamicWithValue", OperatorId.Equals, ["test"])
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([

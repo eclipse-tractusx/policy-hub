@@ -223,8 +223,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement", OperatorId.Equals, "Traceability:1.0"),
-                new Constraints("Dismantler.allowedBrands", OperatorId.In, "Audi")
+                new Constraints("FrameworkAgreement", OperatorId.Equals, ["Traceability:1.0"]),
+                new Constraints("Dismantler.allowedBrands", OperatorId.In, ["Audi"])
             });
 
         // Act
@@ -247,8 +247,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, "1.0"),
-                new Constraints("purpose", OperatorId.In, "By accepting this policy you have to pay 1K BC")
+                new Constraints("FrameworkAgreement.traceability", OperatorId.Equals, ["1.0"]),
+                new Constraints("purpose", OperatorId.In, ["By accepting this policy you have to pay 1K BC"])
             });
 
         // Act
@@ -268,9 +268,9 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement", OperatorId.Equals, "Traceability:1.0"),
-                new Constraints("Dismantler.allowedBrands", OperatorId.In, "Audi"),
-                new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK")
+                new Constraints("FrameworkAgreement", OperatorId.Equals, ["Traceability:1.0"]),
+                new Constraints("Dismantler.allowedBrands", OperatorId.In, ["Audi"]),
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, ["BPNL00000003CRHK"])
             });
 
         // Act
