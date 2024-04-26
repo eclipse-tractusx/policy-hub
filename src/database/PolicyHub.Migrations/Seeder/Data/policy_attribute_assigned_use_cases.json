@@ -54,5 +54,9 @@
     { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f1", "use_case_id": 2, "is_active": true },
     { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f1", "use_case_id": 3, "is_active": true },
     { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f1", "use_case_id": 4, "is_active": true },
-    { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f1", "use_case_id": 5, "is_active": true }
+    { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f2", "use_case_id": 1, "is_active": true },
+    { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f2", "use_case_id": 2, "is_active": true },
+    { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f2", "use_case_id": 3, "is_active": true },
+    { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f2", "use_case_id": 4, "is_active": true },
+    { "attribute_id": "01a0fba3-9b6e-435a-b045-e0e890c300f2", "use_case_id": 5, "is_active": true }
 ]

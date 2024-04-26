@@ -124,5 +124,12 @@
     "key": 5,
     "attribute_value": "Businesspartner:1.0",
     "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300f2",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300d1",
+    "key": 4,
+    "attribute_value": "active",
+    "is_active": true
   }
 ]

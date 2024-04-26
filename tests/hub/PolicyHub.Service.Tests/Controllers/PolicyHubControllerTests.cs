@@ -78,12 +78,13 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(5).And.Satisfy(
+            .And.HaveCount(6).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement",
-                x => x.TechnicalKey == "companyRole.dismantler",
-                x => x.TechnicalKey == "purpose"
+                x => x.TechnicalKey == "Dismantler.allowedBrands",
+                x => x.TechnicalKey == "purpose",
+                x => x.TechnicalKey == "Dismantler"
             );
     }
 
@@ -95,10 +96,11 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(3).And.Satisfy(
+            .And.HaveCount(4).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
-                x => x.TechnicalKey == "companyRole.dismantler"
+                x => x.TechnicalKey == "Dismantler.allowedBrands",
+                x => x.TechnicalKey == "Dismantler"
             );
     }
 
@@ -110,12 +112,13 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(5).And.Satisfy(
+            .And.HaveCount(6).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement",
-                x => x.TechnicalKey == "companyRole.dismantler",
-                x => x.TechnicalKey == "purpose"
+                x => x.TechnicalKey == "Dismantler.allowedBrands",
+                x => x.TechnicalKey == "purpose",
+                x => x.TechnicalKey == "Dismantler"
             );
     }
 
@@ -183,14 +186,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     public async Task GetPolicyContent_UsageDismantlerIn_ReturnsExpected()
     {
         // Act
-        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=companyRole.dismantler&operatorType={OperatorId.In}");
+        var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=Dismantler.allowedBrands&operatorType={OperatorId.In}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]}}}}");
     }
 
     [Fact]
@@ -221,7 +224,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             new[]
             {
                 new Constraints("FrameworkAgreement", OperatorId.Equals, "Traceability:1.0"),
-                new Constraints("companyRole.dismantler", OperatorId.In, "Audi")
+                new Constraints("Dismantler.allowedBrands", OperatorId.In, "Audi")
             });
 
         // Act
@@ -232,7 +235,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:1.1\",\"Traceability:1.2\",\"Quality:1.0\",\"PCF:1.0\",\"Behavioraltwin:1.0\",\"Circulareconomy:1.0\",\"Demandcapacity:1.0\",\"Puris:1.0\",\"Businesspartner:1.0\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:1.1\",\"Traceability:1.2\",\"Quality:1.0\",\"PCF:1.0\",\"Behavioraltwin:1.0\",\"Circulareconomy:1.0\",\"Demandcapacity:1.0\",\"Puris:1.0\",\"Businesspartner:1.0\"]}]}");
     }
 
     [Fact]
@@ -266,7 +269,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             new[]
             {
                 new Constraints("FrameworkAgreement", OperatorId.Equals, "Traceability:1.0"),
-                new Constraints("companyRole.dismantler", OperatorId.In, "Audi"),
+                new Constraints("Dismantler.allowedBrands", OperatorId.In, "Audi"),
                 new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK")
             });
 
@@ -278,7 +281,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:Dismantler.activityType\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:1.1\",\"Traceability:1.2\",\"Quality:1.0\",\"PCF:1.0\",\"Behavioraltwin:1.0\",\"Circulareconomy:1.0\",\"Demandcapacity:1.0\",\"Puris:1.0\",\"Businesspartner:1.0\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:1.1\",\"Traceability:1.2\",\"Quality:1.0\",\"PCF:1.0\",\"Behavioraltwin:1.0\",\"Circulareconomy:1.0\",\"Demandcapacity:1.0\",\"Puris:1.0\",\"Businesspartner:1.0\"]}]}");
     }
 
     #endregion

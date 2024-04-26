@@ -18,8 +18,7 @@
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "kind_id": 5,
-    "technical_key": "companyRole.dismantler",
-    "left_operand_value": "Dismantler.activityType",
+    "technical_key": "Dismantler.allowedBrands",
     "description": "Company role defining a dismantler. Companies holding the credential are dismantler certified companies.",
     "is_active": true,
     "attribute_key_id": 4
@@ -39,5 +38,13 @@
     "description": "With the Framework Credential, only those participants which have signed the respective framework agreement (general or via a specific version) are allowed to view or negotiate the respective data offer. Generic: \"rightOperand\": \"active\"; specific \"rightOperand\": \"active:{version}\"",
     "is_active": true,
     "attribute_key_id": 5
-  }  
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d1",
+    "kind_id": 5,
+    "technical_key": "Dismantler",
+    "description": "Companies holding the credential are dismantler certified companies.",
+    "is_active": true,
+    "attribute_key_id": 4
+  }
 ]
