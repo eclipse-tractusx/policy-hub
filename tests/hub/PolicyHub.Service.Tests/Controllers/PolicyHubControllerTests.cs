@@ -83,7 +83,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement",
                 x => x.TechnicalKey == "Dismantler.allowedBrands",
-                x => x.TechnicalKey == "purpose",
+                x => x.TechnicalKey == "UsagePurpose",
                 x => x.TechnicalKey == "Dismantler"
             );
     }
@@ -117,7 +117,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement",
                 x => x.TechnicalKey == "Dismantler.allowedBrands",
-                x => x.TechnicalKey == "purpose",
+                x => x.TechnicalKey == "UsagePurpose",
                 x => x.TechnicalKey == "Dismantler"
             );
     }
