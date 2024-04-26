@@ -31,5 +31,5 @@ public record PolicyContentRequest(
 public record Constraints(
     [property: JsonPropertyName("key")] string Key,
     [property: JsonPropertyName("operator")] OperatorId Operator,
-    [property: JsonPropertyName("value"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Value
+    [property: JsonPropertyName("value"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IEnumerable<string>? Values
 );

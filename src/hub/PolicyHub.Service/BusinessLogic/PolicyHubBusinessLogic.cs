@@ -119,6 +119,21 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             throw new ControllerArgumentException($"The support of OR constraintOperand for Usage constraints are not supported for now");
         }
 
+        if (requestData.PolicyType == PolicyTypeId.Access && requestData.ConstraintOperand == ConstraintOperandId.And && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Values.Count() > 1)))
+        {
+            throw new ControllerArgumentException($"Only a single value BPNL is allowed with an AND constraint");
+        }
+
+        if (requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber") && !requestData.Constraints.Any(x => x.Operator == OperatorId.Equals))
+        {
+            throw new ControllerArgumentException($"The operator for BPNLs should always be Equals");
+        }
+
+        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Values.Count() > 1)))
+        {
+            throw new ControllerArgumentException($"For usage policies only a single BPNL is allowed");
+        }
+
         var keyCounts = requestData.Constraints
             .GroupBy(pair => pair.Key)
             .ToDictionary(group => group.Key, group => group.Count());
@@ -135,7 +150,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested technicalKeys does not exists. TechnicalKeys {string.Join(",", attributeValuesForTechnicalKeys.Select(x => x.TechnicalKey))} are allowed");
         }
 
-        IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> keyValues = requestData.Constraints.GroupBy(x => x.Key).Select(x => new ValueTuple<string, IEnumerable<string>>(x.Key, x.Where(y => y.Value != null).Select(y => y.Value!)));
+        IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> keyValues = requestData.Constraints.GroupBy(x => x.Key).Select(x => new ValueTuple<string, IEnumerable<string>>(x.Key, x.Where(y => y.Values != null).SelectMany(y => y.Values!)));
         IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> missingValues = keyValues
             .Join(attributeValuesForTechnicalKeys, secondItem => secondItem.TechnicalKey, firstItem => firstItem.TechnicalKey,
                 (secondItem, firstItem) => new { secondItem, firstItem })
@@ -170,21 +185,46 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
                 throw new UnexpectedConditionException("There must be one configured rightOperand value");
             }
 
-            var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
-                GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, constraint.Value, policy.LeftOperand, null) :
-                (policy.RightOperandValue!, null);
-            if (additionalAttribute != null)
+            if (constraint.Values != null)
             {
-                additionalAttributes ??= new List<AdditionalAttributes>();
-                additionalAttributes.Add(additionalAttribute);
-            }
+                foreach (var keyValue in constraint.Values)
+                {
+                    var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
+                                    GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, keyValue, policy.LeftOperand, null) :
+                                    (policy.RightOperandValue!, null);
+                    if (additionalAttribute != null)
+                    {
+                        additionalAttributes ??= new List<AdditionalAttributes>();
+                        additionalAttributes.Add(additionalAttribute);
+                    }
 
-            constraints.Add(new Constraint(null,
-                null,
-                "cx-policy:" + policy.LeftOperand,
-                constraint.Operator.OperatorToJsonString(),
-                rightOperand
-            ));
+                    constraints.Add(new Constraint(null,
+                        null,
+                        "cx-policy:" + policy.LeftOperand,
+                        constraint.Operator.OperatorToJsonString(),
+                        rightOperand
+                    ));
+
+                }
+            }
+            else
+            {
+                var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
+                                    GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, null, policy.LeftOperand, null) :
+                                    (policy.RightOperandValue!, null);
+                if (additionalAttribute != null)
+                {
+                    additionalAttributes ??= new List<AdditionalAttributes>();
+                    additionalAttributes.Add(additionalAttribute);
+                }
+
+                constraints.Add(new Constraint(null,
+                    null,
+                    "cx-policy:" + policy.LeftOperand,
+                    constraint.Operator.OperatorToJsonString(),
+                    rightOperand
+                ));
+            }
         }
 
         var permission = new Permission(
