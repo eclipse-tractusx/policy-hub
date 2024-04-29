@@ -12,6 +12,7 @@
     "kind_id": 2,
     "technical_key": "Membership",
     "description": "The membership credential can get used to ensure that only CX members are allowed to view or negotiate the respective data offer.",
+    "left_operand_value": null,
     "is_active": true,
     "attribute_key_id": 2
   },
