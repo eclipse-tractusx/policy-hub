@@ -248,7 +248,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.In, ["abc"]),
+                new Constraints("test", OperatorId.In, "abc"),
                 new Constraints("abc", OperatorId.Equals, null)
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
@@ -274,7 +274,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.In, ["test1"]),
+                new Constraints("test", OperatorId.In, "test1"),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "test1" })]);
@@ -319,7 +319,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.Equals, ["testRegValue"]),
+                new Constraints("test", OperatorId.Equals, "testRegValue"),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
@@ -342,7 +342,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.Equals, ["testRegValue"]),
+                new Constraints("test", OperatorId.Equals, "testRegValue"),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
@@ -363,7 +363,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.And,
             new[]
             {
-                new Constraints("BusinessPartnerNumber", OperatorId.Equals, ["BPNL00000003CRHK","BPNL00000004CRHK"]),
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK,BPNL00000004CRHK"),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
@@ -384,7 +384,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.And,
             new[]
             {
-                new Constraints("BusinessPartnerNumber", OperatorId.In, ["BPNL00000003CRHK"]),
+                new Constraints("BusinessPartnerNumber", OperatorId.In, "BPNL00000003CRHK"),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
@@ -405,7 +405,7 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.And,
             new[]
             {
-                new Constraints("BusinessPartnerNumber", OperatorId.Equals, ["BPNL00000003CRHK","BPNL00000004CRHK"]),
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK,BPNL00000003CRHK"),
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
@@ -453,9 +453,9 @@ public class PolicyHubBusinessLogicTests
             new[]
             {
                 new Constraints("inValues", OperatorId.In, null),
-                new Constraints("regValue", OperatorId.Equals, ["BPNL00000001TEST"]),
+                new Constraints("regValue", OperatorId.Equals, "BPNL00000001TEST"),
                 new Constraints("dynamicWithoutValue", OperatorId.Equals, null),
-                new Constraints("dynamicWithValue", OperatorId.Equals, ["test"])
+                new Constraints("dynamicWithValue", OperatorId.Equals, "test")
             });
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
             .Returns([

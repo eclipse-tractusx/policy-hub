@@ -25,6 +25,7 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.Linq;
 using System.Text.RegularExpressions;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
@@ -119,7 +120,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             throw new ControllerArgumentException($"The support of OR constraintOperand for Usage constraints are not supported for now");
         }
 
-        if (requestData.PolicyType == PolicyTypeId.Access && requestData.ConstraintOperand == ConstraintOperandId.And && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Values.Count() > 1)))
+        if (requestData.PolicyType == PolicyTypeId.Access && requestData.ConstraintOperand == ConstraintOperandId.And && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Value!.Split(",").Count() > 1)))
         {
             throw new ControllerArgumentException($"Only a single value BPNL is allowed with an AND constraint");
         }
@@ -129,7 +130,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             throw new ControllerArgumentException($"The operator for BPNLs should always be Equals");
         }
 
-        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Values.Count() > 1)))
+        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Value!.Split(",").Count() > 1)))
         {
             throw new ControllerArgumentException($"For usage policies only a single BPNL is allowed");
         }
@@ -150,7 +151,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested technicalKeys does not exists. TechnicalKeys {string.Join(",", attributeValuesForTechnicalKeys.Select(x => x.TechnicalKey))} are allowed");
         }
 
-        IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> keyValues = requestData.Constraints.GroupBy(x => x.Key).Select(x => new ValueTuple<string, IEnumerable<string>>(x.Key, x.Where(y => y.Values != null).SelectMany(y => y.Values!)));
+        IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> keyValues = requestData.Constraints.GroupBy(x => x.Key).Select(x => new ValueTuple<string, IEnumerable<string>>(x.Key, x.Where(y => y.Value != null).SelectMany(y => y.Value!.Split(","))));
         IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> missingValues = keyValues
             .Join(attributeValuesForTechnicalKeys, secondItem => secondItem.TechnicalKey, firstItem => firstItem.TechnicalKey,
                 (secondItem, firstItem) => new { secondItem, firstItem })
@@ -185,9 +186,9 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
                 throw new UnexpectedConditionException("There must be one configured rightOperand value");
             }
 
-            if (constraint.Values != null)
+            if (constraint.Value != null)
             {
-                foreach (var keyValue in constraint.Values)
+                foreach (var keyValue in constraint.Value.Split(","))
                 {
                     var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
                                     GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, keyValue, policy.LeftOperand, null) :
