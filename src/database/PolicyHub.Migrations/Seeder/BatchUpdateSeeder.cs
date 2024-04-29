@@ -44,11 +44,12 @@ public class BatchUpdateSeeder : ICustomSeeder
         await SeedTable<Policy>(
             "policies",
             x => new { x.Id },
-            x => x.dbEntity.IsActive != x.dataEntity.IsActive || x.dbEntity.TechnicalKey != x.dataEntity.TechnicalKey,
+            x => x.dbEntity.IsActive != x.dataEntity.IsActive || x.dbEntity.TechnicalKey != x.dataEntity.TechnicalKey || x.dbEntity.LeftOperandValue != x.dataEntity.LeftOperandValue,
             (dbEntity, entity) =>
             {
                 dbEntity.IsActive = entity.IsActive;
                 dbEntity.TechnicalKey = entity.TechnicalKey;
+                dbEntity.LeftOperandValue = entity.LeftOperandValue;
             }, cancellationToken).ConfigureAwait(false);
 
         await SeedTable<PolicyAttribute>(
