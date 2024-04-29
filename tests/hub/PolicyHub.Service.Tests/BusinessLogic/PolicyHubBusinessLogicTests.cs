@@ -357,6 +357,69 @@ public class PolicyHubBusinessLogicTests
     }
 
     [Fact]
+    public async Task GetPolicyContentAsync_WithBPNLAllowingANDOperandWithSingleBPNL_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK,BPNL00000004CRHK"),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("Only a single value BPNL is allowed with an AND constraint");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithBPNLOperatorShouldEquals_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.In, "BPNL00000003CRHK"),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("The operator for BPNLs should always be Equals");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithUsagePolicyOnlySingleBPNLAllowed_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK,BPNL00000003CRHK"),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("For usage policies only a single BPNL is allowed");
+    }
+
+    [Fact]
     public async Task GetPolicyContentAsync_WithMultipleDefinedKeys_ThrowsNotFoundException()
     {
         // Arrange

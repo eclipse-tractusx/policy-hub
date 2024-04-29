@@ -12,6 +12,7 @@
     "kind_id": 2,
     "technical_key": "Membership",
     "description": "The membership credential can get used to ensure that only CX members are allowed to view or negotiate the respective data offer.",
+    "left_operand_value": null,
     "is_active": true,
     "attribute_key_id": 2
   },
@@ -19,7 +20,6 @@
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "kind_id": 5,
     "technical_key": "Dismantler.allowedBrands",
-    "left_operand_value": null,
     "description": "Company role defining a dismantler. Companies holding the credential are dismantler certified companies.",
     "is_active": true,
     "attribute_key_id": 4
