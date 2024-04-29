@@ -191,7 +191,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
                 foreach (var keyValue in constraint.Value.Split(","))
                 {
                     var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
-                                    GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, keyValue, policy.LeftOperand, null) :
+                                    GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, keyValue.Trim(), policy.LeftOperand, null) :
                                     (policy.RightOperandValue!, null);
                     if (additionalAttribute != null)
                     {
