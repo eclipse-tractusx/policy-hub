@@ -25,7 +25,7 @@ using System;
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
     /// <inheritdoc />
-    public partial class _25policyseeding : Migration
+    public partial class _100rc1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
