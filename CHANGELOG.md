@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.0.0-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v0.1.0...v1.0.0-rc.1) (2024-04-30)
+
+
+### Features
+
+* **bpnl:** add bpnl policy handling ([#116](https://github.com/eclipse-tractusx/policy-hub/issues/116)) ([421202b](https://github.com/eclipse-tractusx/policy-hub/commit/421202b80a8916a0747c39135905eea0479a2540))
+* **helm_db-dependency:** change image tag to get latest minor updates ([a2663c1](https://github.com/eclipse-tractusx/policy-hub/commit/a2663c16e260eb33dd969c36d15a1ea77821efd6))
+* **helm:** change image tag retrieval for fallback to appVersion ([39b5b69](https://github.com/eclipse-tractusx/policy-hub/commit/39b5b6953c0a3c72f10c66ecc71b097144ac02ae))
+* **helm:** change ingress according to TRG-5.04 ([b00b25f](https://github.com/eclipse-tractusx/policy-hub/commit/b00b25f1cd684bddbaf2461c1405db3321a929d8))
+* **helm:** consolidate centralidp configuration ([660ad6f](https://github.com/eclipse-tractusx/policy-hub/commit/660ad6faec42d14a9e5d2f139a6a0488506fb06c))
+* **helm:** move health checks to service ([7b92236](https://github.com/eclipse-tractusx/policy-hub/commit/7b9223693fe7a65a33d01fd25ee7c51fa2f788a5))
+* **helm:** move passwords for db dependency to according section ([26b0b4e](https://github.com/eclipse-tractusx/policy-hub/commit/26b0b4e688742f59ead334253a19d9715d04729d))
+* **helm:** set resource limits ([913c837](https://github.com/eclipse-tractusx/policy-hub/commit/913c837a6750eca2362a6197f67cf60e7a9e1e70))
+* **net8:** upgrade to .net8 ([#102](https://github.com/eclipse-tractusx/policy-hub/issues/102)) ([fb9e3c9](https://github.com/eclipse-tractusx/policy-hub/commit/fb9e3c944bbee02f5800ab99095ffb439bc91dd3)), closes [#19](https://github.com/eclipse-tractusx/policy-hub/issues/19)
+* **policy:** add value check to post endpoint ([#97](https://github.com/eclipse-tractusx/policy-hub/issues/97)) ([2039af0](https://github.com/eclipse-tractusx/policy-hub/commit/2039af081fe41add04518a0932948e989967dbac)), closes [#68](https://github.com/eclipse-tractusx/policy-hub/issues/68)
+* **policy:** policy seeding data update ([#88](https://github.com/eclipse-tractusx/policy-hub/issues/88)) ([10bb931](https://github.com/eclipse-tractusx/policy-hub/commit/10bb931387e93260d84bdacf59f1fcd77b76e169)), closes [#25](https://github.com/eclipse-tractusx/policy-hub/issues/25)
+* **template:** policyhub restrict or operand to access policies ([#107](https://github.com/eclipse-tractusx/policy-hub/issues/107)) ([6a4cacd](https://github.com/eclipse-tractusx/policy-hub/commit/6a4cacd607325fecf08ce567c13b2d3bacd2e636)), closes [#43](https://github.com/eclipse-tractusx/policy-hub/issues/43)
+
+
+### Bug Fixes
+
+* **helm:** fix label and username for external database ([#72](https://github.com/eclipse-tractusx/policy-hub/issues/72)) ([e9817ff](https://github.com/eclipse-tractusx/policy-hub/commit/e9817ffd1d38db9525338e965248f7375a592857))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-rc.1 ([9f1cb78](https://github.com/eclipse-tractusx/policy-hub/commit/9f1cb78344b742bf7a834369d99720a6ff5eeaff))
+
 ## [0.1.0](https://github.com/eclipse-tractusx/policy-hub/compare/v0.1.0-rc.3...v0.1.0) (2024-03-06)
 
 
