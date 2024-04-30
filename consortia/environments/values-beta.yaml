@@ -18,7 +18,8 @@
 ###############################################################
 
 policyHubBackendAddress: "https://policy-hub.beta.demo.catena-x.net"
-centralidpAddress: "https://centralidp.beta.demo.catena-x.net"
+centralidp:
+  address: "https://centralidp.beta.demo.catena-x.net"
 
 ingress:
   enabled: true
@@ -45,10 +46,8 @@ policyhubmigrations:
   logging:
     default: "Debug"
 
-secrets:
-  postgresql:
-    auth:
-      existingSecret:
-        postgrespassword: "<path:portal/data/policy-hub/beta/postgres#postgres-password>"
-        password: "<path:portal/data/policy-hub/beta/postgres#password>"
-        replicationPassword: "<path:portal/data/policy-hub/beta/postgres#replication-password>"
+postgresql:
+  auth:
+    postgrespassword: "<path:portal/data/policy-hub/beta/postgres#postgres-password>"
+    password: "<path:portal/data/policy-hub/beta/postgres#password>"
+    replicationPassword: "<path:portal/data/policy-hub/beta/postgres#replication-password>"

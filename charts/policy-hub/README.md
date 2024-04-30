@@ -27,7 +27,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 0.1.0
+    version: 1.0.0-rc.1
 ```
 
 ## Requirements
@@ -40,48 +40,37 @@ dependencies:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| centralidpAddress | string | `"https://centralidp.example.org"` | Provide centralidp base address (CX IAM), without trailing '/auth'. |
-| ingress.enabled | bool | `false` | Policy Hub ingress parameters, enable ingress record generation for policy-hub. |
-| ingress.className | string | `"nginx"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/use-regex" | string | `"true"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/enable-cors" | string | `"true"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/proxy-body-size" | string | `"8m"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/cors-allow-origin" | string | `"https://*.example.org"` | Provide CORS allowed origin. |
-| ingress.tls[0] | object | `{"hosts":["policy-hub.example.org"],"secretName":""}` | Provide tls secret. |
-| ingress.tls[0].hosts | list | `["policy-hub.example.org"]` | Provide host for tls secret. |
-| ingress.hosts[0] | object | `{"host":"policy-hub.example.org","paths":[{"path":"/api/policy-hub","pathType":"Prefix"}]}` | Provide default path for the ingress record. |
-| dotnetEnvironment | string | `"Production"` |  |
-| dbConnection.schema | string | `"hub"` |  |
-| dbConnection.sslMode | string | `"Disable"` |  |
-| keycloak.central.authRealm | string | `"CX-Central"` |  |
-| keycloak.central.jwtBearerOptions.requireHttpsMetadata | string | `"true"` |  |
-| keycloak.central.jwtBearerOptions.metadataPath | string | `"/auth/realms/CX-Central/.well-known/openid-configuration"` |  |
-| keycloak.central.jwtBearerOptions.tokenValidationParameters.validIssuerPath | string | `"/auth/realms/CX-Central"` |  |
-| keycloak.central.jwtBearerOptions.tokenValidationParameters.validAudience | string | `"Cl23-CX-Policy-Hub"` |  |
-| keycloak.central.jwtBearerOptions.refreshInterval | string | `"00:00:30"` |  |
-| keycloak.central.tokenPath | string | `"/auth/realms/CX-Central/protocol/openid-connect/token"` |  |
-| keycloak.central.useAuthTrail | bool | `true` | Flag if the api should be used with an leading /auth path |
-| healthChecks.startup.path | string | `"/health/startup"` |  |
-| healthChecks.liveness.path | string | `"/healthz"` |  |
-| healthChecks.readyness.path | string | `"/ready"` |  |
-| policyhub.image | string | `"docker.io/tractusx/policy-hub-service:0.1.0"` |  |
+| policyhub.image.name | string | `"docker.io/tractusx/policy-hub-service"` |  |
+| policyhub.image.tag | string | `""` |  |
 | policyhub.imagePullPolicy | string | `"IfNotPresent"` |  |
-| policyhub.resources | object | `{"requests":{"cpu":"15m","memory":"300M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
+| policyhub.resources | object | `{"limits":{"cpu":"45m","memory":"300M"},"requests":{"cpu":"15m","memory":"300M"}}` | We recommend to review the default resource limits as this should a conscious choice. |
 | policyhub.logging.businessLogic | string | `"Information"` |  |
 | policyhub.logging.default | string | `"Information"` |  |
+| policyhub.healthChecks.startup.path | string | `"/health/startup"` |  |
 | policyhub.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
 | policyhub.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
+| policyhub.healthChecks.liveness.path | string | `"/healthz"` |  |
+| policyhub.healthChecks.readyness.path | string | `"/ready"` |  |
 | policyhub.swaggerEnabled | bool | `false` |  |
-| policyhubmigrations.image | string | `"docker.io/tractusx/policy-hub-migrations:0.1.0"` |  |
+| policyhubmigrations.image.name | string | `"docker.io/tractusx/policy-hub-migrations"` |  |
+| policyhubmigrations.image.tag | string | `""` |  |
 | policyhubmigrations.imagePullPolicy | string | `"IfNotPresent"` |  |
-| policyhubmigrations.resources | object | `{"requests":{"cpu":"15m","memory":"105M"}}` | We recommend not to specify default resource limits and to leave this as a conscious choice for the user. If you do want to specify resource limits, uncomment the following lines and adjust them as necessary. |
+| policyhubmigrations.resources | object | `{"limits":{"cpu":"45m","memory":"105M"},"requests":{"cpu":"15m","memory":"105M"}}` | We recommend to review the default resource limits as this should a conscious choice. |
 | policyhubmigrations.seeding.testDataEnvironments | string | `""` |  |
 | policyhubmigrations.seeding.testDataPaths | string | `"Seeder/Data"` |  |
 | policyhubmigrations.logging.default | string | `"Information"` |  |
+| dotnetEnvironment | string | `"Production"` |  |
+| dbConnection.schema | string | `"hub"` |  |
+| dbConnection.sslMode | string | `"Disable"` |  |
 | postgresql.enabled | bool | `true` | PostgreSQL chart configuration; default configurations: host: "policy-hub-postgresql-primary", port: 5432; Switch to enable or disable the PostgreSQL helm chart. |
+| postgresql.image | object | `{"tag":"15-debian-11"}` | Setting image tag to major to get latest minor updates |
+| postgresql.commonLabels."app.kubernetes.io/version" | string | `"15"` |  |
 | postgresql.auth.username | string | `"hub"` | Non-root username. |
 | postgresql.auth.database | string | `"policy-hub"` | Database name. |
 | postgresql.auth.existingSecret | string | `"{{ .Release.Name }}-phub-postgres"` | Secret containing the passwords for root usernames postgres and non-root username hub. Should not be changed without changing the "phub-postgresSecretName" template as well. |
+| postgresql.auth.postgrespassword | string | `""` | Password for the root username 'postgres'. Secret-key 'postgres-password'. |
+| postgresql.auth.password | string | `""` | Password for the non-root username 'hub'. Secret-key 'password'. |
+| postgresql.auth.replicationPassword | string | `""` | Password for the non-root username 'repl_user'. Secret-key 'replication-password'. |
 | postgresql.architecture | string | `"replication"` |  |
 | postgresql.audit.pgAuditLog | string | `"write, ddl"` |  |
 | postgresql.audit.logLinePrefix | string | `"%m %u %d "` |  |
@@ -90,14 +79,17 @@ dependencies:
 | postgresql.readReplicas.extendedConfiguration | string | `""` | Extended PostgreSQL read only replicas configuration (increase of max_connections recommended - default is 100) |
 | externalDatabase.host | string | `"phub-postgres-ext"` | External PostgreSQL configuration IMPORTANT: non-root db user needs to be created beforehand on external database. And the init script (02-init-db.sql) available in templates/configmap-postgres-init.yaml needs to be executed beforehand. Database host ('-primary' is added as postfix). |
 | externalDatabase.port | int | `5432` | Database port number. |
-| externalDatabase.user | string | `"hub"` | Non-root username for policy-hub. |
+| externalDatabase.username | string | `"hub"` | Non-root username for policy-hub. |
 | externalDatabase.database | string | `"policy-hub"` | Database name. |
 | externalDatabase.password | string | `""` | Password for the non-root username (default 'hub'). Secret-key 'password'. |
 | externalDatabase.existingSecret | string | `"policy-hub-external-db"` | Secret containing the password non-root username, (default 'hub'). |
-| externalDatabase.existingSecretPasswordKey | string | `"password"` | Name of an existing secret key containing the database credentials. |
-| secrets.postgresql.auth.existingSecret.postgrespassword | string | `""` | Password for the root username 'postgres'. Secret-key 'postgres-password'. |
-| secrets.postgresql.auth.existingSecret.password | string | `""` | Password for the non-root username 'hub'. Secret-key 'password'. |
-| secrets.postgresql.auth.existingSecret.replicationPassword | string | `""` | Password for the non-root username 'repl_user'. Secret-key 'replication-password'. |
+| centralidp | object | `{"address":"https://centralidp.example.org","authRealm":"CX-Central","jwtBearerOptions":{"metadataPath":"/auth/realms/CX-Central/.well-known/openid-configuration","refreshInterval":"00:00:30","requireHttpsMetadata":"true","tokenValidationParameters":{"validAudience":"Cl23-CX-Policy-Hub","validIssuerPath":"/auth/realms/CX-Central"}},"tokenPath":"/auth/realms/CX-Central/protocol/openid-connect/token","useAuthTrail":true}` | Provide details about centralidp (CX IAM) Keycloak instance. |
+| centralidp.address | string | `"https://centralidp.example.org"` | Provide centralidp base address (CX IAM), without trailing '/auth'. |
+| centralidp.useAuthTrail | bool | `true` | Flag if the api should be used with an leading /auth path |
+| ingress.enabled | bool | `false` | Policy Hub ingress parameters, enable ingress record generation for policy-hub. |
+| ingress.tls[0] | object | `{"hosts":[""],"secretName":""}` | Provide tls secret. |
+| ingress.tls[0].hosts | list | `[""]` | Provide host for tls secret. |
+| ingress.hosts[0] | object | `{"host":"","paths":[{"path":"/api/policy-hub","pathType":"Prefix"}]}` | Provide default path for the ingress record. |
 | portContainer | int | `8080` |  |
 | portService | int | `8080` |  |
 | replicaCount | int | `3` |  |

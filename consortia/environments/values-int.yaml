@@ -18,7 +18,8 @@
 ###############################################################
 
 policyHubAddress: "https://policy-hub.int.demo.catena-x.net"
-centralidpAddress: "https://centralidp.int.demo.catena-x.net"
+centralidp:
+  address: "https://centralidp.int.demo.catena-x.net"
 
 ingress:
   enabled: true
@@ -51,10 +52,8 @@ policyhubmigrations:
   logging:
     default: "Debug"
 
-secrets:
-  postgresql:
-    auth:
-      existingSecret:
-        postgrespassword: "<path:portal/data/policy-hub/int/postgres#postgres-password>"
-        password: "<path:portal/data/policy-hub/int/postgres#password>"
-        replicationPassword: "<path:portal/data/policy-hub/int/postgres#replication-password>"
+postgresql:
+  auth:
+    postgrespassword: "<path:portal/data/policy-hub/int/postgres#postgres-password>"
+    password: "<path:portal/data/policy-hub/int/postgres#password>"
+    replicationPassword: "<path:portal/data/policy-hub/int/postgres#replication-password>"

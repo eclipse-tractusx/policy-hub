@@ -20,32 +20,28 @@
 using Org.Eclipse.TractusX.PolicyHub.DbAccess;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
+using Org.Eclipse.TractusX.PolicyHub.Entities.Entities;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.Linq;
 using System.Text.RegularExpressions;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 
-public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
+public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
+    : IPolicyHubBusinessLogic
 {
-    private readonly IHubRepositories _hubRepositories;
-
-    public PolicyHubBusinessLogic(IHubRepositories hubRepositories)
-    {
-        _hubRepositories = hubRepositories;
-    }
-
     public IAsyncEnumerable<string> GetAttributeKeys() =>
-        _hubRepositories.GetInstance<IPolicyRepository>().GetAttributeKeys();
+        hubRepositories.GetInstance<IPolicyRepository>().GetAttributeKeys();
 
     public IAsyncEnumerable<PolicyTypeResponse> GetPolicyTypes(PolicyTypeId? type, UseCaseId? useCase) =>
-        _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyTypes(type, useCase);
+        hubRepositories.GetInstance<IPolicyRepository>().GetPolicyTypes(type, useCase);
 
     public async Task<PolicyResponse> GetPolicyContentWithFiltersAsync(UseCaseId? useCase, PolicyTypeId type, string credential, OperatorId operatorId, string? value)
     {
-        var (exists, leftOperand, attributes, rightOperandValue) = await _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyContentAsync(useCase, type, credential).ConfigureAwait(false);
+        var (exists, leftOperand, attributes, rightOperandValue) = await hubRepositories.GetInstance<IPolicyRepository>().GetPolicyContentAsync(useCase, type, credential).ConfigureAwait(false);
         if (!exists)
         {
             throw new NotFoundException($"Policy for type {type} and technicalKey {credential} does not exists");
@@ -58,19 +54,26 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
         }
 
         var (rightOperand, additionalAttribute) = attributes.Key != null ?
-            GetRightOperand(operatorId, attributes, rightOperands, value, leftOperand) :
+            GetRightOperand(operatorId, attributes, rightOperands, value, leftOperand, useCase) :
             (rightOperandValue!, null);
 
-        return new PolicyResponse(CreateFileContent(type, operatorId, leftOperand, rightOperand), additionalAttribute == null ? null : Enumerable.Repeat(additionalAttribute, 1));
+        return new PolicyResponse(CreateFileContent(type, operatorId, "cx-policy:" + leftOperand, rightOperand), additionalAttribute == null ? null : Enumerable.Repeat(additionalAttribute, 1));
     }
 
-    private static (object rightOperand, AdditionalAttributes? additionalAttribute) GetRightOperand(OperatorId operatorId, (AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand) =>
+    private static (object rightOperand, AdditionalAttributes? additionalAttribute) GetRightOperand(OperatorId operatorId, (AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand, UseCaseId? useCase) =>
         attributes.Key switch
         {
             AttributeKeyId.DynamicValue => (value ?? "{dynamicValue}", null),
             AttributeKeyId.Regex => (GetRegexValue(attributes, value), null),
             _ => operatorId == OperatorId.Equals
-                ? rightOperands.Count() > 1 ? ($"@{leftOperand}-{attributes.Key}", new AdditionalAttributes($"@{leftOperand}-{attributes.Key}", rightOperands)) : (rightOperands.Single(), null)
+                ? rightOperands.Count() > 1 ?
+                    ($"@{leftOperand}{(useCase != null ?
+                        useCase.ToString().Insert(0, ".") :
+                        string.Empty)}-{attributes.Key}",
+                        new AdditionalAttributes($"@{leftOperand}{(useCase != null ?
+                            useCase.ToString().Insert(0, ".") :
+                            string.Empty)}-{attributes.Key}", rightOperands)) :
+                    (rightOperands.Single(), null)
                 : (rightOperands, null)
         };
 
@@ -112,6 +115,26 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
 
     public async Task<PolicyResponse> GetPolicyContentAsync(PolicyContentRequest requestData)
     {
+        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.ConstraintOperand == ConstraintOperandId.Or)
+        {
+            throw new ControllerArgumentException($"The support of OR constraintOperand for Usage constraints are not supported for now");
+        }
+
+        if (requestData.PolicyType == PolicyTypeId.Access && requestData.ConstraintOperand == ConstraintOperandId.And && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Value!.Split(",").Count() > 1)))
+        {
+            throw new ControllerArgumentException($"Only a single value BPNL is allowed with an AND constraint");
+        }
+
+        if (requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber") && !requestData.Constraints.Any(x => x.Operator == OperatorId.Equals))
+        {
+            throw new ControllerArgumentException($"The operator for BPNLs should always be Equals");
+        }
+
+        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Value!.Split(",").Count() > 1)))
+        {
+            throw new ControllerArgumentException($"For usage policies only a single BPNL is allowed");
+        }
+
         var keyCounts = requestData.Constraints
             .GroupBy(pair => pair.Key)
             .ToDictionary(group => group.Key, group => group.Count());
@@ -121,10 +144,35 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
             throw new ControllerArgumentException($"Keys {string.Join(",", multipleDefinedKey.Select(x => x.Key).Distinct())} have been defined multiple times");
         }
 
-        var policies = await _hubRepositories.GetInstance<IPolicyRepository>().GetPolicyForOperandContent(requestData.PolicyType, requestData.Constraints.Select(x => x.Key)).ToListAsync().ConfigureAwait(false);
+        var technicalKeys = requestData.Constraints.Select(x => x.Key);
+        var attributeValuesForTechnicalKeys = await hubRepositories.GetInstance<IPolicyRepository>().GetAttributeValuesForTechnicalKeys(requestData.PolicyType, technicalKeys).ConfigureAwait(false);
+        if (technicalKeys.Except(attributeValuesForTechnicalKeys.Select(a => a.TechnicalKey)).Any())
+        {
+            throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested technicalKeys does not exists. TechnicalKeys {string.Join(",", attributeValuesForTechnicalKeys.Select(x => x.TechnicalKey))} are allowed");
+        }
+
+        IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> keyValues = requestData.Constraints.GroupBy(x => x.Key).Select(x => new ValueTuple<string, IEnumerable<string>>(x.Key, x.Where(y => y.Value != null).SelectMany(y => y.Value!.Split(","))));
+        IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> missingValues = keyValues
+            .Join(attributeValuesForTechnicalKeys, secondItem => secondItem.TechnicalKey, firstItem => firstItem.TechnicalKey,
+                (secondItem, firstItem) => new { secondItem, firstItem })
+            .Select(t => new { t, missing = t.secondItem.Values.Except(t.firstItem.Values) })
+            .Where(t => t.missing.Any())
+            .Select(t => (Key: t.t.secondItem.TechnicalKey, MissingValues: t.missing));
+
+        var attributesToIgnore = new[] { AttributeKeyId.Regex, AttributeKeyId.DynamicValue };
+        var technicalKeysToIgnore = attributeValuesForTechnicalKeys.Where(x => x.AttributeKey != null && attributesToIgnore.Any(y => y == x.AttributeKey)).Select(x => x.TechnicalKey);
+        var invalidValues = missingValues.Select(x => x.TechnicalKey).Except(technicalKeysToIgnore);
+        if (invalidValues.Any())
+        {
+            var x = missingValues.Where(x => invalidValues.Contains(x.TechnicalKey)).Select(x =>
+                $"Key: {x.TechnicalKey}, invalid values: {string.Join(',', x.Values)}");
+            throw new ControllerArgumentException($"Invalid values set for {string.Join(',', x)}");
+        }
+
+        var policies = await hubRepositories.GetInstance<IPolicyRepository>().GetPolicyForOperandContent(requestData.PolicyType, technicalKeys).ToListAsync().ConfigureAwait(false);
         if (policies.Count != requestData.Constraints.Count())
         {
-            throw new NotFoundException($"Policy for type {requestData.PolicyType} and technicalKeys {string.Join(",", requestData.Constraints.Select(x => x.Key).Except(policies.Select(x => x.TechnicalKey)))} does not exists");
+            throw new NotFoundException($"Policy for type {requestData.PolicyType} and technicalKeys {string.Join(",", technicalKeys.Except(policies.Select(x => x.TechnicalKey)))} does not exists");
         }
 
         var constraints = new List<Constraint>();
@@ -138,21 +186,46 @@ public class PolicyHubBusinessLogic : IPolicyHubBusinessLogic
                 throw new UnexpectedConditionException("There must be one configured rightOperand value");
             }
 
-            var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
-                GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, constraint.Value, policy.LeftOperand) :
-                (policy.RightOperandValue!, null);
-            if (additionalAttribute != null)
+            if (constraint.Value != null)
             {
-                additionalAttributes ??= new List<AdditionalAttributes>();
-                additionalAttributes.Add(additionalAttribute);
-            }
+                foreach (var keyValue in constraint.Value.Split(","))
+                {
+                    var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
+                                    GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, keyValue.Trim(), policy.LeftOperand, null) :
+                                    (policy.RightOperandValue!, null);
+                    if (additionalAttribute != null)
+                    {
+                        additionalAttributes ??= new List<AdditionalAttributes>();
+                        additionalAttributes.Add(additionalAttribute);
+                    }
 
-            constraints.Add(new Constraint(null,
-                null,
-                policy.LeftOperand,
-                constraint.Operator.OperatorToJsonString(),
-                rightOperand
-            ));
+                    constraints.Add(new Constraint(null,
+                        null,
+                        "cx-policy:" + policy.LeftOperand,
+                        constraint.Operator.OperatorToJsonString(),
+                        rightOperand
+                    ));
+
+                }
+            }
+            else
+            {
+                var (rightOperand, additionalAttribute) = policy.Attributes.Key != null ?
+                                    GetRightOperand(constraint.Operator, policy.Attributes, rightOperands, null, policy.LeftOperand, null) :
+                                    (policy.RightOperandValue!, null);
+                if (additionalAttribute != null)
+                {
+                    additionalAttributes ??= new List<AdditionalAttributes>();
+                    additionalAttributes.Add(additionalAttribute);
+                }
+
+                constraints.Add(new Constraint(null,
+                    null,
+                    "cx-policy:" + policy.LeftOperand,
+                    constraint.Operator.OperatorToJsonString(),
+                    rightOperand
+                ));
+            }
         }
 
         var permission = new Permission(

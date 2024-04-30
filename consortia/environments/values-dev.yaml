@@ -18,7 +18,8 @@
 ###############################################################
 
 policyHubAddress: "https://policy-hub.dev.demo.catena-x.net"
-centralidpAddress: "https://centralidp.dev.demo.catena-x.net"
+centralidp:
+  address: "https://centralidp.dev.demo.catena-x.net"
 
 ingress:
   enabled: true
@@ -45,20 +46,20 @@ keycloak:
         validAudience: "Cl23-CX-Policy-Hub"
 
 policyhub:
-  image: "docker.io/tractusx/policy-hub-service:dev"
+  image:
+    tag: "dev"
   imagePullPolicy: "Always"
   swaggerEnabled: true
 
 policyhubmigrations:
-  image: "docker.io/tractusx/policy-hub-migrations:dev"
+  image:
+    tag: "dev"
   imagePullPolicy: "Always"
   logging:
     default: "Debug"
 
-secrets:
-  postgresql:
-    auth:
-      existingSecret:
-        postgrespassword: "<path:portal/data/policy-hub/dev/postgres#postgres-password>"
-        password: "<path:portal/data/policy-hub/dev/postgres#password>"
-        replicationPassword: "<path:portal/data/policy-hub/dev/postgres#replication-password>"
+postgresql:
+  auth:
+    postgrespassword: "<path:portal/data/policy-hub/dev/postgres#postgres-password>"
+    password: "<path:portal/data/policy-hub/dev/postgres#password>"
+    replicationPassword: "<path:portal/data/policy-hub/dev/postgres#replication-password>"

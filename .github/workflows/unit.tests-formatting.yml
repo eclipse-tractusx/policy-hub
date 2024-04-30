@@ -22,8 +22,12 @@ name: Unit-Tests and Formatting
 on:
   push:
     branches: [main, dev]
+    paths:
+      - 'src/**'
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - 'src/**'
   workflow_dispatch:
 
 jobs:
@@ -32,12 +36,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: ['7.0']
+        dotnet-version: ['8.0']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dotnet-format

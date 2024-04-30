@@ -31,7 +31,9 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
 {
     private readonly TestDbFixture _dbTestDbFixture;
 
+#pragma warning disable xUnit1041 // Fixture arguments to test classes must have fixture sources
     public PolicyRepositoryTests(TestDbFixture testDbFixture)
+#pragma warning restore xUnit1041 // Fixture arguments to test classes must have fixture sources
     {
         _dbTestDbFixture = testDbFixture;
     }
@@ -42,10 +44,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetAttributeKeys_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetAttributeKeys().ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetAttributeKeys().ToListAsync();
 
         // Assert
         result.Should().NotBeEmpty().And.HaveCount(5).And.Satisfy(
@@ -64,24 +66,19 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyTypes_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyTypes(null, null).ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetPolicyTypes(null, null).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(11).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(6).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber",
             x => x.TechnicalKey == "Membership",
-            x => x.TechnicalKey == "FrameworkAgreement.traceability",
-            x => x.TechnicalKey == "FrameworkAgreement.quality",
-            x => x.TechnicalKey == "FrameworkAgreement.pcf",
-            x => x.TechnicalKey == "FrameworkAgreement.behavioraltwin",
-            x => x.TechnicalKey == "purpose.trace.v1.TraceBattery",
-            x => x.TechnicalKey == "purpose.trace.v1.aspects",
-            x => x.TechnicalKey == "companyRole.dismantler",
-            x => x.TechnicalKey == "purpose.trace.v1.qualityanalysis",
-            x => x.TechnicalKey == "purpose"
+            x => x.TechnicalKey == "FrameworkAgreement",
+            x => x.TechnicalKey == "Dismantler.allowedBrands",
+            x => x.TechnicalKey == "UsagePurpose",
+            x => x.TechnicalKey == "Dismantler"
         );
     }
 
@@ -89,16 +86,17 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyTypes_WithTypeFilter_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyTypes(PolicyTypeId.Access, null).ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetPolicyTypes(PolicyTypeId.Access, null).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(3).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(4).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "Membership" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "companyRole.dismantler" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5
+            x => x.TechnicalKey == "Dismantler.allowedBrands" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
+            x => x.TechnicalKey == "Dismantler" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5
         );
     }
 
@@ -106,16 +104,18 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyTypes_WithUseCase_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyTypes(null, UseCaseId.Sustainability).ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetPolicyTypes(null, UseCaseId.Quality).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(3).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(5).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "Membership" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "companyRole.dismantler" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5
+            x => x.TechnicalKey == "Dismantler.allowedBrands" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
+            x => x.TechnicalKey == "FrameworkAgreement" && x.Attribute.Count() == 10 && x.Type.Count() == 1 && x.UseCase.Count() == 5,
+            x => x.TechnicalKey == "Dismantler" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5
         );
     }
 
@@ -127,17 +127,17 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyContentAsync_WithoutRightOperand_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "purpose.trace.v1.TraceBattery").ConfigureAwait(false);
+        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "Membership");
 
         // Assert
         result.Exists.Should().BeTrue();
         result.Attributes.Key.Should().Be(AttributeKeyId.Static);
         result.Attributes.Values.Should().ContainSingle()
-            .And.Satisfy(x => x == "purpose.trace.v1.TraceBattery");
-        result.LeftOperand.Should().Be("purpose.trace.v1.TraceBattery");
+            .And.Satisfy(x => x == "active");
+        result.LeftOperand.Should().Be("Membership");
         result.RightOperandValue.Should().BeNull();
     }
 
@@ -145,18 +145,28 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyContentAsync_WithRightOperand_ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "FrameworkAgreement.behavioraltwin").ConfigureAwait(false);
+        var result = await sut.GetPolicyContentAsync(null, PolicyTypeId.Usage, "FrameworkAgreement");
 
         // Assert
         result.Exists.Should().BeTrue();
         result.Attributes.Key.Should().Be(AttributeKeyId.Version);
-        result.Attributes.Values.Should().ContainSingle()
-            .And.Satisfy(x => x == "1.0");
-        result.LeftOperand.Should().Be("FrameworkAgreement.behavioraltwin");
-        result.RightOperandValue.Should().Be("active:{0}");
+        result.Attributes.Values.Should().Satisfy(
+            x => x == "Traceability:1.0",
+            x => x == "Traceability:1.1",
+            x => x == "Traceability:1.2",
+            x => x == "Quality:1.0",
+            x => x == "PCF:1.0",
+            x => x == "Behavioraltwin:1.0",
+            x => x == "Circulareconomy:1.0",
+            x => x == "Demandcapacity:1.0",
+            x => x == "Puris:1.0",
+            x => x == "Businesspartner:1.0"
+        );
+        result.LeftOperand.Should().Be("FrameworkAgreement");
+        result.RightOperandValue.Should().BeNull();
     }
 
     #endregion
@@ -167,18 +177,18 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
     public async Task GetPolicyForOperandContent__ReturnsExpectedResult()
     {
         // Arrange
-        var sut = await CreateSut().ConfigureAwait(false);
+        var sut = await CreateSut();
 
         // Act
-        var result = await sut.GetPolicyForOperandContent(PolicyTypeId.Usage, Enumerable.Repeat("purpose.trace.v1.TraceBattery", 1)).ToListAsync().ConfigureAwait(false);
+        var result = await sut.GetPolicyForOperandContent(PolicyTypeId.Usage, Enumerable.Repeat("Membership", 1)).ToListAsync();
 
         // Assert
         result.Should().ContainSingle()
             .And.Satisfy(
-                x => x.TechnicalKey == "purpose.trace.v1.TraceBattery" &&
+                x => x.TechnicalKey == "Membership" &&
                      x.Attributes.Key == AttributeKeyId.Static &&
-                     x.Attributes.Values.Single() == "purpose.trace.v1.TraceBattery" &&
-                     x.LeftOperand == "purpose.trace.v1.TraceBattery" &&
+                     x.Attributes.Values.Single() == "active" &&
+                     x.LeftOperand == "Membership" &&
                      x.RightOperandValue == null);
     }
 

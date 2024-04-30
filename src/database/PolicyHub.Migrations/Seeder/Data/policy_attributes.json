@@ -1,92 +1,135 @@
 [
   {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d1",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b1",
     "key": 1,
     "attribute_value": "^BPNL[\\w|\\d]{12}$",
     "is_active": true
   },
   {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d2",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b2",
     "key": 2,
     "attribute_value": "active",
     "is_active": true
   },
   {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
-    "key": 5,
-    "attribute_value": "1.0",
-    "is_active": true
-  },
-  {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
-    "key": 5,
-    "attribute_value": "1.1",
-    "is_active": true
-  },
-  {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
-    "key": 5,
-    "attribute_value": "1.2",
-    "is_active": true
-  },
-  {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b4",
-    "key": 5,
-    "attribute_value": "1.0",
-    "is_active": true
-  },
-  {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b5",
-    "key": 5,
-    "attribute_value": "1.0",
-    "is_active": true
-  },
-  {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b6",
-    "key": 5,
-    "attribute_value": "1.0",
-    "is_active": true
-  },
-  {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b7",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d3",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
     "attribute_value": "purpose.trace.v1.TraceBattery",
     "is_active": true
   },
   {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b8",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d4",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
     "attribute_value": "purpose.trace.v1.aspects",
     "is_active": true
   },
   {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b9",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d5",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
     "attribute_value": "purpose.trace.v1.qualityanalysis",
     "is_active": true
   },
   {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d6",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "key": 4,
     "attribute_value": "BMW",
     "is_active": true
   },
   {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d7",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "key": 4,
     "attribute_value": "Audi",
     "is_active": true
   },
   {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d8",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
     "key": 4,
     "attribute_value": "VW",
     "is_active": true
   },
   {
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
-    "key": 2,
-    "attribute_value": "ID Trace 3.1",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d9",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Traceability:1.0",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e1",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Traceability:1.1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e2",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Traceability:1.2",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e3",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Quality:1.0",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e4",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "PCF:1.0",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e6",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Behavioraltwin:1.0",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e7",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Circulareconomy:1.0",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e8",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Demandcapacity:1.0",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e9",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Puris:1.0",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300f1",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
+    "key": 5,
+    "attribute_value": "Businesspartner:1.0",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300f2",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300d1",
+    "key": 4,
+    "attribute_value": "active",
     "is_active": true
   }
 ]

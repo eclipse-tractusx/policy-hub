@@ -23,7 +23,7 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
-using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Service;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Web;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
@@ -46,7 +46,7 @@ public static class PolicyHubController
             .Produces(StatusCodes.Status200OK, typeof(string), Constants.JsonContentType);
 
         policyHub.MapGet("policy-types", (PolicyTypeId? type, UseCaseId? useCase, IPolicyHubBusinessLogic logic) => logic.GetPolicyTypes(type, useCase))
-            .WithSwaggerDescription("Gets the policy types",
+            .WithSwaggerDescription("Provides all current supported policy types incl. a policy description and useCase link.",
                 "Example: GET: api/policy-hub/policy-types",
                 "OPTIONAL: Type to filter the response",
                 "OPTIONAL: UseCase to filter the response")
@@ -57,24 +57,24 @@ public static class PolicyHubController
         policyHub.MapGet("policy-content",
                 (UseCaseId? useCase,
                 PolicyTypeId type,
-                string credential,
-                OperatorId operatorId,
+                string policyName,
+                OperatorId operatorType,
                 string? value,
-                IPolicyHubBusinessLogic logic) => logic.GetPolicyContentWithFiltersAsync(useCase, type, credential, operatorId, value))
-            .WithSwaggerDescription("Gets the content for a specific policy type",
+                IPolicyHubBusinessLogic logic) => logic.GetPolicyContentWithFiltersAsync(useCase, type, policyName, operatorType, value))
+            .WithSwaggerDescription("Receive the policy template 'access' or 'usage' for a single policy rule based on the request parameters submitted by the user.",
                 "Example: GET: api/policy-hub/policy-content",
                 "OPTIONAL: The use case",
-                "Type of the policy to get the content for",
+                "Policy type for which the policy is supposed to get created. Possible values: 'Access' or 'Usage'",
                 "The technical key of the policy",
-                "The operator of the left and right operand",
-                "OPTIONAL: Value for dynamic or regex operands")
+                "Policy Rule operator. Possible values: 'Equals' or 'In'",
+                "OPTIONAL: Value to be used for the rightOperand")
             .RequireAuthorization()
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(PolicyResponse), Constants.JsonContentType)
             .Produces(StatusCodes.Status404NotFound, typeof(ErrorResponse), Constants.JsonContentType);
 
         policyHub.MapPost("policy-content", ([FromBody] PolicyContentRequest requestData, IPolicyHubBusinessLogic logic) => logic.GetPolicyContentAsync(requestData))
-            .WithSwaggerDescription("Gets the content for a specific policy type",
+            .WithSwaggerDescription("Receive the policy template 'access' or 'usage' for multiple policy rule template based on the input request body.",
                 "Example: POST: api/policy-hub/policy-content",
                 "Request data with the configuration of the constraints")
             .RequireAuthorization()

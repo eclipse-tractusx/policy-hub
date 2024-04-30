@@ -58,7 +58,7 @@ public class PolicyHubBusinessLogicTests
         Setup_GetAttributeKeys();
 
         // Act
-        var result = await _sut.GetAttributeKeys().ToListAsync().ConfigureAwait(false);
+        var result = await _sut.GetAttributeKeys().ToListAsync();
 
         // Assert
         result.Should().HaveCount(5);
@@ -75,7 +75,7 @@ public class PolicyHubBusinessLogicTests
         Setup_GetPolicyTypes();
 
         // Act
-        var result = await _sut.GetPolicyTypes(null, null).ToListAsync().ConfigureAwait(false);
+        var result = await _sut.GetPolicyTypes(null, null).ToListAsync();
 
         // Assert
         result.Should().HaveCount(2);
@@ -88,7 +88,7 @@ public class PolicyHubBusinessLogicTests
         Setup_GetPolicyTypes();
 
         // Act
-        var result = await _sut.GetPolicyTypes(null, UseCaseId.Sustainability).ToListAsync().ConfigureAwait(false);
+        var result = await _sut.GetPolicyTypes(null, UseCaseId.Sustainability).ToListAsync();
 
         // Assert
         result.Should().ContainSingle();
@@ -105,7 +105,7 @@ public class PolicyHubBusinessLogicTests
         const PolicyTypeId policyTypeId = PolicyTypeId.Access;
         A.CallTo(() => _policyRepository.GetPolicyContentAsync(null, policyTypeId, "membership"))
             .Returns(new ValueTuple<bool, string, (AttributeKeyId, IEnumerable<string>), string?>(false, null!, default, null!));
-        async Task Act() => await _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, null);
+        Task Act() => _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, null);
 
         // Act
         var ex = await Assert.ThrowsAsync<NotFoundException>(Act);
@@ -121,7 +121,7 @@ public class PolicyHubBusinessLogicTests
         const PolicyTypeId policyTypeId = PolicyTypeId.Access;
         A.CallTo(() => _policyRepository.GetPolicyContentAsync(null, policyTypeId, "membership"))
             .Returns(new ValueTuple<bool, string, (AttributeKeyId?, IEnumerable<string>), string?>(true, "test", (null, Enumerable.Empty<string>()), null!));
-        async Task Act() => await _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, null);
+        Task Act() => _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, null);
 
         // Act
         var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act);
@@ -152,10 +152,10 @@ public class PolicyHubBusinessLogicTests
         const PolicyTypeId policyTypeId = PolicyTypeId.Access;
         A.CallTo(() => _policyRepository.GetPolicyContentAsync(null, policyTypeId, "membership"))
             .Returns(new ValueTuple<bool, string, (AttributeKeyId?, IEnumerable<string>), string?>(true, "test", (AttributeKeyId.Regex, new[] { "test1", "test2" }), null));
-        async Task Act() => await _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, "test");
+        Task Act() => _sut.GetPolicyContentWithFiltersAsync(null, policyTypeId, "membership", OperatorId.Equals, "test");
 
         // Act
-        var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act).ConfigureAwait(false);
+        var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act);
 
         // Assert
         ex.Message.Should().Be("There should only be one regex pattern defined");
@@ -169,7 +169,7 @@ public class PolicyHubBusinessLogicTests
             .Returns(new ValueTuple<bool, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(true, "multipleAdditionalValues", new ValueTuple<AttributeKeyId, IEnumerable<string>>(AttributeKeyId.Static, new[] { "value1", "value2", "value3" }), null));
 
         // Act
-        var result = await _sut.GetPolicyContentWithFiltersAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues", OperatorId.Equals, "test").ConfigureAwait(false);
+        var result = await _sut.GetPolicyContentWithFiltersAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues", OperatorId.Equals, "test");
 
         // Assert
         result.Content.Id.Should().Be("....");
@@ -181,8 +181,8 @@ public class PolicyHubBusinessLogicTests
                 x => x == "value2",
                 x => x == "value3"
             );
-        result.Content.Permission.Constraint.RightOperandValue.Should().Be("@multipleAdditionalValues-Static");
-        result.Content.Permission.Constraint.LeftOperand.Should().Be("multipleAdditionalValues");
+        result.Content.Permission.Constraint.RightOperandValue.Should().Be("@multipleAdditionalValues.Traceability-Static");
+        result.Content.Permission.Constraint.LeftOperand.Should().Be("cx-policy:multipleAdditionalValues");
         result.Content.Permission.Constraint.Operator.Should().Be("eq");
         result.Content.Permission.Constraint.AndOperands.Should().BeNull();
         result.Content.Permission.Constraint.OrOperands.Should().BeNull();
@@ -202,15 +202,69 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("test", OperatorId.In, null),
                 new Constraints("abc", OperatorId.Equals, null)
             });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([
+                ("test", AttributeKeyId.Version, []),
+                ("abc", AttributeKeyId.Version, []),
+            ]);
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", default, null), 1).ToAsyncEnumerable());
+        Task Act() => _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<NotFoundException>(Act);
+
+        // Assert
+        ex.Message.Should().Be($"Policy for type {data.PolicyType} and technicalKeys abc does not exists");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithUnmatchingTechnicalKeys_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.In, null),
+                new Constraints("abc", OperatorId.Equals, null)
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, [])]);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", default, null), 1).ToAsyncEnumerable());
         async Task Act() => await _sut.GetPolicyContentAsync(data);
 
         // Act
-        var ex = await Assert.ThrowsAsync<NotFoundException>(Act).ConfigureAwait(false);
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be($"Policy for type {data.PolicyType} and technicalKeys abc does not exists");
+        ex.Message.Should().Be($"Policy for type {data.PolicyType} and requested technicalKeys does not exists. TechnicalKeys test are allowed");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithUnmatchingAttributeValues_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.In, "abc"),
+                new Constraints("abc", OperatorId.Equals, null)
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([
+                ("test", AttributeKeyId.Version, ["test"]),
+                ("abc", AttributeKeyId.Version, [])
+            ]);
+        A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", default, null), 1).ToAsyncEnumerable());
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("Invalid values set for Key: test, invalid values: abc");
     }
 
     [Fact]
@@ -220,14 +274,16 @@ public class PolicyHubBusinessLogicTests
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
             new[]
             {
-                new Constraints("test", OperatorId.In, null),
+                new Constraints("test", OperatorId.In, "test1"),
             });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "test1" })]);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", (null, Enumerable.Empty<string>()), null), 1).ToAsyncEnumerable());
-        async Task Act() => await _sut.GetPolicyContentAsync(data);
+        Task Act() => _sut.GetPolicyContentAsync(data);
 
         // Act
-        var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act).ConfigureAwait(false);
+        var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act);
 
         // Assert
         ex.Message.Should().Be("There must be one configured rightOperand value");
@@ -242,12 +298,14 @@ public class PolicyHubBusinessLogicTests
             {
                 new Constraints("test", OperatorId.Equals, null),
             });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Regex, new List<string> { "test1" })]);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", (AttributeKeyId.Regex, Enumerable.Repeat(@"^BPNL[\w|\d]{12}$", 1)), null), 1).ToAsyncEnumerable());
-        async Task Act() => await _sut.GetPolicyContentAsync(data);
+        Task Act() => _sut.GetPolicyContentAsync(data);
 
         // Act
-        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
         ex.ParamName.Should().Be("value");
@@ -263,16 +321,102 @@ public class PolicyHubBusinessLogicTests
             {
                 new Constraints("test", OperatorId.Equals, "testRegValue"),
             });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", (AttributeKeyId.Regex, Enumerable.Repeat(@"^BPNL[\w|\d]{12}$", 1)), null), 1).ToAsyncEnumerable());
-        async Task Act() => await _sut.GetPolicyContentAsync(data);
+        Task Act() => _sut.GetPolicyContentAsync(data);
 
         // Act
-        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
         ex.ParamName.Should().Be("value");
         ex.Message.Should().Be(@"The provided value testRegValue does not match the regex pattern ^BPNL[\w|\d]{12}$ (Parameter 'value')");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithUsageConstraintNotAllowedWithOR_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.Or,
+            new[]
+            {
+                new Constraints("test", OperatorId.Equals, "testRegValue"),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("The support of OR constraintOperand for Usage constraints are not supported for now");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithBPNLAllowingANDOperandWithSingleBPNL_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK,BPNL00000004CRHK"),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("Only a single value BPNL is allowed with an AND constraint");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithBPNLOperatorShouldEquals_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.In, "BPNL00000003CRHK"),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("The operator for BPNLs should always be Equals");
+    }
+
+    [Fact]
+    public async Task GetPolicyContentAsync_WithUsagePolicyOnlySingleBPNLAllowed_ThrowsControllerArgumentException()
+    {
+        // Arrange
+        var data = new PolicyContentRequest(PolicyTypeId.Usage, ConstraintOperandId.And,
+            new[]
+            {
+                new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK,BPNL00000003CRHK"),
+            });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([("test", AttributeKeyId.Version, new List<string> { "testRegValue" })]);
+
+        async Task Act() => await _sut.GetPolicyContentAsync(data);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("For usage policies only a single BPNL is allowed");
     }
 
     [Fact]
@@ -285,15 +429,17 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("test", OperatorId.In, null),
                 new Constraints("test", OperatorId.Equals, null)
             });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([]);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(new[]
             {
                 new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", default, null)
             }.ToAsyncEnumerable());
-        async Task Act() => await _sut.GetPolicyContentAsync(data);
+        Task Act() => _sut.GetPolicyContentAsync(data);
 
         // Act
-        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act).ConfigureAwait(false);
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
         ex.Message.Should().Be("Keys test have been defined multiple times");
@@ -311,6 +457,13 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("dynamicWithoutValue", OperatorId.Equals, null),
                 new Constraints("dynamicWithValue", OperatorId.Equals, "test")
             });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([
+                ("inValues", AttributeKeyId.Version, []),
+                ("regValue", AttributeKeyId.Regex, ["BPNL..."]),
+                ("dynamicWithoutValue", AttributeKeyId.DynamicValue, []),
+                ("dynamicWithValue", AttributeKeyId.DynamicValue, []),
+            ]);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(new[]
             {
@@ -321,7 +474,7 @@ public class PolicyHubBusinessLogicTests
             }.ToAsyncEnumerable());
 
         // Act
-        var result = await _sut.GetPolicyContentAsync(data).ConfigureAwait(false);
+        var result = await _sut.GetPolicyContentAsync(data);
 
         // Assert
         result.Content.Id.Should().Be("....");
@@ -332,10 +485,10 @@ public class PolicyHubBusinessLogicTests
         result.Content.Permission.Constraint.AndOperands.Should().BeNull();
         result.Content.Permission.Constraint.OrOperands.Should().HaveCount(4)
             .And.Satisfy(
-                x => x.LeftOperand == "active" && x.Operator == "in" && ((x.RightOperandValue as IEnumerable<string>)!).Count() == 2,
-                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "BPNL00000001TEST",
-                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "{dynamicValue}",
-                x => x.LeftOperand == "active" && x.Operator == "eq" && x.RightOperandValue as string == "test");
+                x => x.LeftOperand == "cx-policy:active" && x.Operator == "in" && ((x.RightOperandValue as IEnumerable<string>)!).Count() == 2,
+                x => x.LeftOperand == "cx-policy:active" && x.Operator == "eq" && x.RightOperandValue as string == "BPNL00000001TEST",
+                x => x.LeftOperand == "cx-policy:active" && x.Operator == "eq" && x.RightOperandValue as string == "{dynamicValue}",
+                x => x.LeftOperand == "cx-policy:active" && x.Operator == "eq" && x.RightOperandValue as string == "test");
     }
 
     [Fact]
@@ -347,6 +500,11 @@ public class PolicyHubBusinessLogicTests
                 new Constraints("multipleAdditionalValues", OperatorId.Equals, null),
                 new Constraints("test", OperatorId.In, null)
             });
+        A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
+            .Returns([
+                ("multipleAdditionalValues", AttributeKeyId.Version, ["test"]),
+                ("test", AttributeKeyId.Version, [])
+            ]);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
             .Returns(new[]
             {
@@ -355,7 +513,7 @@ public class PolicyHubBusinessLogicTests
             }.ToAsyncEnumerable());
 
         // Act
-        var result = await _sut.GetPolicyContentAsync(data).ConfigureAwait(false);
+        var result = await _sut.GetPolicyContentAsync(data);
 
         // Assert
         result.Content.Id.Should().Be("....");
@@ -366,8 +524,8 @@ public class PolicyHubBusinessLogicTests
         result.Content.Permission.Constraint.OrOperands.Should().BeNull();
         result.Content.Permission.Constraint.AndOperands.Should().HaveCount(2)
             .And.Satisfy(
-                x => x.LeftOperand == "multipleAdditionalValues" && x.Operator == "eq" && x.RightOperandValue as string == "@multipleAdditionalValues-Static",
-                x => x.LeftOperand == "test" && x.Operator == "in" && (x.RightOperandValue as IEnumerable<string>)!.Count() == 2);
+                x => x.LeftOperand == "cx-policy:multipleAdditionalValues" && x.Operator == "eq" && x.RightOperandValue as string == "@multipleAdditionalValues-Static",
+                x => x.LeftOperand == "cx-policy:test" && x.Operator == "in" && (x.RightOperandValue as IEnumerable<string>)!.Count() == 2);
         result.AdditionalAttributes.Should().ContainSingle()
             .And.Satisfy(x => x.Key == "@multipleAdditionalValues-Static");
         result.AdditionalAttributes!.Single().PossibleValues.Should().HaveCount(3)

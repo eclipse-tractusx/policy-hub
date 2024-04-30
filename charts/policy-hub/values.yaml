@@ -17,99 +17,58 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-# -- Provide centralidp base address (CX IAM), without trailing '/auth'.
-centralidpAddress: "https://centralidp.example.org"
+policyhub:
+  image:
+    name: "docker.io/tractusx/policy-hub-service"
+    tag: ""
+  imagePullPolicy: "IfNotPresent"
+  # -- We recommend to review the default resource limits as this should a conscious choice.
+  resources:
+    requests:
+      cpu: 15m
+      memory: 300M
+    limits:
+      cpu: 45m
+      memory: 300M
+  logging:
+    businessLogic: "Information"
+    default: "Information"
+  healthChecks:
+    startup:
+      path: "/health/startup"
+      tags:
+      - name: "HEALTHCHECKS__0__TAGS__1"
+        value: "policyhubdb"
+    liveness:
+      path: "/healthz"
+    readyness:
+      path: "/ready"
+  swaggerEnabled: false
 
-ingress:
-  # -- Policy Hub ingress parameters,
-  # enable ingress record generation for policy-hub.
-  enabled: false
-  className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "8m"
-    # -- Provide CORS allowed origin.
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://*.example.org"
-  tls:
-    # -- Provide tls secret.
-    - secretName: ""
-      # -- Provide host for tls secret.
-      hosts:
-        - "policy-hub.example.org"
-  hosts:
-    # -- Provide default path for the ingress record.
-    - host: "policy-hub.example.org"
-      paths:
-        - path: "/api/policy-hub"
-          pathType: "Prefix"
+policyhubmigrations:
+  image:
+    name: "docker.io/tractusx/policy-hub-migrations"
+    tag: ""
+  imagePullPolicy: "IfNotPresent"
+  # -- We recommend to review the default resource limits as this should a conscious choice.
+  resources:
+    requests:
+      cpu: 15m
+      memory: 105M
+    limits:
+      cpu: 45m
+      memory: 105M
+  seeding:
+    testDataEnvironments: ""
+    testDataPaths: "Seeder/Data"
+  logging:
+    default: "Information"
 
 dotnetEnvironment: "Production"
 
 dbConnection:
   schema: "hub"
   sslMode: "Disable"
-
-keycloak:
-  central:
-    authRealm: "CX-Central"
-    jwtBearerOptions:
-      requireHttpsMetadata: "true"
-      metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
-      tokenValidationParameters:
-        validIssuerPath: "/auth/realms/CX-Central"
-        validAudience: "Cl23-CX-Policy-Hub"
-      refreshInterval: "00:00:30"
-    tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
-    # -- Flag if the api should be used with an leading /auth path
-    useAuthTrail: true
-healthChecks:
-  startup:
-    path: "/health/startup"
-  liveness:
-    path: "/healthz"
-  readyness:
-    path: "/ready"
-
-policyhub:
-  image: "docker.io/tractusx/policy-hub-service:0.1.0"
-  imagePullPolicy: "IfNotPresent"
-  # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
-  # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
-  resources:
-    requests:
-      cpu: 15m
-      memory: 300M
-    # limits:
-    #   cpu: 45m
-    #   memory: 400M
-  logging:
-    businessLogic: "Information"
-    default: "Information"
-  healthChecks:
-    startup:
-      tags:
-      - name: "HEALTHCHECKS__0__TAGS__1"
-        value: "policyhubdb"
-  swaggerEnabled: false
-
-policyhubmigrations:
-  image: "docker.io/tractusx/policy-hub-migrations:0.1.0"
-  imagePullPolicy: "IfNotPresent"
-  # -- We recommend not to specify default resource limits and to leave this as a conscious choice for the user.
-  # If you do want to specify resource limits, uncomment the following lines and adjust them as necessary.
-  resources:
-    requests:
-      cpu: 15m
-      memory: 105M
-    # limits:
-    #   cpu: 45m
-    #   memory: 105M
-  seeding:
-    testDataEnvironments: ""
-    testDataPaths: "Seeder/Data"
-  logging:
-    default: "Information"
 
 postgresql:
   # -- PostgreSQL chart configuration;
@@ -118,6 +77,11 @@ postgresql:
   # port: 5432;
   # Switch to enable or disable the PostgreSQL helm chart.
   enabled: true
+  # -- Setting image tag to major to get latest minor updates
+  image:
+    tag: "15-debian-11"
+  commonLabels:
+    app.kubernetes.io/version: "15"
   auth:
     # -- Non-root username.
     username: hub
@@ -126,6 +90,12 @@ postgresql:
     # -- Secret containing the passwords for root usernames postgres and non-root username hub.
     # Should not be changed without changing the "phub-postgresSecretName" template as well.
     existingSecret: "{{ .Release.Name }}-phub-postgres"
+    # -- Password for the root username 'postgres'. Secret-key 'postgres-password'.
+    postgrespassword: ""
+    # -- Password for the non-root username 'hub'. Secret-key 'password'.
+    password: ""
+    # -- Password for the non-root username 'repl_user'. Secret-key 'replication-password'.
+    replicationPassword: ""
   architecture: replication
   audit:
     pgAuditLog: "write, ddl"
@@ -149,26 +119,54 @@ externalDatabase:
   # -- Database port number.
   port: 5432
   # -- Non-root username for policy-hub.
-  user: "hub"
+  username: "hub"
   # -- Database name.
   database: "policy-hub"
   # -- Password for the non-root username (default 'hub'). Secret-key 'password'.
   password: ""
   # -- Secret containing the password non-root username, (default 'hub').
   existingSecret: "policy-hub-external-db"
-  # -- Name of an existing secret key containing the database credentials.
-  existingSecretPasswordKey: "password"
 
-secrets:
-  postgresql:
-    auth:
-      existingSecret:
-        # -- Password for the root username 'postgres'. Secret-key 'postgres-password'.
-        postgrespassword: ""
-        # -- Password for the non-root username 'hub'. Secret-key 'password'.
-        password: ""
-        # -- Password for the non-root username 'repl_user'. Secret-key 'replication-password'.
-        replicationPassword: ""
+# -- Provide details about centralidp (CX IAM) Keycloak instance.
+centralidp:
+  # -- Provide centralidp base address (CX IAM), without trailing '/auth'.
+  address: "https://centralidp.example.org"
+  authRealm: "CX-Central"
+  jwtBearerOptions:
+    requireHttpsMetadata: "true"
+    metadataPath: "/auth/realms/CX-Central/.well-known/openid-configuration"
+    tokenValidationParameters:
+      validIssuerPath: "/auth/realms/CX-Central"
+      validAudience: "Cl23-CX-Policy-Hub"
+    refreshInterval: "00:00:30"
+  tokenPath: "/auth/realms/CX-Central/protocol/openid-connect/token"
+  # -- Flag if the api should be used with an leading /auth path
+  useAuthTrail: true
+
+ingress:
+  # -- Policy Hub ingress parameters,
+  # enable ingress record generation for policy-hub.
+  enabled: false
+  # className: "nginx"
+  ## Optional annotations when using the nginx ingress class
+  # annotations:
+  #   nginx.ingress.kubernetes.io/use-regex: "true"
+  #   nginx.ingress.kubernetes.io/enable-cors: "true"
+  #   nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+  #   # -- Provide CORS allowed origin.
+  #   nginx.ingress.kubernetes.io/cors-allow-origin: "https://*.example.org"
+  tls:
+    # -- Provide tls secret.
+    - secretName: ""
+      # -- Provide host for tls secret.
+      hosts:
+        - ""
+  hosts:
+    # -- Provide default path for the ingress record.
+    - host: ""
+      paths:
+        - path: "/api/policy-hub"
+          pathType: "Prefix"
 
 portContainer: 8080
 

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -21,35 +21,27 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Entities.Entities;
 
-public class PolicyAttribute : IActiveEntity
+public class PolicyAttributeAssignedUseCases
 {
-    private PolicyAttribute()
+    private PolicyAttributeAssignedUseCases()
     {
-        AttributeValue = null!;
-        PolicyAttributeAssignedUseCases = new HashSet<PolicyAttributeAssignedUseCases>();
+        PolicyAttribute = null!;
+        UseCase = null!;
     }
 
-    public PolicyAttribute(Guid id, Guid policyId, AttributeKeyId key, string attributeValue)
+    public PolicyAttributeAssignedUseCases(Guid attributeId, UseCaseId useCaseId)
         : this()
     {
-        Id = id;
-        PolicyId = policyId;
-        Key = key;
-        AttributeValue = attributeValue;
+        AttributeId = attributeId;
+        UseCaseId = useCaseId;
     }
 
-    public Guid Id { get; set; }
-    public Guid PolicyId { get; set; }
+    public Guid AttributeId { get; set; }
 
-    public AttributeKeyId Key { get; set; }
-
-    public string AttributeValue { get; set; }
+    public UseCaseId UseCaseId { get; set; }
 
     public bool IsActive { get; set; }
 
-    public virtual Policy? Policy { get; private set; }
-
-    public virtual AttributeKey? AttributeKey { get; private set; }
-
-    public virtual ICollection<PolicyAttributeAssignedUseCases> PolicyAttributeAssignedUseCases { get; private set; }
+    public virtual PolicyAttribute? PolicyAttribute { get; private set; }
+    public virtual UseCase? UseCase { get; private set; }
 }

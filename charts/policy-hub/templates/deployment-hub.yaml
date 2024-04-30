@@ -45,7 +45,7 @@ spec:
             - ALL
           readOnlyRootFilesystem: true
           runAsNonRoot: true
-        image: "{{ .Values.policyhub.image }}"
+        image: "{{ .Values.policyhub.image.name }}:{{ .Values.policyhub.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: "{{ .Values.policyhub.imagePullPolicy }}"
         env:
         - name: DOTNET_ENVIRONMENT
@@ -69,24 +69,24 @@ spec:
           value: "Server={{ .Values.externalDatabase.host }};Database={{ .Values.externalDatabase.database }};Port={{ .Values.externalDatabase.port }};User Id={{ .Values.externalDatabase.username }};Password=$(POLICY_HUB_PASSWORD);Ssl Mode={{ .Values.dbConnection.sslMode }};"
         {{- end }}
         - name: "HEALTHCHECKS__0__PATH"
-          value: "{{ .Values.healthChecks.startup.path}}"
+          value: "{{ .Values.policyhub.healthChecks.startup.path}}"
         {{- if .Values.policyhub.healthChecks.startup.tags }}
         {{- toYaml .Values.policyhub.healthChecks.startup.tags | nindent 8 }}
         {{- end }}
         - name: "HEALTHCHECKS__1__PATH"
-          value: "{{ .Values.healthChecks.readyness.path}}"
+          value: "{{ .Values.policyhub.healthChecks.readyness.path}}"
         - name: "HEALTHCHECKS__2__PATH"
-          value: "{{ .Values.healthChecks.liveness.path}}"
+          value: "{{ .Values.policyhub.healthChecks.liveness.path}}"
         - name: "JWTBEAREROPTIONS__METADATAADDRESS"
-          value: "{{ .Values.centralidpAddress }}{{ .Values.keycloak.central.jwtBearerOptions.metadataPath }}"
+          value: "{{ .Values.centralidp.address }}{{ .Values.centralidp.jwtBearerOptions.metadataPath }}"
         - name: "JWTBEAREROPTIONS__REQUIREHTTPSMETADATA"
-          value: "{{ .Values.keycloak.central.jwtBearerOptions.requireHttpsMetadata }}"
+          value: "{{ .Values.centralidp.jwtBearerOptions.requireHttpsMetadata }}"
         - name: "JWTBEAREROPTIONS__TOKENVALIDATIONPARAMETERS__VALIDAUDIENCE"
-          value: "{{ .Values.keycloak.central.jwtBearerOptions.tokenValidationParameters.validAudience }}"
+          value: "{{ .Values.centralidp.jwtBearerOptions.tokenValidationParameters.validAudience }}"
         - name: "JWTBEAREROPTIONS__TOKENVALIDATIONPARAMETERS__VALIDISSUER"
-          value: "{{ .Values.centralidpAddress }}{{ .Values.keycloak.central.jwtBearerOptions.tokenValidationParameters.validIssuerPath }}"
+          value: "{{ .Values.centralidp.address }}{{ .Values.centralidp.jwtBearerOptions.tokenValidationParameters.validIssuerPath }}"
         - name: "JWTBEAREROPTIONS__REFRESHINTERVAL"
-          value: "{{ .Values.keycloak.central.jwtBearerOptions.refreshInterval }}"
+          value: "{{ .Values.centralidp.jwtBearerOptions.refreshInterval }}"
         - name: "SERILOG__MINIMUMLEVEL__Default"
           value: "{{ .Values.policyhub.logging.default }}"
         - name: "SERILOG__MINIMUMLEVEL__OVERRIDE__Org.Eclipse.TractusX.PolicyHub.Service"
@@ -99,7 +99,7 @@ spec:
           protocol: TCP
         startupProbe:
           httpGet:
-            path: {{ .Values.healthChecks.startup.path }}
+            path: {{ .Values.policyhub.healthChecks.startup.path }}
             port: {{ .Values.portContainer }}
             scheme: HTTP
           initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
@@ -109,7 +109,7 @@ spec:
           failureThreshold: {{ .Values.startupProbe.failureThreshold }}
         livenessProbe:
           httpGet:
-            path: {{ .Values.healthChecks.liveness.path }}
+            path: {{ .Values.policyhub.healthChecks.liveness.path }}
             port: {{ .Values.portContainer }}
             scheme: HTTP
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
@@ -119,7 +119,7 @@ spec:
           failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
         readinessProbe:
           httpGet:
-            path: {{ .Values.healthChecks.readyness.path }}
+            path: {{ .Values.policyhub.healthChecks.readyness.path }}
             port: {{ .Values.portContainer }}
             scheme: HTTP
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}

@@ -45,36 +45,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           fetch-depth: 0
 
       - name: Kubernetes KinD Cluster
-        uses: container-tools/kind-action@0fc957b58d9a5bc9ca57a1b419324a2074c7653b # v2.0.3
+        uses: container-tools/kind-action@0ad70e2299366b0e1552c7240f4e4567148f723e # v2.0.4
         with:
           node_image: ${{ github.event.inputs.node_image || 'kindest/node:v1.27.3' }}
           version: v0.20.0
 
       - name: Set up Helm
-        uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3.5
+        uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # v4.2.0
         with:
           version: v3.5.0
 
       - name: Build migration image
         id: build-migration-image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           context: .
-          file: docker/Dockerfile-policy-hub-migrations
+          file: ./docker/Dockerfile-policy-hub-migrations
           push: true
           tags: kind-registry:5000/policy-hub-migrations:testing
 
       - name: Build service image
         id: build-service-image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           context: .
-          file: docker/Dockerfile-policy-hub-service
+          file: ./docker/Dockerfile-policy-hub-service
           push: true
           tags: kind-registry:5000/policy-hub-service:testing
 
@@ -89,7 +89,7 @@ jobs:
           helm dependency build
 
       - name: Install the chart on KinD cluster
-        run: helm install testing -n apps --create-namespace --wait --set policyhub.image=kind-registry:5000/policy-hub-service:testing --set=policyhubmigrations.image=kind-registry:5000/policy-hub-migrations:testing --set=policyhub.swaggerEnabled=true charts/policy-hub
+        run: helm install testing -n apps --create-namespace --wait --set policyhub.image.name=kind-registry:5000/policy-hub-service --set policyhub.image.tag=testing --set policyhubmigrations.image.name=kind-registry:5000/policy-hub-migrations --set policyhubmigrations.image.tag=testing --set policyhub.swaggerEnabled=true charts/policy-hub
 
       - name: Configure port forward to app in KinD
         run: |
@@ -126,7 +126,7 @@ jobs:
 
       - name: Upload HTML report
         if: success() || failure()
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: ZAP scan report
           path: ./report_html.html
