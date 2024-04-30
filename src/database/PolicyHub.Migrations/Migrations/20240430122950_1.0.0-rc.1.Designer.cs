@@ -1,4 +1,4 @@
-﻿/********************************************************************************
+/********************************************************************************
  * Copyright (c) 2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
@@ -31,8 +31,8 @@ using Org.Eclipse.TractusX.PolicyHub.Entities;
 namespace Org.Eclipse.TractusX.PolicyHub.Migrations.Migrations
 {
     [DbContext(typeof(PolicyHubContext))]
-    [Migration("20240425103233_25-policy-seeding")]
-    partial class _25policyseeding
+    [Migration("20240430122950_1.0.0-rc.1")]
+    partial class _100rc1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
