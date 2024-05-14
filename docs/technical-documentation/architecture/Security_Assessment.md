@@ -10,20 +10,19 @@
 
 ## Product Description
 
-Policy-Hub project is an readonly REST API project, without implementation of an UI. (Pure Backend Component)
+The Policy-Hub product is an readonly REST API project, without implementation of an UI. (Pure Backend Component)
 
-Main purpose of the product is to provide interested and authenticated C-X Users with read access to policy data, use cases, credential types, policy rules, that are created during an application seeding.
+The main purpose of the product is to provide interested and authenticated CX Users with read access to policy data, use cases, credential types, policy rules, which are created during an application seeding.
 
-The Policy-Hub comprise the technical foundation for interaction, monitoring, auditing and further functionalities. 
-They are state of the art in terms of technology portfolio, consist of open-source components whenever possible and are open-sourced themselves 100%.
+The Policy-Hub comprises the technical foundation for interaction, monitoring, auditing and further functionalities.
 
-Policy-Hub can be run anywhere: it can be deployed as a docker image, e. g. on Kubernetes (platform-independent, cloud, on prem or local).
+The product can be run anywhere: it can be deployed as a docker image, e. g. on Kubernetes (platform-independent, cloud, on prem or local).
 
 The policy hub is using following key frameworks:
 
 - .Net
 - Entity Framework
-[architecture & development concept](https://github.com/eclipse-tractusx/policy-hub/blob/main/docs/technical-documentation/architecture/Development%20Concept.md)
+[Development Concept](./Development%20Concept.md)
 
 ## Data Flow Diagram
 
@@ -43,12 +42,12 @@ flowchart LR
      CU
     end
 
-    subgraph Policy-Hub Product   
+    subgraph Policy-Hub Product
      PH
      PHD
     end
 
-    K-->|"Authentication & Authorization Data \n (Using JWT)"|PH     
+    K-->|"Authentication & Authorization Data \n (Using JWT)"|PH
     CU-->|"Consumption of central, read-only REST API \n [HTTPS]"|PH
     PH-->|"Read policies, use cases, \n credential types, policy rules"|PHD
     CU-->|"IAM with OIDC \n [HTTPS]"|K
