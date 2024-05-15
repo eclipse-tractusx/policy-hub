@@ -88,7 +88,7 @@ public class PolicyHubBusinessLogicTests
         Setup_GetPolicyTypes();
 
         // Act
-        var result = await _sut.GetPolicyTypes(null, UseCaseId.Sustainability).ToListAsync();
+        var result = await _sut.GetPolicyTypes(null, UseCaseId.Quality).ToListAsync();
 
         // Assert
         result.Should().ContainSingle();
@@ -548,7 +548,7 @@ public class PolicyHubBusinessLogicTests
     private void Setup_GetPolicyTypes()
     {
         var susAccess = _fixture.Build<PolicyTypeResponse>()
-            .With(x => x.UseCase, Enumerable.Repeat(UseCaseId.Sustainability, 1))
+            .With(x => x.UseCase, Enumerable.Repeat(UseCaseId.Quality, 1))
             .With(x => x.Type, Enumerable.Repeat(PolicyTypeId.Access, 1))
             .Create();
         var traceAccess = _fixture.Build<PolicyTypeResponse>()
@@ -558,7 +558,7 @@ public class PolicyHubBusinessLogicTests
 
         A.CallTo(() => _policyRepository.GetPolicyTypes(null, null))
             .Returns(new[] { susAccess, traceAccess }.ToAsyncEnumerable());
-        A.CallTo(() => _policyRepository.GetPolicyTypes(null, UseCaseId.Sustainability))
+        A.CallTo(() => _policyRepository.GetPolicyTypes(null, UseCaseId.Quality))
             .Returns(new[] { susAccess }.ToAsyncEnumerable());
     }
 
