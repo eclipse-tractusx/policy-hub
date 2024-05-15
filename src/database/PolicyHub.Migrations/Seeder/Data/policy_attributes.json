@@ -17,23 +17,191 @@
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300d3",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
-    "attribute_value": "purpose.trace.v1.TraceBattery",
+    "attribute_value": "cx.core.tractionbattery:1",
     "is_active": true
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300d4",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
-    "attribute_value": "purpose.trace.v1.aspects",
+    "attribute_value": "cx.core.industrycore:1",
     "is_active": true
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300d5",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
-    "attribute_value": "purpose.trace.v1.qualityanalysis",
+    "attribute_value": "cx.core.qualityNotifications:1",
     "is_active": true
   },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d6",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.pcf.base:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d7",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.quality.base:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d8",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.dcm.base:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d9",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.puris.base:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30010",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.circular.dpp:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30011",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.circular.smc:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30012",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.circular.marketplace:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30013",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.circular.materialaccounting:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30014",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.gate.upload:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30015",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.gate.download:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30016",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.pool:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30017",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.dataquality.upload:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30018",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.dataquality.download:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30019",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.bdv.upload:1",
+    "is_active": true
+  },  
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30020",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.bdv.download:1",
+    "is_active": true
+  }, 
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30021",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.fpd.upload:1",
+    "is_active": true
+  }, 
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30022",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.fpd.download:1",
+    "is_active": true
+  }, 
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30023",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.swd.upload:1",
+    "is_active": true
+  }, 
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30024",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.swd.download:1",
+    "is_active": true
+  }, 
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30025",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.nps.upload:1",
+    "is_active": true
+  }, 
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30026",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.nps.download:1",
+    "is_active": true
+  }, 
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30027",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.bpdm.vas.countryrisk:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30028",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.behaviortwin.base:1",
+    "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c30029",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
+    "key": 2,
+    "attribute_value": "cx.core.digitalTwinRegistry:1",
+    "is_active": true
+  },  
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300d6",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c1",
@@ -66,14 +234,14 @@
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300e1",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "Traceability:1.1",
+    "attribute_value": "Traceability:2.0",
     "is_active": true
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300e2",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "Traceability:1.2",
+    "attribute_value": "Traceability:3.0",
     "is_active": true
   },
   {
@@ -87,28 +255,28 @@
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300e4",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "PCF:1.0",
+    "attribute_value": "Pcf:1.0",
     "is_active": true
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300e6",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "Behavioraltwin:1.0",
+    "attribute_value": "BehavioralTwin:1.0",
     "is_active": true
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300e7",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "Circulareconomy:1.0",
+    "attribute_value": "CircularEconomy:1.0",
     "is_active": true
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300e8",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "Demandcapacity:1.0",
+    "attribute_value": "DemandCapacity:1.0",
     "is_active": true
   },
   {
@@ -122,7 +290,7 @@
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300f1",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "Businesspartner:1.0",
+    "attribute_value": "BusinessPartner:1.0",
     "is_active": true
   },
   {
