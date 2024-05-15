@@ -28,35 +28,35 @@
     "is_active": true
   },
   {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d5",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c301d5",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
     "attribute_value": "cx.core.qualityNotifications:1",
     "is_active": true
   },
   {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d6",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c301d6",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
     "attribute_value": "cx.pcf.base:1",
     "is_active": true
   },
   {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d7",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c301d7",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
     "attribute_value": "cx.quality.base:1",
     "is_active": true
   },
   {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d8",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c301d8",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
     "attribute_value": "cx.dcm.base:1",
     "is_active": true
   },
   {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d9",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c301d9",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2",
     "key": 2,
     "attribute_value": "cx.puris.base:1",
