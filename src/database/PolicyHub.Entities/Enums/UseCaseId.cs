@@ -25,5 +25,7 @@ public enum UseCaseId
     Quality = 2,
     PCF = 3,
     Behavioraltwin = 4,
-    Sustainability = 5
+    Businesspartner = 5,
+    CircularEconomy = 6,
+    DemandCapacity = 7
 }
