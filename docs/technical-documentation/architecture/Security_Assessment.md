@@ -1,18 +1,18 @@
 # Security Assessment Policy-Hub 
 
-|                           |                                                                                                |
-| ------------------------- | ---------------------------------------------------------------------------------------------- |
-| Contact for product       | [@evegufy](https://github.com/evegufy) <br> [@jjeroch](https://github.com/jjeroch)             |
-| Security responsible      | [Szymon Kowalczyk](szymon.kowalczyk@zf.com) |
-| Version number of product | 0.1.0                                                                                          |
-| Dates of assessment       | 2024-02-16: Assessment                                                                      |
-| Status of assessment      | Assessment Report                                                                            |
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Contact for product       | [@evegufy](https://github.com/evegufy) <br> [@jjeroch](https://github.com/jjeroch)                       |
+| Security responsible      | [@szymonkowalczykzf](https://github.com/szymonkowalczykzf) <br> [@pablosec](https://github.com/pablosec) |
+| Version number of product | 1.0.0                                                                                                    |
+| Dates of assessment       | 2024-02-16: Assessment <br> 2024-05-15 Re-Assessment for 1.0.0                                           |
+| Status of assessment      | final                                                                                                    |
 
 ## Product Description
 
-The Policy-Hub product is an readonly REST API project, without implementation of an UI. (Pure Backend Component)
+The Policy-Hub product is a read-only REST API project, without implementation of an UI. (Pure Backend Component)
 
-The main purpose of the product is to provide interested and authenticated CX Users with read access to policy data, use cases, credential types, policy rules, which are created during an application seeding.
+The main purpose of the product is to provide interested and authenticated CX Users with read access to policy data, use cases, credential types and policy rules, which are created during an application seeding.
 
 The Policy-Hub comprises the technical foundation for interaction, monitoring, auditing and further functionalities.
 
@@ -22,6 +22,7 @@ The policy hub is using following key frameworks:
 
 - .Net
 - Entity Framework
+
 [Development Concept](./Development%20Concept.md)
 
 ## Data Flow Diagram
@@ -55,7 +56,8 @@ flowchart LR
 
 ### Changes compared to last Security Assessment
 
-N/A
+* upgrade to .NET 8
+* new seeding data 
 
 ### Features for Upcoming Versions
 
