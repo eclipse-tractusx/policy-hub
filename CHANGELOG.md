@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0-rc.2](https://github.com/eclipse-tractusx/policy-hub/compare/v1.0.0-rc.1...v1.0.0-rc.2) (2024-05-16)
+
+
+### Features
+
+* **seed:** update policies to standard ([#135](https://github.com/eclipse-tractusx/policy-hub/issues/135)) ([4b04f7a](https://github.com/eclipse-tractusx/policy-hub/commit/4b04f7a60da6a5039a46bd7daf7f3a6c2b86c89b))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-rc.2 ([9ad3b37](https://github.com/eclipse-tractusx/policy-hub/commit/9ad3b3713236395e063e148bd51892f02a69ab3f))
+
 ## [1.0.0-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v0.1.0...v1.0.0-rc.1) (2024-04-30)
 
 
