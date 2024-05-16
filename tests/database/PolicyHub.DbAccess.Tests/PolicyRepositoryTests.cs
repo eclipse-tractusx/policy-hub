@@ -155,15 +155,15 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         result.Attributes.Key.Should().Be(AttributeKeyId.Version);
         result.Attributes.Values.Should().Satisfy(
             x => x == "Traceability:1.0",
-            x => x == "Traceability:1.1",
-            x => x == "Traceability:1.2",
+            x => x == "Traceability:2.0",
+            x => x == "Traceability:3.0",
             x => x == "Quality:1.0",
-            x => x == "PCF:1.0",
-            x => x == "Behavioraltwin:1.0",
-            x => x == "Circulareconomy:1.0",
-            x => x == "Demandcapacity:1.0",
+            x => x == "Pcf:1.0",
+            x => x == "BehavioralTwin:1.0",
+            x => x == "CircularEconomy:1.0",
+            x => x == "DemandCapacity:1.0",
             x => x == "Puris:1.0",
-            x => x == "Businesspartner:1.0"
+            x => x == "BusinessPartner:1.0"
         );
         result.LeftOperand.Should().Be("FrameworkAgreement");
         result.RightOperandValue.Should().BeNull();

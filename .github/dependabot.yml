@@ -50,10 +50,8 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      production-dependencies:
+      dependencies:
         dependency-type: "production"
-      development-dependencies:
-        dependency-type: "development"
 
   # Docker
   -
@@ -69,7 +67,5 @@ updates:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
     groups:
-      production-dependencies:
+      dependencies:
         dependency-type: "production"
-      development-dependencies:
-        dependency-type: "development"

@@ -179,7 +179,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.Traceability-Version\"}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.Traceability-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:1.1\",\"Traceability:1.2\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.Traceability-Version\"}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.Traceability-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:2.0\",\"Traceability:3.0\"]}]}");
     }
 
     [Fact]
@@ -235,7 +235,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:1.1\",\"Traceability:1.2\",\"Quality:1.0\",\"PCF:1.0\",\"Behavioraltwin:1.0\",\"Circulareconomy:1.0\",\"Demandcapacity:1.0\",\"Puris:1.0\",\"Businesspartner:1.0\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:2.0\",\"Traceability:3.0\",\"Quality:1.0\",\"Pcf:1.0\",\"BehavioralTwin:1.0\",\"CircularEconomy:1.0\",\"DemandCapacity:1.0\",\"Puris:1.0\",\"BusinessPartner:1.0\"]}]}");
     }
 
     [Fact]
@@ -281,7 +281,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:1.1\",\"Traceability:1.2\",\"Quality:1.0\",\"PCF:1.0\",\"Behavioraltwin:1.0\",\"Circulareconomy:1.0\",\"Demandcapacity:1.0\",\"Puris:1.0\",\"Businesspartner:1.0\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:2.0\",\"Traceability:3.0\",\"Quality:1.0\",\"Pcf:1.0\",\"BehavioralTwin:1.0\",\"CircularEconomy:1.0\",\"DemandCapacity:1.0\",\"Puris:1.0\",\"BusinessPartner:1.0\"]}]}");
     }
 
     #endregion
