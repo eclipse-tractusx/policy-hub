@@ -18,7 +18,6 @@ To install the chart with the release name `policy-hub`:
 
 ```shell
 $ helm repo add tractusx-dev https://eclipse-tractusx.github.io/charts/dev
-$ helm dependency update
 $ helm install policy-hub tractusx-dev/policy-hub
 ```
 
