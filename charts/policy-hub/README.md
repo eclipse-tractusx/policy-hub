@@ -93,8 +93,7 @@ dependencies:
 | centralidp.address | string | `"https://centralidp.example.org"` | Provide centralidp base address (CX IAM), without trailing '/auth'. |
 | centralidp.useAuthTrail | bool | `true` | Flag if the api should be used with an leading /auth path |
 | ingress.enabled | bool | `false` | Policy Hub ingress parameters, enable ingress record generation for policy-hub. |
-| ingress.tls[0] | object | `{"hosts":[""],"secretName":""}` | Provide tls secret. |
-| ingress.tls[0].hosts | list | `[""]` | Provide host for tls secret. |
+| ingress.tls | list | `[]` | Ingress TLS configuration |
 | ingress.hosts[0] | object | `{"host":"","paths":[{"path":"/api/policy-hub","pathType":"Prefix"}]}` | Provide default path for the ingress record. |
 | portContainer | int | `8080` |  |
 | portService | int | `8080` |  |
