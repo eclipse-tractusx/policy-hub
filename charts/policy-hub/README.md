@@ -6,6 +6,12 @@ For further information please refer to [Technical Documentation](../../docs/tec
 
 The referenced container images are for demonstration purposes only.
 
+## Prerequisites
+
+- [Kubernetes](https://kubernetes.io) 1.25.11+
+- [Helm](https://helm.sh) 3.9.3+
+- PV provisioner support in the underlying infrastructure
+
 ## Installation
 
 To install the chart with the release name `policy-hub`:
