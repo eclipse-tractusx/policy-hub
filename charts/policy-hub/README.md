@@ -6,6 +6,12 @@ For further information please refer to [Technical Documentation](../../docs/tec
 
 The referenced container images are for demonstration purposes only.
 
+## Prerequisites
+
+- [Kubernetes](https://kubernetes.io) 1.25.11+
+- [Helm](https://helm.sh) 3.9.3+
+- PV provisioner support in the underlying infrastructure
+
 ## Installation
 
 To install the chart with the release name `policy-hub`:
@@ -27,7 +33,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 1.0.0-rc.2
+    version: 1.0.0
 ```
 
 ## Requirements
@@ -87,8 +93,7 @@ dependencies:
 | centralidp.address | string | `"https://centralidp.example.org"` | Provide centralidp base address (CX IAM), without trailing '/auth'. |
 | centralidp.useAuthTrail | bool | `true` | Flag if the api should be used with an leading /auth path |
 | ingress.enabled | bool | `false` | Policy Hub ingress parameters, enable ingress record generation for policy-hub. |
-| ingress.tls[0] | object | `{"hosts":[""],"secretName":""}` | Provide tls secret. |
-| ingress.tls[0].hosts | list | `[""]` | Provide host for tls secret. |
+| ingress.tls | list | `[]` | Ingress TLS configuration |
 | ingress.hosts[0] | object | `{"host":"","paths":[{"path":"/api/policy-hub","pathType":"Prefix"}]}` | Provide default path for the ingress record. |
 | portContainer | int | `8080` |  |
 | portService | int | `8080` |  |
