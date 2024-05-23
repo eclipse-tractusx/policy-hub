@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0](https://github.com/eclipse-tractusx/policy-hub/compare/v1.0.0-rc.2...v1.0.0) (2024-05-23)
+
+
+### Bug Fixes
+
+* **helm:** change ingress to work without tls enabled ([fd7a634](https://github.com/eclipse-tractusx/policy-hub/commit/fd7a634125d2f3ae9313f541ffec0c352059c535))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([f289e1d](https://github.com/eclipse-tractusx/policy-hub/commit/f289e1d20ba8adee5e98de3b089188c8eae39e4d))
+
 ## [1.0.0-rc.2](https://github.com/eclipse-tractusx/policy-hub/compare/v1.0.0-rc.1...v1.0.0-rc.2) (2024-05-16)
 
 
