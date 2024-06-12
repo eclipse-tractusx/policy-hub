@@ -103,7 +103,7 @@ jobs:
         run: ct lint --validate-maintainers=false --check-version-increment=false --target-branch ${{ github.event.repository.default_branch }}
 
       - name: Run chart-testing (install)
-        run: ct install --charts charts/policy-hub --config charts/chart-testing-config.yaml --helm-extra-set-args "--set policyhub.image.name=kind-registry:5000/policy-hub-service --set policyhub.image.tag=testing --set policyhubmigrations.image.name=kind-registry:5000/policy-hub-migrations --set policyhubmigrations.image.tag=testing"
+        run: ct install --charts charts/policy-hub --config charts/chart-testing-config.yaml --helm-extra-set-args "--set service.image.name=kind-registry:5000/policy-hub-service --set service.image.tag=testing --set migrations.image.name=kind-registry:5000/policy-hub-migrations --set migrations.image.tag=testing"
         if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
 
       # Upgrade the released chart version with the locally available chart
@@ -114,5 +114,5 @@ jobs:
           helm repo add tractusx-dev https://eclipse-tractusx.github.io/charts/dev
           helm install policy-hub tractusx-dev/policy-hub --version ${{ github.event.inputs.upgrade_from || '0.1.0' }} --namespace upgrade --create-namespace
           helm dependency update charts/policy-hub
-          helm upgrade policy-hub charts/policy-hub --set policyhub.image.name=kind-registry:5000/policy-hub-service --set policyhub.image.tag=testing --set policyhubmigrations.image.name=kind-registry:5000/policy-hub-migrations --set policyhubmigrations.image.tag=testing --namespace upgrade
+          helm upgrade policy-hub charts/policy-hub --set service.image.name=kind-registry:5000/policy-hub-service --set service.image.tag=testing --set migrations.image.name=kind-registry:5000/policy-hub-migrations --set migrations.image.tag=testing --namespace upgrade
         if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'

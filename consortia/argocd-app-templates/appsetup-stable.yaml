@@ -55,7 +55,7 @@ spec:
                       backend:
                         service: "policy-hub-service"
                         port: 8080
-            policyhubmigrations:
+            migrations:
               logging:
                 default: "Debug"
             postgresql:
