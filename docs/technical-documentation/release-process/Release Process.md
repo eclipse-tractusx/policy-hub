@@ -61,7 +61,7 @@ Please see:
 ## Merge release branch
 
 The release branch must be merged into main.
-The merge needs to happen via PRs.
+The merge needs to happen via PR.
 
 Example for PR titles:
 
