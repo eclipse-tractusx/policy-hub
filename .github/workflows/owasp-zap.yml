@@ -89,7 +89,7 @@ jobs:
           helm dependency build
 
       - name: Install the chart on KinD cluster
-        run: helm install testing -n apps --create-namespace --wait --set policyhub.image.name=kind-registry:5000/policy-hub-service --set policyhub.image.tag=testing --set policyhubmigrations.image.name=kind-registry:5000/policy-hub-migrations --set policyhubmigrations.image.tag=testing --set policyhub.swaggerEnabled=true charts/policy-hub
+        run: helm install testing -n apps --create-namespace --wait --set service.image.name=kind-registry:5000/policy-hub-service --set service.image.tag=testing --set migrations.image.name=kind-registry:5000/policy-hub-migrations --set migrations.image.tag=testing --set service.swaggerEnabled=true charts/policy-hub
 
       - name: Configure port forward to app in KinD
         run: |

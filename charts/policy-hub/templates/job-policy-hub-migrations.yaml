@@ -31,7 +31,7 @@ metadata:
 spec:
   template:
     metadata:
-      name: {{ .Values.policyhubmigrations.name }}-migrations
+      name: {{ .Values.migrations.name }}-migrations
     spec:
       restartPolicy: Never
       containers:
@@ -43,8 +43,8 @@ spec:
             - ALL
           readOnlyRootFilesystem: true
           runAsNonRoot: true
-        image: "{{ .Values.policyhubmigrations.image.name }}:{{ .Values.policyhubmigrations.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: "{{ .Values.policyhubmigrations.imagePullPolicy }}"
+        image: "{{ .Values.migrations.image.name }}:{{ .Values.migrations.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: "{{ .Values.migrations.imagePullPolicy }}"
         env:
           - name: DOTNET_ENVIRONMENT
             value: "{{ .Values.dotnetEnvironment }}"
@@ -67,14 +67,14 @@ spec:
             value: "Server={{ .Values.externalDatabase.host }};Database={{ .Values.externalDatabase.database }};Port={{ .Values.externalDatabase.port }};User Id={{ .Values.externalDatabase.username }};Password=$(POLICY_HUB_PASSWORD);Ssl Mode={{ .Values.dbConnection.sslMode }};"
           {{- end }}
           - name: "SEEDING__TESTDATAENVIRONMENTS__0"
-            value: "{{ .Values.policyhubmigrations.seeding.testDataEnvironments }}"
+            value: "{{ .Values.migrations.seeding.testDataEnvironments }}"
           - name: "SEEDING__DATAPATHS__0"
-            value: "{{ .Values.policyhubmigrations.seeding.testDataPaths }}"
+            value: "{{ .Values.migrations.seeding.testDataPaths }}"
           - name: "SERILOG__MINIMUMLEVEL__Default"
-            value: "{{ .Values.policyhubmigrations.logging.default }}"
+            value: "{{ .Values.migrations.logging.default }}"
         ports:
         - name: http
           containerPort: {{ .Values.portContainer }}
           protocol: TCP
         resources:
-          {{- toYaml .Values.policyhubmigrations.resources | nindent 10 }}
+          {{- toYaml .Values.migrations.resources | nindent 10 }}

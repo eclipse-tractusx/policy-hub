@@ -39,10 +39,10 @@ ingress:
         - path: "/api/policy-hub"
           pathType: "Prefix"
 
-policyhub:
+service:
   swaggerEnabled: true
 
-policyhubmigrations:
+migrations:
   logging:
     default: "Debug"
 

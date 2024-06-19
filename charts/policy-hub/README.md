@@ -46,25 +46,25 @@ dependencies:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| policyhub.image.name | string | `"docker.io/tractusx/policy-hub-service"` |  |
-| policyhub.image.tag | string | `""` |  |
-| policyhub.imagePullPolicy | string | `"IfNotPresent"` |  |
-| policyhub.resources | object | `{"limits":{"cpu":"45m","memory":"300M"},"requests":{"cpu":"15m","memory":"300M"}}` | We recommend to review the default resource limits as this should a conscious choice. |
-| policyhub.logging.businessLogic | string | `"Information"` |  |
-| policyhub.logging.default | string | `"Information"` |  |
-| policyhub.healthChecks.startup.path | string | `"/health/startup"` |  |
-| policyhub.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
-| policyhub.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
-| policyhub.healthChecks.liveness.path | string | `"/healthz"` |  |
-| policyhub.healthChecks.readyness.path | string | `"/ready"` |  |
-| policyhub.swaggerEnabled | bool | `false` |  |
-| policyhubmigrations.image.name | string | `"docker.io/tractusx/policy-hub-migrations"` |  |
-| policyhubmigrations.image.tag | string | `""` |  |
-| policyhubmigrations.imagePullPolicy | string | `"IfNotPresent"` |  |
-| policyhubmigrations.resources | object | `{"limits":{"cpu":"45m","memory":"105M"},"requests":{"cpu":"15m","memory":"105M"}}` | We recommend to review the default resource limits as this should a conscious choice. |
-| policyhubmigrations.seeding.testDataEnvironments | string | `""` |  |
-| policyhubmigrations.seeding.testDataPaths | string | `"Seeder/Data"` |  |
-| policyhubmigrations.logging.default | string | `"Information"` |  |
+| service.image.name | string | `"docker.io/tractusx/policy-hub-service"` |  |
+| service.image.tag | string | `""` |  |
+| service.imagePullPolicy | string | `"IfNotPresent"` |  |
+| service.resources | object | `{"limits":{"cpu":"45m","memory":"300M"},"requests":{"cpu":"15m","memory":"300M"}}` | We recommend to review the default resource limits as this should a conscious choice. |
+| service.logging.businessLogic | string | `"Information"` |  |
+| service.logging.default | string | `"Information"` |  |
+| service.healthChecks.startup.path | string | `"/health/startup"` |  |
+| service.healthChecks.startup.tags[0].name | string | `"HEALTHCHECKS__0__TAGS__1"` |  |
+| service.healthChecks.startup.tags[0].value | string | `"policyhubdb"` |  |
+| service.healthChecks.liveness.path | string | `"/healthz"` |  |
+| service.healthChecks.readyness.path | string | `"/ready"` |  |
+| service.swaggerEnabled | bool | `false` |  |
+| migrations.image.name | string | `"docker.io/tractusx/policy-hub-migrations"` |  |
+| migrations.image.tag | string | `""` |  |
+| migrations.imagePullPolicy | string | `"IfNotPresent"` |  |
+| migrations.resources | object | `{"limits":{"cpu":"45m","memory":"105M"},"requests":{"cpu":"15m","memory":"105M"}}` | We recommend to review the default resource limits as this should a conscious choice. |
+| migrations.seeding.testDataEnvironments | string | `""` |  |
+| migrations.seeding.testDataPaths | string | `"Seeder/Data"` |  |
+| migrations.logging.default | string | `"Information"` |  |
 | dotnetEnvironment | string | `"Production"` |  |
 | dbConnection.schema | string | `"hub"` |  |
 | dbConnection.sslMode | string | `"Disable"` |  |

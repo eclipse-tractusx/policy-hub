@@ -39,13 +39,13 @@ ingress:
         - path: "/api/policy-hub"
           pathType: "Prefix"
 
-policyhub:
+service:
   image:
     tag: "rc"
   imagePullPolicy: "Always"
   swaggerEnabled: true
 
-policyhubmigrations:
+migrations:
   image:
     tag: "rc"
   imagePullPolicy: "Always"

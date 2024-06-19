@@ -45,13 +45,13 @@ keycloak:
       tokenValidationParameters:
         validAudience: "Cl23-CX-Policy-Hub"
 
-policyhub:
+service:
   image:
     tag: "dev"
   imagePullPolicy: "Always"
   swaggerEnabled: true
 
-policyhubmigrations:
+migrations:
   image:
     tag: "dev"
   imagePullPolicy: "Always"
