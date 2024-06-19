@@ -47,13 +47,13 @@ keycloak:
 
 service:
   image:
-    tag: "dev"
+    tag: "main"
   imagePullPolicy: "Always"
   swaggerEnabled: true
 
 migrations:
   image:
-    tag: "dev"
+    tag: "main"
   imagePullPolicy: "Always"
   logging:
     default: "Debug"

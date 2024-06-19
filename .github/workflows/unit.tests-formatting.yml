@@ -21,7 +21,7 @@ name: Unit-Tests and Formatting
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
     paths:
       - 'src/**'
   pull_request:

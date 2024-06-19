@@ -7,7 +7,7 @@ flowchart LR
     end
     subgraph eclipse-tractusx
         direction LR
-        D -- PR* to dev*--> PH(policy-hub**)
+        D -- PR* to main*--> PH(policy-hub**)
         click PH "https://github.com/eclipse-tractusx/policy-hub"
     end
     subgraph Argo CD - sync to k8s cluster
