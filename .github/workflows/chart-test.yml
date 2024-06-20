@@ -23,7 +23,7 @@ on:
   push:
     paths:
       - 'charts/policy-hub/**'
-    branches: [main, dev, release-candidate]
+    branches: [main]
   pull_request:
     paths:
       - 'charts/policy-hub/**'
