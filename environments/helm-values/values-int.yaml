@@ -53,6 +53,8 @@ policyhubmigrations:
   logging:
     default: "Debug"
 
+replicaCount: 2
+
 postgresql:
   architecture: standalone
   auth:
