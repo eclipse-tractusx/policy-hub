@@ -224,73 +224,10 @@
     "is_active": true
   },
   {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d9",
+    "id": "d72611ad-b6e4-47cc-94d2-d3efdc02db17",
     "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
     "key": 5,
-    "attribute_value": "Traceability:1.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e1",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "Traceability:2.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e2",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "Traceability:3.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e3",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "Quality:1.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e4",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "Pcf:1.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e6",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "BehavioralTwin:1.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e7",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "CircularEconomy:1.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e8",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "DemandCapacity:1.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300e9",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "Puris:1.0",
-    "is_active": true
-  },
-  {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300f1",
-    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
-    "key": 5,
-    "attribute_value": "BusinessPartner:1.0",
+    "attribute_value": "DataExchangeGovernance:1.0",
     "is_active": true
   },
   {
