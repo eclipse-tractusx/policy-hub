@@ -69,7 +69,7 @@ jobs:
         run: dotnet test tests/endToEnd --no-restore --verbosity minimal --logger "html;logfilename=e2ePolicyHub.html"
       - name: 'Upload Artifact'
         if: always()
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
           name: e2e-policy-hub-report
           path: tests/endToEnd/TestResults/e2ePolicyHub.html
