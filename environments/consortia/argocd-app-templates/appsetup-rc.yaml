@@ -20,7 +20,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: policy-hub
+  name: policy-hub-rc
 spec:
   destination:
     namespace: product-iam
@@ -28,11 +28,11 @@ spec:
   source:
     path: charts/policy-hub
     repoURL: 'https://github.com/eclipse-tractusx/policy-hub.git'
-    targetRevision: policy-hub-1.0.0
+    targetRevision: release-candidate
     plugin:
       env:
         - name: AVP_SECRET
           value: vault-secret
         - name: helm_args
-          value: '-f values.yaml -f ../../consortia/environments/values-int.yaml'
+          value: '-f values.yaml -f ../../environments/consortia/helm-values/values-rc.yaml'
   project: project-portal
