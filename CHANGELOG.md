@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.1.0-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v1.0.0...v1.1.0-rc.1) (2024-07-16)
+
+
+### Features
+
+* **attributes:** align seeding for DateExchangeGovernance ([#166](https://github.com/eclipse-tractusx/policy-hub/issues/166)) ([5b04040](https://github.com/eclipse-tractusx/policy-hub/commit/5b04040da08671344a98ce3d37d086f3874055b1)), closes [#165](https://github.com/eclipse-tractusx/policy-hub/issues/165)
+* **helm:** consolidate structure in values.yaml ([#156](https://github.com/eclipse-tractusx/policy-hub/issues/156)) ([79559ef](https://github.com/eclipse-tractusx/policy-hub/commit/79559efa0f4ba13c50e51ac427a54abbbfcdd271))
+
+
+### Bug Fixes
+
+* **image-build:** change from emulation to cross-compile ([#162](https://github.com/eclipse-tractusx/policy-hub/issues/162)) ([075316a](https://github.com/eclipse-tractusx/policy-hub/commit/075316ab0ac4337982273ce50d9a44382e40b496))
+* **policy:** adjust attributeKey for purpose ([#161](https://github.com/eclipse-tractusx/policy-hub/issues/161)) ([6df52f6](https://github.com/eclipse-tractusx/policy-hub/commit/6df52f6f7a78b7378801aa95c6b46655e94832da))
+
+
+### Miscellaneous Chores
+
+* release 1.1.0-rc.1 ([4f66d8e](https://github.com/eclipse-tractusx/policy-hub/commit/4f66d8e602e50553fb46bb5bfb0f544daa324f59))
+
 ## [1.0.0](https://github.com/eclipse-tractusx/policy-hub/compare/v1.0.0-rc.2...v1.0.0) (2024-05-23)
 
 
