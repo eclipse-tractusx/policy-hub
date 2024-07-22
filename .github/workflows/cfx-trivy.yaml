@@ -1,0 +1,43 @@
+# Workflow to scan the latest container image daily
+name: Trivy scan
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/cfx-trivy.yaml'
+  schedule:
+    # Daily
+    - cron: '0 0 * * *'
+
+concurrency:
+  # cancel older running jobs on the same branch
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan-image:
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      id-token: write
+
+    strategy:
+      matrix:
+        include:
+          - service_name: policy-hub-service
+            dockerfile: docker/Dockerfile-policy-hub-service
+          - service_name: policy-hub-migrations
+            dockerfile: docker/Dockerfile-policy-hub-migrations
+
+    uses: Cofinity-X/central-pipelines/.github/workflows/reusable-trivy-acr-latest-image-scan.yaml@main
+    name: Trivy Scan
+    with:
+      environment: lower-env-acr
+      image-name: ${{ matrix.service_name }}
+      image-namespace: core-services/policy-hub/images
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
