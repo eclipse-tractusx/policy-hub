@@ -49,7 +49,7 @@
     "attribute_key_id": 4
   },
   {
-    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b2",
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
     "kind_id": 6,
     "technical_key": "ContractReference",
     "description": "The contract reference restriction can get used to define under which bilateral contract details the data are getting shared. Note that the exact bilateral contract name needs to get added inside the right operand.",
