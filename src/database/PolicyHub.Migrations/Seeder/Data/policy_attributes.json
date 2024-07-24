@@ -236,5 +236,12 @@
     "key": 4,
     "attribute_value": "active",
     "is_active": true
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300d2",
+    "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b2",
+    "key": 2,
+    "attribute_value": "{bilateralContractName}",
+    "is_active": true
   }
 ]
