@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   policy-hub:
   - apiVersion: v2
+    appVersion: 1.1.0-rc.2
+    created: "2024-07-25T15:16:53.149179815Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.x
+    description: Helm chart for Policy Hub
+    digest: aa309f245e71242ff8f81ead35cff68b91fc28450f4c0177f608361f805bd8fb
+    home: https://github.com/eclipse-tractusx/policy-hub
+    name: policy-hub
+    type: application
+    urls:
+    - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-1.1.0-rc.2/policy-hub-1.1.0-rc.2.tgz
+    version: 1.1.0-rc.2
+  - apiVersion: v2
     appVersion: 1.1.0-rc.1
     created: "2024-07-16T21:14:11.129808715Z"
     dependencies:
@@ -161,4 +177,4 @@ entries:
     urls:
     - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-0.1.0-rc.1/policy-hub-0.1.0-rc.1.tgz
     version: 0.1.0-rc.1
-generated: "2024-07-25T15:12:32.85500487Z"
+generated: "2024-07-25T15:16:53.149245167Z"
