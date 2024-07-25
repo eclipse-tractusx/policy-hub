@@ -8,5 +8,6 @@
   { "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c2", "policy_type_id": 2, "is_active": true },
   { "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300c9", "policy_type_id": 2, "is_active": true },
   { "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300d1", "policy_type_id": 1, "is_active": true },
-  { "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300d1", "policy_type_id": 2, "is_active": true }
+  { "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300d1", "policy_type_id": 2, "is_active": true },
+  { "policy_id": "01a0fba3-9b6e-435a-b045-e0e890c300b3", "policy_type_id": 2, "is_active": true }
 ]
