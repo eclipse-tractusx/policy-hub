@@ -72,13 +72,14 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var result = await sut.GetPolicyTypes(null, null).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(6).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(7).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber",
             x => x.TechnicalKey == "Membership",
             x => x.TechnicalKey == "FrameworkAgreement",
             x => x.TechnicalKey == "Dismantler.allowedBrands",
             x => x.TechnicalKey == "UsagePurpose",
-            x => x.TechnicalKey == "Dismantler"
+            x => x.TechnicalKey == "Dismantler",
+            x => x.TechnicalKey == "ContractReference"
         );
     }
 

@@ -78,13 +78,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(6).And.Satisfy(
+            .And.HaveCount(7).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement",
                 x => x.TechnicalKey == "Dismantler.allowedBrands",
                 x => x.TechnicalKey == "UsagePurpose",
-                x => x.TechnicalKey == "Dismantler"
+                x => x.TechnicalKey == "Dismantler",
+                x => x.TechnicalKey == "ContractReference"
             );
     }
 
