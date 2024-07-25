@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0-rc.2](https://github.com/eclipse-tractusx/policy-hub/compare/v1.1.0-rc.1...v1.1.0-rc.2) (2024-07-25)
+
+
+### Features
+
+* add contract reference policy ([#177](https://github.com/eclipse-tractusx/policy-hub/issues/177)) ([4faa2db](https://github.com/eclipse-tractusx/policy-hub/commit/4faa2db2f0e0286effd0714b7f9be7e8b3aff812))
+
+
+### Miscellaneous Chores
+
+* release 1.1.0-rc.2 ([30f8bbb](https://github.com/eclipse-tractusx/policy-hub/commit/30f8bbb013efcb6ce4f7c03843f2f033581cb295))
+
 ## [1.1.0-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v1.0.0...v1.1.0-rc.1) (2024-07-16)
 
 
