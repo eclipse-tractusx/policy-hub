@@ -46,10 +46,10 @@ keycloak:
       tokenValidationParameters:
         validAudience: "Cl23-CX-Policy-Hub"
 
-policyhub:
+service:
   swaggerEnabled: true
 
-policyhubmigrations:
+migrations:
   logging:
     default: "Debug"
 
