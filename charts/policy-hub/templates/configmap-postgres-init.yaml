@@ -27,8 +27,8 @@ metadata:
     {{- include "phub.labels" . | nindent 4 }}
 data:
   02-init-db.sql: |
-    CREATE SCHEMA hub;
-    ALTER SCHEMA hub OWNER TO hub;
+    CREATE SCHEMA policy-hub;
+    ALTER SCHEMA policy-hub OWNER TO hub;
     CREATE TABLE public.__efmigrations_history_hub (
         migration_id character varying(150) NOT NULL,
         product_version character varying(32) NOT NULL
