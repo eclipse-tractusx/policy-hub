@@ -20,8 +20,8 @@
 apiVersion: v2
 name: policy-hub
 type: application
-version: 1.1.0-rc.1
-appVersion: 1.1.0-rc.1
+version: 1.1.0-rc.2
+appVersion: 1.1.0-rc.2
 description: Helm chart for Policy Hub
 home: https://github.com/eclipse-tractusx/policy-hub
 dependencies:
