@@ -31,7 +31,7 @@ public static class PolicyKindExtensions
             PolicyKindId.Framework => true,
             PolicyKindId.Purpose => false,
             PolicyKindId.Dismantler => true,
-            PolicyKindId.ContractReference => true,
+            PolicyKindId.ContractReference => false,
             _ => throw new ArgumentOutOfRangeException(nameof(policyKindId), policyKindId, $"PolicyKindId {policyKindId} is not supported")
         };
 }
