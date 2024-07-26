@@ -20,12 +20,10 @@
 using Org.Eclipse.TractusX.PolicyHub.DbAccess;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
-using Org.Eclipse.TractusX.PolicyHub.Entities.Entities;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
-using Org.Eclipse.TractusX.Portal.Backend.Framework.Linq;
 using System.Text.RegularExpressions;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
@@ -68,10 +66,10 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             _ => operatorId == OperatorId.Equals
                 ? rightOperands.Count() > 1 ?
                     ($"@{leftOperand}{(useCase != null ?
-                        useCase.ToString().Insert(0, ".") :
+                        useCase.Value.ToString().Insert(0, ".") :
                         string.Empty)}-{attributes.Key}",
                         new AdditionalAttributes($"@{leftOperand}{(useCase != null ?
-                            useCase.ToString().Insert(0, ".") :
+                            useCase.Value.ToString().Insert(0, ".") :
                             string.Empty)}-{attributes.Key}", rightOperands)) :
                     (rightOperands.Single(), null)
                 : (rightOperands, null)
