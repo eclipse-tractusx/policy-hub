@@ -2,21 +2,21 @@ apiVersion: v1
 entries:
   policy-hub:
   - apiVersion: v2
-    appVersion: 1.1.0-rc.2
-    created: "2024-07-25T15:16:53.149179815Z"
+    appVersion: 1.1.0
+    created: "2024-07-30T13:43:31.938453298Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
       repository: https://charts.bitnami.com/bitnami
       version: 12.12.x
     description: Helm chart for Policy Hub
-    digest: aa309f245e71242ff8f81ead35cff68b91fc28450f4c0177f608361f805bd8fb
+    digest: f1604733ff8b2909841d60948f692ceb7d2588fe0a9225b675390fef9a1dca6f
     home: https://github.com/eclipse-tractusx/policy-hub
     name: policy-hub
     type: application
     urls:
-    - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-1.1.0-rc.2/policy-hub-1.1.0-rc.2.tgz
-    version: 1.1.0-rc.2
+    - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-1.1.0/policy-hub-1.1.0.tgz
+    version: 1.1.0
   - apiVersion: v2
     appVersion: 1.1.0-rc.2
     created: "2024-07-25T15:27:22.167844035Z"
@@ -27,6 +27,22 @@ entries:
       version: 12.12.x
     description: Helm chart for Policy Hub
     digest: cb8137fd5120204c3f0917228aa5c5e4e2708481d1fb9c1de20f5a05edd7037a
+    home: https://github.com/eclipse-tractusx/policy-hub
+    name: policy-hub
+    type: application
+    urls:
+    - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-1.1.0-rc.2/policy-hub-1.1.0-rc.2.tgz
+    version: 1.1.0-rc.2
+  - apiVersion: v2
+    appVersion: 1.1.0-rc.2
+    created: "2024-07-25T15:16:53.149179815Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.x
+    description: Helm chart for Policy Hub
+    digest: aa309f245e71242ff8f81ead35cff68b91fc28450f4c0177f608361f805bd8fb
     home: https://github.com/eclipse-tractusx/policy-hub
     name: policy-hub
     type: application
@@ -193,4 +209,4 @@ entries:
     urls:
     - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-0.1.0-rc.1/policy-hub-0.1.0-rc.1.tgz
     version: 0.1.0-rc.1
-generated: "2024-07-25T15:27:22.167920287Z"
+generated: "2024-07-30T13:43:31.93855559Z"
