@@ -30,7 +30,7 @@
     "technical_key": "UsagePurpose",
     "description": "",
     "is_active": true,
-    "attribute_key_id": 3
+    "attribute_key_id": 2
   },
   {
     "id": "01a0fba3-9b6e-435a-b045-e0e890c300c9",
@@ -47,5 +47,13 @@
     "description": "Companies holding the credential are dismantler certified companies.",
     "is_active": true,
     "attribute_key_id": 4
+  },
+  {
+    "id": "01a0fba3-9b6e-435a-b045-e0e890c300b3",
+    "kind_id": 6,
+    "technical_key": "ContractReference",
+    "description": "The contract reference restriction can get used to define under which bilateral contract details the data are getting shared. Note that the exact bilateral contract name needs to get added inside the right operand.",
+    "is_active": true,
+    "attribute_key_id": 2
   }
 ]

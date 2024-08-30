@@ -25,5 +25,6 @@ public enum PolicyKindId
     Membership = 2,
     Framework = 3,
     Purpose = 4,
-    Dismantler = 5
+    Dismantler = 5,
+    ContractReference = 6
 }

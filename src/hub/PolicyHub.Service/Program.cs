@@ -26,8 +26,8 @@ using System.Text.Json.Serialization;
 
 const string Version = "v2";
 
-WebApplicationBuildRunner
-    .BuildAndRunWebApplication<Program>(args, "policy-hub", Version, ".Hub",
+await WebApplicationBuildRunner
+    .BuildAndRunWebApplicationAsync<Program>(args, "policy-hub", Version, ".Hub",
         builder =>
         {
             builder.Services.AddTransient<IClaimsTransformation, KeycloakClaimsTransformation>();
@@ -47,4 +47,4 @@ WebApplicationBuildRunner
             app.MapGroup("/api")
                 .WithOpenApi()
                 .MapPolicyHubApi();
-        });
+        }).ConfigureAwait(ConfigureAwaitOptions.None);

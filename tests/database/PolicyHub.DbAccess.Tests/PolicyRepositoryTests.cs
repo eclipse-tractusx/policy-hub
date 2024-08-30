@@ -72,13 +72,14 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var result = await sut.GetPolicyTypes(null, null).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(6).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(7).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber",
             x => x.TechnicalKey == "Membership",
             x => x.TechnicalKey == "FrameworkAgreement",
             x => x.TechnicalKey == "Dismantler.allowedBrands",
             x => x.TechnicalKey == "UsagePurpose",
-            x => x.TechnicalKey == "Dismantler"
+            x => x.TechnicalKey == "Dismantler",
+            x => x.TechnicalKey == "ContractReference"
         );
     }
 
@@ -114,7 +115,7 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
             x => x.TechnicalKey == "BusinessPartnerNumber" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "Membership" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "Dismantler.allowedBrands" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "FrameworkAgreement" && x.Attribute.Count() == 10 && x.Type.Count() == 1 && x.UseCase.Count() == 5,
+            x => x.TechnicalKey == "FrameworkAgreement" && x.Attribute.Count() == 1 && x.Type.Count() == 1 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "Dismantler" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5
         );
     }
@@ -154,16 +155,7 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         result.Exists.Should().BeTrue();
         result.Attributes.Key.Should().Be(AttributeKeyId.Version);
         result.Attributes.Values.Should().Satisfy(
-            x => x == "Traceability:1.0",
-            x => x == "Traceability:2.0",
-            x => x == "Traceability:3.0",
-            x => x == "Quality:1.0",
-            x => x == "Pcf:1.0",
-            x => x == "BehavioralTwin:1.0",
-            x => x == "CircularEconomy:1.0",
-            x => x == "DemandCapacity:1.0",
-            x => x == "Puris:1.0",
-            x => x == "BusinessPartner:1.0"
+            x => x == "DataExchangeGovernance:1.0"
         );
         result.LeftOperand.Should().Be("FrameworkAgreement");
         result.RightOperandValue.Should().BeNull();

@@ -78,13 +78,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(6).And.Satisfy(
+            .And.HaveCount(7).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement",
                 x => x.TechnicalKey == "Dismantler.allowedBrands",
                 x => x.TechnicalKey == "UsagePurpose",
-                x => x.TechnicalKey == "Dismantler"
+                x => x.TechnicalKey == "Dismantler",
+                x => x.TechnicalKey == "ContractReference"
             );
     }
 
@@ -179,7 +180,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement.Traceability-Version\"}}},\"attributes\":[{\"key\":\"@FrameworkAgreement.Traceability-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:2.0\",\"Traceability:3.0\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}}}}");
     }
 
     [Fact]
@@ -223,7 +224,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement", OperatorId.Equals, "Traceability:1.0"),
+                new Constraints("FrameworkAgreement", OperatorId.Equals, "DataExchangeGovernance:1.0"),
                 new Constraints("Dismantler.allowedBrands", OperatorId.In, "Audi")
             });
 
@@ -235,7 +236,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:2.0\",\"Traceability:3.0\",\"Quality:1.0\",\"Pcf:1.0\",\"BehavioralTwin:1.0\",\"CircularEconomy:1.0\",\"DemandCapacity:1.0\",\"Puris:1.0\",\"BusinessPartner:1.0\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
     }
 
     [Fact]
@@ -268,7 +269,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             ConstraintOperandId.And,
             new[]
             {
-                new Constraints("FrameworkAgreement", OperatorId.Equals, "Traceability:1.0"),
+                new Constraints("FrameworkAgreement", OperatorId.Equals, "DataExchangeGovernance:1.0"),
                 new Constraints("Dismantler.allowedBrands", OperatorId.In, "Audi"),
                 new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK")
             });
@@ -281,7 +282,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"@FrameworkAgreement-Version\"}]}}},\"attributes\":[{\"key\":\"@FrameworkAgreement-Version\",\"possibleValues\":[\"Traceability:1.0\",\"Traceability:2.0\",\"Traceability:3.0\",\"Quality:1.0\",\"Pcf:1.0\",\"BehavioralTwin:1.0\",\"CircularEconomy:1.0\",\"DemandCapacity:1.0\",\"Puris:1.0\",\"BusinessPartner:1.0\"]}]}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
     }
 
     #endregion

@@ -17,9 +17,9 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-policyHubAddress: "https://policy-hub.dev.demo.catena-x.net"
+policyHubAddress: "https://policy-hub-rc.dev.demo.catena-x.net"
 centralidp:
-  address: "https://centralidp.dev.demo.catena-x.net"
+  address: "https://centralidp-rc.dev.demo.catena-x.net"
 
 ingress:
   enabled: true
@@ -32,28 +32,22 @@ ingress:
   tls:
     - secretName: "tls-secret"
       hosts:
-        - "policy-hub.dev.demo.catena-x.net"
+        - "policy-hub-backend-rc.dev.demo.catena-x.net"
   hosts:
-    - host: "policy-hub.dev.demo.catena-x.net"
+    - host: "policy-hub-backend-rc.dev.demo.catena-x.net"
       paths:
         - path: "/api/policy-hub"
           pathType: "Prefix"
 
-keycloak:
-  central:
-    jwtBearerOptions:
-      tokenValidationParameters:
-        validAudience: "Cl23-CX-Policy-Hub"
-
-policyhub:
+service:
   image:
-    tag: "dev"
+    tag: "rc"
   imagePullPolicy: "Always"
   swaggerEnabled: true
 
-policyhubmigrations:
+migrations:
   image:
-    tag: "dev"
+    tag: "rc"
   imagePullPolicy: "Always"
   logging:
     default: "Debug"

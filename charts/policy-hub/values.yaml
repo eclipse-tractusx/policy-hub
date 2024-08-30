@@ -17,7 +17,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-policyhub:
+service:
   image:
     name: "docker.io/tractusx/policy-hub-service"
     tag: ""
@@ -45,7 +45,7 @@ policyhub:
       path: "/ready"
   swaggerEnabled: false
 
-policyhubmigrations:
+migrations:
   image:
     name: "docker.io/tractusx/policy-hub-migrations"
     tag: ""

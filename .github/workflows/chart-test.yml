@@ -23,7 +23,7 @@ on:
   push:
     paths:
       - 'charts/policy-hub/**'
-    branches: [main, dev, release-candidate]
+    branches: [main]
   pull_request:
     paths:
       - 'charts/policy-hub/**'
@@ -37,8 +37,8 @@ on:
         type: string
       upgrade_from:
         description: 'policyhub chart version to upgrade from'
-        # tbd
-        default: '0.1.0'
+        # latest released version
+        default: '1.0.0'
         required: false
         type: string
 
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
 
@@ -62,7 +62,7 @@ jobs:
 
       - name: Build migration image
         id: build-migration-image
-        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
+        uses: docker/build-push-action@94f8f8c2eec4bc3f1d78c1755580779804cb87b2 # v6.0.1
         with:
           context: .
           file: ./docker/Dockerfile-policy-hub-migrations
@@ -71,7 +71,7 @@ jobs:
 
       - name: Build service image
         id: build-service-image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./docker/Dockerfile-policy-hub-service
@@ -103,7 +103,7 @@ jobs:
         run: ct lint --validate-maintainers=false --check-version-increment=false --target-branch ${{ github.event.repository.default_branch }}
 
       - name: Run chart-testing (install)
-        run: ct install --charts charts/policy-hub --config charts/chart-testing-config.yaml --helm-extra-set-args "--set policyhub.image.name=kind-registry:5000/policy-hub-service --set policyhub.image.tag=testing --set policyhubmigrations.image.name=kind-registry:5000/policy-hub-migrations --set policyhubmigrations.image.tag=testing"
+        run: ct install --charts charts/policy-hub --config charts/chart-testing-config.yaml --helm-extra-set-args "--set service.image.name=kind-registry:5000/policy-hub-service --set service.image.tag=testing --set migrations.image.name=kind-registry:5000/policy-hub-migrations --set migrations.image.tag=testing"
         if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
 
       # Upgrade the released chart version with the locally available chart
@@ -112,7 +112,7 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add tractusx-dev https://eclipse-tractusx.github.io/charts/dev
-          helm install policy-hub tractusx-dev/policy-hub --version ${{ github.event.inputs.upgrade_from || '0.1.0' }} --namespace upgrade --create-namespace
+          helm install policy-hub tractusx-dev/policy-hub --version ${{ github.event.inputs.upgrade_from || '1.0.0' }} --namespace upgrade --create-namespace
           helm dependency update charts/policy-hub
-          helm upgrade policy-hub charts/policy-hub --set policyhub.image.name=kind-registry:5000/policy-hub-service --set policyhub.image.tag=testing --set policyhubmigrations.image.name=kind-registry:5000/policy-hub-migrations --set policyhubmigrations.image.tag=testing --namespace upgrade
+          helm upgrade policy-hub charts/policy-hub --set service.image.name=kind-registry:5000/policy-hub-service --set service.image.tag=testing --set migrations.image.name=kind-registry:5000/policy-hub-migrations --set migrations.image.tag=testing --namespace upgrade
         if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'

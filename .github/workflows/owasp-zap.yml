@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
 
@@ -62,7 +62,7 @@ jobs:
 
       - name: Build migration image
         id: build-migration-image
-        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
+        uses: docker/build-push-action@94f8f8c2eec4bc3f1d78c1755580779804cb87b2 # v6.0.1
         with:
           context: .
           file: ./docker/Dockerfile-policy-hub-migrations
@@ -71,7 +71,7 @@ jobs:
 
       - name: Build service image
         id: build-service-image
-        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
+        uses: docker/build-push-action@94f8f8c2eec4bc3f1d78c1755580779804cb87b2 # v6.0.1
         with:
           context: .
           file: ./docker/Dockerfile-policy-hub-service
@@ -89,7 +89,7 @@ jobs:
           helm dependency build
 
       - name: Install the chart on KinD cluster
-        run: helm install testing -n apps --create-namespace --wait --set policyhub.image.name=kind-registry:5000/policy-hub-service --set policyhub.image.tag=testing --set policyhubmigrations.image.name=kind-registry:5000/policy-hub-migrations --set policyhubmigrations.image.tag=testing --set policyhub.swaggerEnabled=true charts/policy-hub
+        run: helm install testing -n apps --create-namespace --wait --set service.image.name=kind-registry:5000/policy-hub-service --set service.image.tag=testing --set migrations.image.name=kind-registry:5000/policy-hub-migrations --set migrations.image.tag=testing --set service.swaggerEnabled=true charts/policy-hub
 
       - name: Configure port forward to app in KinD
         run: |
@@ -126,7 +126,7 @@ jobs:
 
       - name: Upload HTML report
         if: success() || failure()
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
           name: ZAP scan report
           path: ./report_html.html

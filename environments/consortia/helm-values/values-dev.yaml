@@ -17,9 +17,9 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-policyHubAddress: "https://policy-hub-pen.dev.demo.catena-x.net"
+policyHubAddress: "https://policy-hub.dev.demo.catena-x.net"
 centralidp:
-  address: "https://centralidp-pen.dev.demo.catena-x.net"
+  address: "https://centralidp.dev.demo.catena-x.net"
 
 ingress:
   enabled: true
@@ -32,22 +32,34 @@ ingress:
   tls:
     - secretName: "tls-secret"
       hosts:
-        - "policy-hub-backend-pen.dev.demo.catena-x.net"
+        - "policy-hub.dev.demo.catena-x.net"
   hosts:
-    - host: "policy-hub-backend-pen.dev.demo.catena-x.net"
+    - host: "policy-hub.dev.demo.catena-x.net"
       paths:
         - path: "/api/policy-hub"
           pathType: "Prefix"
 
-policyhub:
+keycloak:
+  central:
+    jwtBearerOptions:
+      tokenValidationParameters:
+        validAudience: "Cl23-CX-Policy-Hub"
+
+service:
+  image:
+    tag: "main"
+  imagePullPolicy: "Always"
   swaggerEnabled: true
 
-policyhubmigrations:
+migrations:
+  image:
+    tag: "main"
+  imagePullPolicy: "Always"
   logging:
     default: "Debug"
 
 postgresql:
   auth:
-    postgrespassword: "<path:portal/data/policy-hub/pen/postgres#postgres-password>"
-    password: "<path:portal/data/policy-hub/pen/postgres#password>"
-    replicationPassword: "<path:portal/data/policy-hub/pen/postgres#replication-password>"
+    postgrespassword: "<path:portal/data/policy-hub/dev/postgres#postgres-password>"
+    password: "<path:portal/data/policy-hub/dev/postgres#password>"
+    replicationPassword: "<path:portal/data/policy-hub/dev/postgres#replication-password>"

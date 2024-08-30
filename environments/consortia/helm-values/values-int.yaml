@@ -17,9 +17,9 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-policyHubBackendAddress: "https://policy-hub.beta.demo.catena-x.net"
+policyHubAddress: "https://policy-hub.int.demo.catena-x.net"
 centralidp:
-  address: "https://centralidp.beta.demo.catena-x.net"
+  address: "https://centralidp.int.demo.catena-x.net"
 
 ingress:
   enabled: true
@@ -28,26 +28,32 @@ ingress:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "8m"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:3000, https://*.beta.demo.catena-x.net"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:3000, https://*.int.demo.catena-x.net"
   tls:
     - secretName: "tls-secret"
       hosts:
-        - "policy-hub.beta.demo.catena-x.net"
+        - "policy-hub.int.demo.catena-x.net"
   hosts:
-    - host: "policy-hub.beta.demo.catena-x.net"
+    - host: "policy-hub.int.demo.catena-x.net"
       paths:
         - path: "/api/policy-hub"
           pathType: "Prefix"
 
-policyhub:
+keycloak:
+  central:
+    jwtBearerOptions:
+      tokenValidationParameters:
+        validAudience: "Cl23-CX-Policy-Hub"
+
+service:
   swaggerEnabled: true
 
-policyhubmigrations:
+migrations:
   logging:
     default: "Debug"
 
 postgresql:
   auth:
-    postgrespassword: "<path:portal/data/policy-hub/beta/postgres#postgres-password>"
-    password: "<path:portal/data/policy-hub/beta/postgres#password>"
-    replicationPassword: "<path:portal/data/policy-hub/beta/postgres#replication-password>"
+    postgrespassword: "<path:portal/data/policy-hub/int/postgres#postgres-password>"
+    password: "<path:portal/data/policy-hub/int/postgres#password>"
+    replicationPassword: "<path:portal/data/policy-hub/int/postgres#replication-password>"
