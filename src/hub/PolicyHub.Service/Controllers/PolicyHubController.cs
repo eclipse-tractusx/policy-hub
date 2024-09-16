@@ -23,6 +23,7 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Web;
 using System.Diagnostics.CodeAnalysis;
 
@@ -81,7 +82,8 @@ public static class PolicyHubController
             .RequireAuthorization()
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(PolicyResponse), Constants.JsonContentType)
-            .Produces(StatusCodes.Status404NotFound, typeof(ErrorResponse), Constants.JsonContentType);
+            .Produces(StatusCodes.Status400BadRequest, typeof(ErrorResponse), Constants.JsonContentType)
+            .Produces(StatusCodes.Status404NotFound, typeof(ControllerArgumentException), Constants.JsonContentType);
 
         return group;
     }
