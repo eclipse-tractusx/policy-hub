@@ -72,6 +72,7 @@ public static class PolicyHubController
             .RequireAuthorization()
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(PolicyResponse), Constants.JsonContentType)
+            .Produces(StatusCodes.Status400BadRequest, typeof(ErrorResponse), Constants.JsonContentType)
             .Produces(StatusCodes.Status404NotFound, typeof(ErrorResponse), Constants.JsonContentType);
 
         policyHub.MapPost("policy-content", ([FromBody] PolicyContentRequest requestData, IPolicyHubBusinessLogic logic) => logic.GetPolicyContentAsync(requestData))
