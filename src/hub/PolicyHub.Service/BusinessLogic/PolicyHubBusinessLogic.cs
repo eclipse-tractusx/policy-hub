@@ -176,7 +176,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
         if (invalidValues.Any())
         {
             var x = missingValues.Where(x => invalidValues.Contains(x.TechnicalKey)).Select(x =>
-                $"Key: {x.TechnicalKey}, requested value[{string.Join(',', x.Values)}] Possible Values[{string.Join(',', attributeValuesForTechnicalKeys.Where(a => a.TechnicalKey.Equals(x.TechnicalKey)).Select(a => a.Values.Select(x => x)).First())}]");
+                $"Key: {x.TechnicalKey}, requested value[{string.Join(',', x.Values)}] Possible Values[{string.Join(',', attributeValuesForTechnicalKeys.Where(a => a.TechnicalKey.Equals(x.TechnicalKey)).Select(a => a.Values).First())}]");
             throw new ControllerArgumentException($"Invalid values set for {string.Join(',', x)}");
         }
 
