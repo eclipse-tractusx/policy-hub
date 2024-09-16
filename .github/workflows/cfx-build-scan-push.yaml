@@ -1,0 +1,164 @@
+# A workflow for Gradle build, Sonar scan, Code QL, Container image build, and image push
+name: Policy Hub Build, scan and push
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    branches: [ main ]
+    paths:
+      - 'docker/**'
+      - 'src/**'
+      - 'tests/**'
+      - '.github/workflows/cfx-build-scan-push.yaml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'docker/**'
+      - 'src/**'
+      - 'tests.*'
+      - '.github/workflows/cfx-build-scan-push.yaml'
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+-*'
+
+jobs:
+  build-test-scan-app:
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+    name: Build, test, and scan App
+    uses: Cofinity-X/central-pipelines/.github/workflows/reusable-dotnet-build.yaml@main
+    with:
+      dotnet-version: 8.0
+      project: "src"
+      codeql-cfg-path: ./.github/codeql/codeql-config.yaml
+
+  # The sonar job needs to use to central resusable worklows once it's available there
+  sonar-scan:
+    name: Sonar scan
+    runs-on: ubuntu-latest
+    needs: build-test-scan-app
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018 # v4.2.2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Cache SonarCloud packages
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        with:
+          path: ~/sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        with:
+          path: ./.sonar/scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ./.sonar/scanner
+          dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
+
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet tool install --global dotnet-coverage
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:Cofinity-X_policy-hub /o:cofinity-x /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=src/coverage.xml
+          dotnet build src
+          cd src
+          dotnet-coverage collect 'dotnet test --no-restore --verbosity normal' -s 'settings-coverage.xml' -f xml -o 'coverage.xml'
+          cd ..
+          ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+  # For Container image build, Trivy scan, and image push
+  dockerizing-application:
+    needs: build-test-scan-app
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+      id-token: write
+
+    strategy:
+      matrix:
+        include:
+          - service_name: policy-hub-service
+            dockerfile: docker/Dockerfile-policy-hub-service
+          - service_name: policy-hub-migrations
+            dockerfile: docker/Dockerfile-policy-hub-migrations
+
+    name: Docker build, Trivy scan, Docker push
+    uses: Cofinity-X/central-pipelines/.github/workflows/reusable-publish-image-to-acr.yaml@main
+    with:
+      team_name: core-services
+      repository_name: policy-hub
+      service_name: ${{ matrix.service_name }}
+      dockerfile_path: ${{ matrix.dockerfile }}
+      environment: "lower-env-acr"
+      push: ${{ github.event_name != 'pull_request' }} # Don't push the image in case of PR
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+
+  # To dispatch a workflow in core-services-charts repo for auto image tag update. The following job could be developed as reusable workflow in the future.
+  auto-deploy-dispatch:
+    needs: dockerizing-application
+    name: Dispatch charts repo workflow
+    runs-on: ubuntu-latest
+    if: ${{ (github.event_name != 'pull_request') && (github.ref_type != 'tag') }}  # Execute only if container image is pushed and no tag is published
+    steps:
+      # Get image tags from the previous job filter the tag that needs to be updated (Currently, it's main-{sha})
+      - name: Get image tags
+        id: get_tag
+        run: |
+          for image_tag in $(echo "${{ needs.dockerizing-application.outputs.image_tags }}")
+          do
+            tag=$(echo $image_tag | cut -d ":" -f2)
+            if [[ $tag == main* ]];
+            then
+              main_tag=$tag
+            fi
+          done
+          echo "main_tag=$main_tag" >> $GITHUB_OUTPUT
+
+      # Generate a temporary token using Github app
+      - name: Get token
+        id: get_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CORE_SERVICES_WORKFLOW_TRIGGER_GH_APP_ID }}
+          private-key: ${{ secrets.CORE_SERVICES_WORKFLOW_TRIGGER_GH_APP_PRIVATE_KEY }}
+          repositories: core-services-charts
+          owner: cofinity-x
+
+      # Trigger remote workflow of core-services-chart to update the image tag in the helm values
+      - name: Trigger workflow
+        id: trigger_remote_workflow
+        env:
+          TOKEN: ${{ steps.get_token.outputs.token }}
+          HELM_VALUES_PATH: "policy-hub/dev/values.yaml"
+          IMAGE_TAG: ${{ steps.get_tag.outputs.main_tag }}
+          IMAGE_TAG_PROPERTY: '(.[\"service\", \"migrations\"].image.tag)'
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/cofinity-x/core-services-charts/dispatches \
+            -d '{"event_type":"update_dev_image_tag","client_payload": { "image_tag": "'"$IMAGE_TAG"'", "helm_values_path": "'"$HELM_VALUES_PATH"'", "image_tag_property": "'"$IMAGE_TAG_PROPERTY"'", "dispatcher_info": "'"Runner id - $GITHUB_RUN_ID"'" }}' \
+            --fail

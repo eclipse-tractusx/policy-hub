@@ -64,16 +64,29 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             AttributeKeyId.DynamicValue => (value ?? "{dynamicValue}", null),
             AttributeKeyId.Regex => (GetRegexValue(attributes, value), null),
             _ => operatorId == OperatorId.Equals
-                ? rightOperands.Count() > 1 ?
+                ? processEqualsOperator(attributes, rightOperands, value, leftOperand, useCase)
+                : (rightOperands, null)
+        };
+
+    private static (object rightOperand, AdditionalAttributes? additionalAttribute) processEqualsOperator((AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand, UseCaseId? useCase)
+    {
+        if (value != null)
+        {
+            if (!rightOperands.Any(r => r == value))
+            {
+                throw new ControllerArgumentException($"Invalid values [{value}] set for key {leftOperand}. Possible values [{string.Join(",", rightOperands)}]");
+            }
+            rightOperands = rightOperands.Where(r => r.Equals(value));
+        }
+        return rightOperands.Count() > 1 ?
                     ($"@{leftOperand}{(useCase != null ?
                         useCase.Value.ToString().Insert(0, ".") :
                         string.Empty)}-{attributes.Key}",
                         new AdditionalAttributes($"@{leftOperand}{(useCase != null ?
                             useCase.Value.ToString().Insert(0, ".") :
                             string.Empty)}-{attributes.Key}", rightOperands)) :
-                    (rightOperands.Single(), null)
-                : (rightOperands, null)
-        };
+                    (rightOperands.Single(), null);
+    }
 
     private static object GetRegexValue((AttributeKeyId? Key, IEnumerable<string> Values) attributes, string? value)
     {
@@ -163,7 +176,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
         if (invalidValues.Any())
         {
             var x = missingValues.Where(x => invalidValues.Contains(x.TechnicalKey)).Select(x =>
-                $"Key: {x.TechnicalKey}, invalid values: {string.Join(',', x.Values)}");
+                $"Key: {x.TechnicalKey}, requested value[{string.Join(',', x.Values)}] Possible Values[{string.Join(',', attributeValuesForTechnicalKeys.Where(a => a.TechnicalKey.Equals(x.TechnicalKey)).Select(a => a.Values).First())}]");
             throw new ControllerArgumentException($"Invalid values set for {string.Join(',', x)}");
         }
 
