@@ -76,7 +76,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             {
                 throw new ControllerArgumentException($"Invalid values [{value}] set for key {leftOperand}. Possible values [{string.Join(",", rightOperands)}]");
             }
-            rightOperands = rightOperands.Select(r => r).Where(r => r.Equals(value));
+            rightOperands = rightOperands.Where(r => r.Equals(value));
         }
         return rightOperands.Count() > 1 ?
                     ($"@{leftOperand}{(useCase != null ?
