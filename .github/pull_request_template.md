@@ -1,25 +1,33 @@
 ## Description
 
-Please include a summary of the change.
+<!-- Provide a clear and concise description of the changes introduced by this pull request. Explain the problem it 
+solves or the feature it adds. -->
 
 ## Why
 
-Please include an explanation of why this change is necessary as well as relevant motivation and context. List any dependencies that are required for this change.
+<!-- Why are these changes necessary? What problem does it solve? -->
 
-## Issue
 
-Link to Github issue.
+## Issue Link
+
+Refs: <issue_number>
+
 
 ## Checklist
-
 Please delete options that are not relevant.
 
-- [ ] I have followed the [contributing guidelines](https://github.com/eclipse-tractusx/policy-hub/blob/main/docs/technical-documentation/dev-process/How%20to%20contribute.md)
-- [ ] I have performed [IP checks](https://eclipse-tractusx.github.io/docs/release/trg-7/trg-7-04#checking-libraries-using-the-eclipse-dash-license-tool) for added or updated 3rd party libraries
-- [ ] I have created and linked IP issues or requested their creation by a committer
+- [ ] I have followed the contributing guidelines
+
+- [ ] I have performed IP checks for added or updated 3rd party libraries
+
+- [ ] I have added copyright and license headers, footers (for .md files) or files (for images) //open source requirement
+
 - [ ] I have performed a self-review of my own code
+
 - [ ] I have successfully tested my changes locally
-- [ ] I have added tests that prove my changes work
+
+- [ ] I have added tests and updated existing tests that prove my changes work
+
 - [ ] I have checked that new and existing tests pass locally with my changes
+
 - [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have added copyright and license headers, footers (for .md files) or files (for images)

@@ -18,6 +18,8 @@
  ********************************************************************************/
 
 using Microsoft.AspNetCore.Authentication;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.DependencyInjection;
 using Org.Eclipse.TractusX.PolicyHub.Service.Authentication;
 using Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
@@ -33,6 +35,20 @@ await WebApplicationBuildRunner
             builder.Services.AddTransient<IClaimsTransformation, KeycloakClaimsTransformation>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddHubRepositories(builder.Configuration);
+
+            // Configure OpenTelemetry and Prometheus Exporter
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource
+                    .AddService(serviceName: builder.Environment.ApplicationName))
+                .WithMetrics(metrics => metrics
+                    .AddAspNetCoreInstrumentation()  // Capture ASP.NET Core metrics
+                    .AddPrometheusExporter()         // Add Prometheus exporter for metrics
+                    .AddConsoleExporter((exporterOptions, metricReaderOptions) =>
+                    {
+                        metricReaderOptions.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = 1000;
+                    }));
+
+            // JSON serialization options for API responses
             builder.Services.ConfigureHttpJsonOptions(options =>
             {
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -47,4 +63,7 @@ await WebApplicationBuildRunner
             app.MapGroup("/api")
                 .WithOpenApi()
                 .MapPolicyHubApi();
+
+            // Expose Prometheus scraping endpoint on the same port (8080)
+            app.UseOpenTelemetryPrometheusScrapingEndpoint();  // Exposes /metrics endpoint
         }).ConfigureAwait(ConfigureAwaitOptions.None);
