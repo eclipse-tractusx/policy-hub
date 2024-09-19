@@ -78,13 +78,13 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             }
             rightOperands = rightOperands.Where(r => r.Equals(value));
         }
+
+        var useCaseValue = useCase != null ?
+            useCase.Value.ToString().Insert(0, ".") :
+            string.Empty;
+        var rightOperand = $"@{leftOperand}{useCaseValue}-{attributes.Key}";
         return rightOperands.Count() > 1 ?
-                    ($"@{leftOperand}{(useCase != null ?
-                        useCase.Value.ToString().Insert(0, ".") :
-                        string.Empty)}-{attributes.Key}",
-                        new AdditionalAttributes($"@{leftOperand}{(useCase != null ?
-                            useCase.Value.ToString().Insert(0, ".") :
-                            string.Empty)}-{attributes.Key}", rightOperands)) :
+                    (rightOperand, new AdditionalAttributes(rightOperand, rightOperands)) :
                     (rightOperands.Single(), null);
     }
 
