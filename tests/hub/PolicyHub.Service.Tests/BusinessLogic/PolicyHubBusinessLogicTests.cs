@@ -169,7 +169,7 @@ public class PolicyHubBusinessLogicTests
             .Returns(new ValueTuple<bool, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(true, "multipleAdditionalValues", new ValueTuple<AttributeKeyId, IEnumerable<string>>(AttributeKeyId.Static, new[] { "value1", "value2", "value3" }), null));
 
         // Act
-        var result = await _sut.GetPolicyContentWithFiltersAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues", OperatorId.Equals, "test");
+        var result = await _sut.GetPolicyContentWithFiltersAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues", OperatorId.Equals, null);
 
         // Assert
         result.Content.Id.Should().Be("....");
@@ -186,6 +186,23 @@ public class PolicyHubBusinessLogicTests
         result.Content.Permission.Constraint.Operator.Should().Be("eq");
         result.Content.Permission.Constraint.AndOperands.Should().BeNull();
         result.Content.Permission.Constraint.OrOperands.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetPolicyContentWithFiltersAsync_WithInvalidValue_ExceptionExpected()
+    {
+        // Arrange
+        A.CallTo(() => _policyRepository.GetPolicyContentAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues"))
+            .Returns(new ValueTuple<bool, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(true, "multipleAdditionalValues", new ValueTuple<AttributeKeyId, IEnumerable<string>>(AttributeKeyId.Static, new[] { "value1", "value2", "value3" }), null));
+
+        // Act
+        async Task Act() => await _sut.GetPolicyContentWithFiltersAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues", OperatorId.Equals, "test");
+
+        // Act
+        var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
+
+        // Assert
+        ex.Message.Should().Be("Invalid values [test] set for key multipleAdditionalValues. Possible values [value1,value2,value3]");
     }
 
     #endregion
@@ -264,7 +281,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be("Invalid values set for Key: test, invalid values: abc");
+        ex.Message.Should().Be("Invalid values set for Key: test, requested value[abc] Possible Values[test]");
     }
 
     [Fact]
