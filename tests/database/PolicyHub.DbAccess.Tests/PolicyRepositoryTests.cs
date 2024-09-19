@@ -72,13 +72,11 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var result = await sut.GetPolicyTypes(null, null).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(7).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(5).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber",
             x => x.TechnicalKey == "Membership",
             x => x.TechnicalKey == "FrameworkAgreement",
-            x => x.TechnicalKey == "Dismantler.allowedBrands",
             x => x.TechnicalKey == "UsagePurpose",
-            x => x.TechnicalKey == "Dismantler",
             x => x.TechnicalKey == "ContractReference"
         );
     }
@@ -93,11 +91,9 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var result = await sut.GetPolicyTypes(PolicyTypeId.Access, null).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(4).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(2).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "Membership" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "Dismantler.allowedBrands" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "Dismantler" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5
+            x => x.TechnicalKey == "Membership" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5
         );
     }
 
@@ -111,12 +107,10 @@ public class PolicyRepositoryTests : IAssemblyFixture<TestDbFixture>
         var result = await sut.GetPolicyTypes(null, UseCaseId.Quality).ToListAsync();
 
         // Assert
-        result.Should().NotBeEmpty().And.HaveCount(5).And.Satisfy(
+        result.Should().NotBeEmpty().And.HaveCount(3).And.Satisfy(
             x => x.TechnicalKey == "BusinessPartnerNumber" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
             x => x.TechnicalKey == "Membership" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "Dismantler.allowedBrands" && x.Attribute.Count() == 3 && x.Type.Count() == 2 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "FrameworkAgreement" && x.Attribute.Count() == 1 && x.Type.Count() == 1 && x.UseCase.Count() == 5,
-            x => x.TechnicalKey == "Dismantler" && x.Attribute.Count() == 1 && x.Type.Count() == 2 && x.UseCase.Count() == 5
+            x => x.TechnicalKey == "FrameworkAgreement" && x.Attribute.Count() == 1 && x.Type.Count() == 1 && x.UseCase.Count() == 5
         );
     }
 
