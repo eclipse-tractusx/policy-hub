@@ -21,7 +21,7 @@
     "kind_id": 5,
     "technical_key": "Dismantler.allowedBrands",
     "description": "Company role defining a dismantler. Companies holding the credential are dismantler certified companies.",
-    "is_active": true,
+    "is_active": false,
     "attribute_key_id": 4
   },
   {
@@ -45,7 +45,7 @@
     "kind_id": 5,
     "technical_key": "Dismantler",
     "description": "Companies holding the credential are dismantler certified companies.",
-    "is_active": true,
+    "is_active": false,
     "attribute_key_id": 4
   },
   {
