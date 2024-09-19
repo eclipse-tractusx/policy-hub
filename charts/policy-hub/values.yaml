@@ -21,6 +21,7 @@ service:
   image:
     name: "docker.io/tractusx/policy-hub-service"
     tag: ""
+    pullSecrets: []
   imagePullPolicy: "IfNotPresent"
   # -- We recommend to review the default resource limits as this should a conscious choice.
   resources:
@@ -49,6 +50,7 @@ migrations:
   image:
     name: "docker.io/tractusx/policy-hub-migrations"
     tag: ""
+    pullSecrets: []
   imagePullPolicy: "IfNotPresent"
   # -- We recommend to review the default resource limits as this should a conscious choice.
   resources:
