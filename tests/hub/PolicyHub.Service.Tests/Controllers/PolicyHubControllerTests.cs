@@ -78,13 +78,11 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(7).And.Satisfy(
+            .And.HaveCount(5).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement",
-                x => x.TechnicalKey == "Dismantler.allowedBrands",
                 x => x.TechnicalKey == "UsagePurpose",
-                x => x.TechnicalKey == "Dismantler",
                 x => x.TechnicalKey == "ContractReference"
             );
     }
@@ -97,11 +95,9 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(4).And.Satisfy(
+            .And.HaveCount(2).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
-                x => x.TechnicalKey == "Membership",
-                x => x.TechnicalKey == "Dismantler.allowedBrands",
-                x => x.TechnicalKey == "Dismantler"
+                x => x.TechnicalKey == "Membership"
             );
     }
 
@@ -113,13 +109,11 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
 
         // Assert
         policies.Should().NotBeNull()
-            .And.HaveCount(6).And.Satisfy(
+            .And.HaveCount(4).And.Satisfy(
                 x => x.TechnicalKey == "BusinessPartnerNumber",
                 x => x.TechnicalKey == "Membership",
                 x => x.TechnicalKey == "FrameworkAgreement",
-                x => x.TechnicalKey == "Dismantler.allowedBrands",
-                x => x.TechnicalKey == "UsagePurpose",
-                x => x.TechnicalKey == "Dismantler"
+                x => x.TechnicalKey == "UsagePurpose"
             );
     }
 
@@ -184,17 +178,14 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     }
 
     [Fact]
-    public async Task GetPolicyContent_UsageDismantlerIn_ReturnsExpected()
+    public async Task GetPolicyContent_UsageDismantlerIn_ExceptionExpected()
     {
         // Act
         var response = await _client.GetAsync($"{BaseUrl}/policy-content?type={PolicyTypeId.Usage}&policyName=Dismantler.allowedBrands&operatorType={OperatorId.In}");
 
         // Assert
         response.Should().NotBeNull();
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await response.Content.ReadAsStringAsync())
-            .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]}}}}");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -225,7 +216,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             new[]
             {
                 new Constraints("FrameworkAgreement", OperatorId.Equals, "DataExchangeGovernance:1.0"),
-                new Constraints("Dismantler.allowedBrands", OperatorId.In, "Audi")
+                new Constraints("UsagePurpose", OperatorId.In, "cx.bpdm.pool:1")
             });
 
         // Act
@@ -236,7 +227,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:UsagePurpose\",\"operator\":\"in\",\"rightOperand\":[\"cx.circular.dpp:1\",\"cx.circular.smc:1\",\"cx.circular.marketplace:1\",\"cx.circular.materialaccounting:1\",\"cx.bpdm.gate.upload:1\",\"cx.bpdm.gate.download:1\",\"cx.bpdm.pool:1\",\"cx.bpdm.vas.dataquality.upload:1\",\"cx.bpdm.vas.dataquality.download:1\",\"cx.bpdm.vas.bdv.upload:1\",\"cx.bpdm.vas.bdv.download:1\",\"cx.bpdm.vas.fpd.upload:1\",\"cx.bpdm.vas.fpd.download:1\",\"cx.bpdm.vas.swd.upload:1\",\"cx.bpdm.vas.swd.download:1\",\"cx.bpdm.vas.nps.upload:1\",\"cx.bpdm.vas.nps.download:1\",\"cx.bpdm.vas.countryrisk:1\",\"cx.behaviortwin.base:1\",\"cx.core.digitalTwinRegistry:1\",\"cx.core.tractionbattery:1\",\"cx.core.industrycore:1\",\"cx.core.qualityNotifications:1\",\"cx.pcf.base:1\",\"cx.quality.base:1\",\"cx.dcm.base:1\",\"cx.puris.base:1\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
     }
 
     [Fact]
@@ -270,7 +261,6 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
             new[]
             {
                 new Constraints("FrameworkAgreement", OperatorId.Equals, "DataExchangeGovernance:1.0"),
-                new Constraints("Dismantler.allowedBrands", OperatorId.In, "Audi"),
                 new Constraints("BusinessPartnerNumber", OperatorId.Equals, "BPNL00000003CRHK")
             });
 
@@ -282,7 +272,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:Dismantler.allowedBrands\",\"operator\":\"in\",\"rightOperand\":[\"BMW\",\"Audi\",\"VW\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
     }
 
     #endregion
