@@ -50,15 +50,7 @@ public class IntegrationTestFactory : WebApplicationFactory<PolicyHubBusinessLog
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        var projectDir = Directory.GetCurrentDirectory();
-        var configPath = Path.Combine(projectDir, "appsettings.IntegrationTests.json");
-
-        builder.ConfigureAppConfiguration((_, conf) =>
-        {
-            conf.AddJsonFile(configPath, true)
-                .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
-                .AddEnvironmentVariables();
-        });
+        Environment.SetEnvironmentVariable("SKIP_CONFIGURATION_VALIDATION", "true");
         builder.ConfigureTestServices(services =>
         {
             services.ConfigureHttpJsonOptions(options =>
