@@ -19,3 +19,5 @@
 
 product: "Policy Hub"
 leadingRepository: "https://github.com/eclipse-tractusx/policy-hub"
+openApiSpecs:
+- "https://raw.githubusercontent.com/eclipse-tractusx/policy-hub/refs/heads/main/docs/api/hub-service.yaml"

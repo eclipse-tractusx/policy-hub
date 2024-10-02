@@ -21,13 +21,14 @@ using Microsoft.AspNetCore.Authentication;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.DependencyInjection;
 using Org.Eclipse.TractusX.PolicyHub.Service.Authentication;
 using Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.Models.Extensions;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Web;
 using System.Text.Json.Serialization;
 
-const string Version = "v2";
+var version = AssemblyExtension.GetApplicationVersion();
 
 await WebApplicationBuildRunner
-    .BuildAndRunWebApplicationAsync<Program>(args, "policy-hub", Version, ".Hub",
+    .BuildAndRunWebApplicationAsync<Program>(args, "policy-hub", version, ".Hub",
         builder =>
         {
             builder.Services.AddTransient<IClaimsTransformation, KeycloakClaimsTransformation>();

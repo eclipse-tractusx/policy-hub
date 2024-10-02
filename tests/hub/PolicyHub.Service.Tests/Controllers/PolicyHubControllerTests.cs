@@ -276,19 +276,4 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
     }
 
     #endregion
-
-    #region Swagger
-
-    [Fact]
-    public async Task CheckSwagger_ReturnsExpected()
-    {
-        // Act
-        var response = await _client.GetAsync($"{BaseUrl}/swagger/v2/swagger.json");
-
-        // Assert
-        response.Should().NotBeNull();
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-    }
-
-    #endregion
 }

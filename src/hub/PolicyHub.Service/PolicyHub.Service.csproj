@@ -32,11 +32,17 @@
     <UserSecretsId>76bc0e20-3589-4626-a67e-bfca52afe9bb</UserSecretsId>
   </PropertyGroup>
 
+  <Target Name="openapi" AfterTargets="Build">
+    <Message Text="generating openapi v$(Version)" Importance="high" />
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet tool run swagger tofile --yaml --output ../../../docs/api/hub-service.yaml $(OutputPath)$(AssemblyName).dll v$(Version)" EnvironmentVariables="DOTNET_ROLL_FORWARD=LatestMajor;SKIP_CONFIGURATION_VALIDATION=true" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="Flurl.Signed" Version="3.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
-    <PackageReference Include="Org.Eclipse.TractusX.Portal.Backend.Framework.Web" Version="2.4.2" />
+    <PackageReference Include="Org.Eclipse.TractusX.Portal.Backend.Framework.Web" Version="2.10.0" />
     <PackageReference Include="System.Json" Version="4.7.1" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
