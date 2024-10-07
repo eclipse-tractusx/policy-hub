@@ -217,7 +217,7 @@ Multiple constrains example:
 
 ```
 
-If you want to try it out, check the [postman collection](/docs/developer/Technical-Documentation/requests/policy-hub.postman_collection.json)
+If you want to try it out, check the [postman collection](./policy-hub.postman_collection.json)
 
 ## NOTICE
 
