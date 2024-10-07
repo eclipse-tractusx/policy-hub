@@ -2,7 +2,7 @@
 
 This repository contains the backend code for the Policy-Hub written in C#.
 
-For **information about the policy hub**, please refer to the documentation, especially the context and scope section in the [architecture documentation](./docs/technical-documentation/architecture).
+For **information about the policy hub**, please refer to the documentation, especially the context and scope section in the [architecture documentation](./docs/architecture).
 
 For **installation** details, please refer to the [README.md](./charts/policy-hub/README.md) of the provided helm chart.
 
@@ -25,7 +25,7 @@ dotnet run
 
 ## Known Issues and Limitations
 
-See [Known Knowns](/docs/technical-documentation/known-knowns/known-issues-and-limitations.md).
+See [Known Knowns](/docs/admin/known-issues-and-limitations.md).
 
 ## Notice for Docker image
 

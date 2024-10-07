@@ -2,7 +2,7 @@
 
 ## Build, test, deploy
 
-Details to the build, test and deploy process can get found under the following md file: [Release Process](/docs/technical-documentation/release-process/Release%20Process.md)
+Details to the build, test and deploy process can get found under the following md file: [Release Process](/docs/admin/release-process/Release%20Process.md)
 
 ## Development Guidelines
 

@@ -1,4 +1,4 @@
-# Security Assessment Policy-Hub 
+# Security Assessment Policy-Hub
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -57,7 +57,7 @@ flowchart LR
 ### Changes compared to last Security Assessment
 
 * upgrade to .NET 8
-* new seeding data 
+* new seeding data
 
 ### Features for Upcoming Versions
 
@@ -69,7 +69,7 @@ All potential threats discussed during the assessment were already mitigated.
 
 ### Mitigated Threats
 
-N/A 
+N/A
 
 ### Performed Security Checks
 

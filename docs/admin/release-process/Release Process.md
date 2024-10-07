@@ -33,7 +33,7 @@ Be aware that migrations coming release branches for release candidates or from 
 
 The version needs to be updated in the `src` directory within the 'Directory.Build.props' file.
 
-Also, bump the chart and app version in the [Chart.yaml](../../../charts/policy-hub/Chart.yaml) and the version of the images in the [values.yaml](../../../charts/policy-hub/values.yaml).
+Also, bump the chart and app version in the [Chart.yaml](../../../charts/policy-hub/Chart.yaml) and the version of the images in the [values.yaml](../../../charts/charts/policy-hub/values.yaml).
 
 _Consortia relevant:  Update the version of the targetRevision tag in the [argocd-app-templates](../../../consortia/argocd-app-templates/), used for consortia-environments._
 
