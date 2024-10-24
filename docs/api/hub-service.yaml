@@ -1,12 +1,12 @@
 openapi: 3.0.1
 info:
   title: Org.Eclipse.TractusX.PolicyHub.Service
-  version: v1.1.0
+  version: v1.2.0-rc.1
 paths:
   /api/policy-hub/policy-attributes:
     get:
       tags:
-        - 'Org.Eclipse.TractusX.PolicyHub.Service, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null'
+        - 'Org.Eclipse.TractusX.PolicyHub.Service, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null'
       summary: Gets the keys for the attributes
       description: 'Example: GET: api/policy-hub/policy-attributes'
       responses:
@@ -31,7 +31,7 @@ paths:
   /api/policy-hub/policy-types:
     get:
       tags:
-        - 'Org.Eclipse.TractusX.PolicyHub.Service, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null'
+        - 'Org.Eclipse.TractusX.PolicyHub.Service, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null'
       summary: Provides all current supported policy types incl. a policy description and useCase link.
       description: 'Example: GET: api/policy-hub/policy-types'
       parameters:
@@ -65,7 +65,7 @@ paths:
   /api/policy-hub/policy-content:
     get:
       tags:
-        - 'Org.Eclipse.TractusX.PolicyHub.Service, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null'
+        - 'Org.Eclipse.TractusX.PolicyHub.Service, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null'
       summary: Receive the policy template 'access' or 'usage' for a single policy rule based on the request parameters submitted by the user.
       description: 'Example: GET: api/policy-hub/policy-content'
       parameters:
@@ -125,7 +125,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
-        - 'Org.Eclipse.TractusX.PolicyHub.Service, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null'
+        - 'Org.Eclipse.TractusX.PolicyHub.Service, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null'
       summary: Receive the policy template 'access' or 'usage' for multiple policy rule template based on the input request body.
       description: 'Example: POST: api/policy-hub/policy-content'
       requestBody:

@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.2.0-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v1.1.0-rc.2...v1.2.0-rc.1) (2024-10-24)
+
+
+### Features
+
+* add imagePullSecrets ([#193](https://github.com/eclipse-tractusx/policy-hub/issues/193)) ([64b2f38](https://github.com/eclipse-tractusx/policy-hub/commit/64b2f380c22b9cdfabda393327a50cf4ace1e579))
+* **api-hub:** create open api spec on build ([#209](https://github.com/eclipse-tractusx/policy-hub/issues/209)) ([a3c9d6f](https://github.com/eclipse-tractusx/policy-hub/commit/a3c9d6f121e49b4f02999229b51e4fd1d4772bbc)), closes [#207](https://github.com/eclipse-tractusx/policy-hub/issues/207)
+
+
+### Bug Fixes
+
+* policy hub  post get policy rules response structuring error value map ([#201](https://github.com/eclipse-tractusx/policy-hub/issues/201)) ([b5a1ec3](https://github.com/eclipse-tractusx/policy-hub/commit/b5a1ec3a09a8c7f2325f4f159aa89ca8429e6d2a))
+* update incorrect seeding data and not supported policies ([#202](https://github.com/eclipse-tractusx/policy-hub/issues/202)) ([db5171a](https://github.com/eclipse-tractusx/policy-hub/commit/db5171a65f47ec71ebceac479121391d753cc500))
+
+
+### Miscellaneous Chores
+
+* release 1.2.0-rc.1 ([8ff0f8b](https://github.com/eclipse-tractusx/policy-hub/commit/8ff0f8bd3b430f4b7c970c3b843100f5abd85869))
+
 ## [1.1.0-rc.2](https://github.com/eclipse-tractusx/policy-hub/compare/v1.1.0-rc.1...v1.1.0-rc.2) (2024-07-25)
 
 

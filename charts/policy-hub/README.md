@@ -33,7 +33,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 1.1.0
+    version: 1.2.0-rc.1
 ```
 
 ## Requirements
@@ -48,6 +48,7 @@ dependencies:
 |-----|------|---------|-------------|
 | service.image.name | string | `"docker.io/tractusx/policy-hub-service"` |  |
 | service.image.tag | string | `""` |  |
+| service.image.pullSecrets | list | `[]` |  |
 | service.imagePullPolicy | string | `"IfNotPresent"` |  |
 | service.resources | object | `{"limits":{"cpu":"45m","memory":"300M"},"requests":{"cpu":"15m","memory":"300M"}}` | We recommend to review the default resource limits as this should a conscious choice. |
 | service.logging.businessLogic | string | `"Information"` |  |
@@ -60,6 +61,7 @@ dependencies:
 | service.swaggerEnabled | bool | `false` |  |
 | migrations.image.name | string | `"docker.io/tractusx/policy-hub-migrations"` |  |
 | migrations.image.tag | string | `""` |  |
+| migrations.image.pullSecrets | list | `[]` |  |
 | migrations.imagePullPolicy | string | `"IfNotPresent"` |  |
 | migrations.resources | object | `{"limits":{"cpu":"45m","memory":"105M"},"requests":{"cpu":"15m","memory":"105M"}}` | We recommend to review the default resource limits as this should a conscious choice. |
 | migrations.seeding.testDataEnvironments | string | `""` |  |
