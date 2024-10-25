@@ -22,6 +22,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
+using Org.Eclipse.TractusX.PolicyHub.Service.Filters;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Web;
@@ -56,12 +57,21 @@ public static class PolicyHubController
             .Produces(StatusCodes.Status200OK, typeof(PolicyTypeResponse), Constants.JsonContentType);
 
         policyHub.MapGet("policy-content",
-                (UseCaseId? useCase,
-                PolicyTypeId type,
+                (string? useCase,
+                String type,
                 string policyName,
-                OperatorId operatorType,
+                String operatorType,
                 string? value,
-                IPolicyHubBusinessLogic logic) => logic.GetPolicyContentWithFiltersAsync(useCase, type, policyName, operatorType, value))
+                IPolicyHubBusinessLogic logic) =>
+                {
+                    UseCaseId? useCaseId = null;
+                    if (useCase != null && useCase.Trim() != string.Empty)
+                    {
+                        useCaseId = Enum.Parse<UseCaseId>(useCase, true);
+                    }
+                    return logic.GetPolicyContentWithFiltersAsync(useCaseId, Enum.Parse<PolicyTypeId>(type), policyName, Enum.Parse<OperatorId>(operatorType), value);
+                })
+            .AddEndpointFilter<PolicyContentQueryParametersFilter>()
             .WithSwaggerDescription("Receive the policy template 'access' or 'usage' for a single policy rule based on the request parameters submitted by the user.",
                 "Example: GET: api/policy-hub/policy-content",
                 "OPTIONAL: The use case",
