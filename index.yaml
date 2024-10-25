@@ -18,6 +18,22 @@ entries:
     - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-1.2.0-rc.1/policy-hub-1.2.0-rc.1.tgz
     version: 1.2.0-rc.1
   - apiVersion: v2
+    appVersion: 1.2.0-rc.1
+    created: "2024-10-25T05:39:15.143526125Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.x
+    description: Helm chart for Policy Hub
+    digest: e81e2e79adcc72451a49af7aa6b7b95c03acad2d6b1c3ebdc402249e42ec69d2
+    home: https://github.com/eclipse-tractusx/policy-hub
+    name: policy-hub
+    type: application
+    urls:
+    - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-1.2.0-rc.1/policy-hub-1.2.0-rc.1.tgz
+    version: 1.2.0-rc.1
+  - apiVersion: v2
     appVersion: 1.1.0
     created: "2024-07-30T13:43:31.938453298Z"
     dependencies:
@@ -67,14 +83,14 @@ entries:
     version: 1.1.0-rc.2
   - apiVersion: v2
     appVersion: 1.1.0-rc.1
-    created: "2024-07-16T21:14:11.129808715Z"
+    created: "2024-07-25T15:12:32.854949144Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
       repository: https://charts.bitnami.com/bitnami
       version: 12.12.x
     description: Helm chart for Policy Hub
-    digest: 006ecbe8194d4f672b02fae767a6fbcb87ab7fadc0614873adfecd8f8bfe89a2
+    digest: f7740218d5ca9d3ec71e13b22b354ae11ea2a8182a778937ac0e532c32bb389d
     home: https://github.com/eclipse-tractusx/policy-hub
     name: policy-hub
     type: application
@@ -99,14 +115,14 @@ entries:
     version: 1.1.0-rc.1
   - apiVersion: v2
     appVersion: 1.1.0-rc.1
-    created: "2024-07-25T15:12:32.854949144Z"
+    created: "2024-07-16T21:14:11.129808715Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
       repository: https://charts.bitnami.com/bitnami
       version: 12.12.x
     description: Helm chart for Policy Hub
-    digest: f7740218d5ca9d3ec71e13b22b354ae11ea2a8182a778937ac0e532c32bb389d
+    digest: 006ecbe8194d4f672b02fae767a6fbcb87ab7fadc0614873adfecd8f8bfe89a2
     home: https://github.com/eclipse-tractusx/policy-hub
     name: policy-hub
     type: application
@@ -225,4 +241,4 @@ entries:
     urls:
     - https://github.com/eclipse-tractusx/policy-hub/releases/download/policy-hub-0.1.0-rc.1/policy-hub-0.1.0-rc.1.tgz
     version: 0.1.0-rc.1
-generated: "2024-10-24T20:38:35.897832717Z"
+generated: "2024-10-25T05:39:15.143681116Z"
