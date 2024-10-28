@@ -39,9 +39,11 @@ public record PolicyFileContent
     [property: JsonPropertyName("permission")] Permission Permission
 );
 
-public record PolicyContext(
-    [property: JsonPropertyName("cx-policy")] string CxPolicy
-);
+public record PolicyContext
+{
+    [JsonPropertyName("cx-policy")]
+    public required string CxPolicy { get; set; }
+}
 
 public record Permission
 (
