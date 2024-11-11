@@ -111,7 +111,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
     private static PolicyFileContent CreateFileContent(PolicyTypeId type, OperatorId operatorId, string leftOperand, object rightOperand) =>
         new(
             GetContext(),
-            "Offer",
+            "Set",
             "....",
             new Permission(
                 type.TypeToJsonString(),
@@ -249,7 +249,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
                 null));
         var content = new PolicyFileContent(
             GetContext(),
-            "Offer",
+            "Set",
             "....",
             permission);
 
