@@ -6,6 +6,10 @@ This document provides information on the endpoints.
 
 There is an [OpenAPI 3.0.1 specification document](./hub-service.yaml) available.
 
+## API Hub
+
+To see the latest open API specs you can have a look at the [API Hub](https://eclipse-tractusx.github.io/api-hub/policy-hub/).
+
 ## Postman
 
 There is a [postman collection](./postman) containing information on how to provide master data and some basic data to test the application.
