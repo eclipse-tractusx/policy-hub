@@ -2,7 +2,7 @@
 
 This helm chart installs the Catena-X Policy Hub application.
 
-For further information please refer to [Technical Documentation](../../docs/technical-documentation/).
+For further information please refer to [Technical Documentation](../../docs/admin/).
 
 The referenced container images are for demonstration purposes only.
 
