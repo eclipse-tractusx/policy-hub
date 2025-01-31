@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Org.Eclipse.TractusX.PolicyHub.Service
-  version: v1.2.0-rc.1
+  version: v1.2.0
 paths:
   /api/policy-hub/policy-attributes:
     get:
@@ -37,10 +37,12 @@ paths:
       parameters:
         - name: type
           in: query
+          description: 'OPTIONAL: Type to filter the response'
           schema:
             $ref: '#/components/schemas/PolicyTypeId'
         - name: useCase
           in: query
+          description: 'OPTIONAL: UseCase to filter the response'
           schema:
             $ref: '#/components/schemas/UseCaseId'
       responses:
@@ -71,25 +73,30 @@ paths:
       parameters:
         - name: useCase
           in: query
+          description: 'OPTIONAL: The use case'
           schema:
             $ref: '#/components/schemas/UseCaseId'
         - name: type
           in: query
+          description: 'Policy type for which the policy is supposed to get created. Possible values: ''Access'' or ''Usage'''
           required: true
           schema:
             $ref: '#/components/schemas/PolicyTypeId'
         - name: policyName
           in: query
+          description: The technical key of the policy
           required: true
           schema:
             type: string
         - name: operatorType
           in: query
+          description: 'Policy Rule operator. Possible values: ''Equals'' or ''In'''
           required: true
           schema:
             $ref: '#/components/schemas/OperatorId'
         - name: value
           in: query
+          description: 'OPTIONAL: Value to be used for the rightOperand'
           schema:
             type: string
       responses:

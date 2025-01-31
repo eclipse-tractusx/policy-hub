@@ -2,7 +2,7 @@
 
 This helm chart installs the Catena-X Policy Hub application.
 
-For further information please refer to [Technical Documentation](../../docs/technical-documentation/).
+For further information please refer to [Technical Documentation](../../docs/admin/).
 
 The referenced container images are for demonstration purposes only.
 
@@ -33,7 +33,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 1.2.0-rc.1
+    version: 1.2.0
 ```
 
 ## Requirements

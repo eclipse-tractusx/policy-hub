@@ -1,6 +1,6 @@
 # Known Issues and Limitations
 
-- There is currently a discussion ongoing about the value types of PolicyKindId `ContractReference` that can be found [here](https://github.com/eclipse-tractusx/policy-hub/issues/186)
+- There are currently no known issues nor limitations.
 
 ## NOTICE
 

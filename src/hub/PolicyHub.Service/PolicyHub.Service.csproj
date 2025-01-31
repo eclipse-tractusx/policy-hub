@@ -40,10 +40,10 @@
 
   <ItemGroup>
     <PackageReference Include="Flurl.Signed" Version="4.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
-    <PackageReference Include="Org.Eclipse.TractusX.Portal.Backend.Framework.Web" Version="2.10.0" />
-    <PackageReference Include="System.Json" Version="4.7.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.12" />
+    <PackageReference Include="Org.Eclipse.TractusX.Portal.Backend.Framework.Web" Version="2.13.0" />
+    <PackageReference Include="System.Json" Version="4.8.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
