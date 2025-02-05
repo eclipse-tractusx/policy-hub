@@ -722,6 +722,7 @@ components:
         - NotNullableValueTypeConstraint
         - DefaultConstructorConstraint
         - SpecialConstraintMask
+        - AllowByRefLike
       type: string
     ICustomAttributeProvider:
       type: object
@@ -1308,9 +1309,6 @@ components:
           type: integer
           format: int32
           readOnly: true
-        isInterface:
-          type: boolean
-          readOnly: true
         memberType:
           $ref: '#/components/schemas/MemberTypes'
         namespace:
@@ -1329,6 +1327,9 @@ components:
           $ref: '#/components/schemas/Assembly'
         module:
           $ref: '#/components/schemas/Module'
+        isInterface:
+          type: boolean
+          readOnly: true
         isNested:
           type: boolean
           readOnly: true
@@ -1558,9 +1559,6 @@ components:
           type: integer
           format: int32
           readOnly: true
-        isInterface:
-          type: boolean
-          readOnly: true
         memberType:
           $ref: '#/components/schemas/MemberTypes'
         namespace:
@@ -1579,6 +1577,9 @@ components:
           $ref: '#/components/schemas/Assembly'
         module:
           $ref: '#/components/schemas/Module'
+        isInterface:
+          type: boolean
+          readOnly: true
         isNested:
           type: boolean
           readOnly: true
