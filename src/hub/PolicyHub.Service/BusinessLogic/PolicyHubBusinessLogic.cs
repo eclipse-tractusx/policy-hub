@@ -256,5 +256,5 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
         return new PolicyResponse(content, additionalAttributes);
     }
 
-    private static IEnumerable<object> GetContext() => new object[] { "https://www.w3.org/ns/odrl.jsonld", new PolicyContext { CxPolicy = "https://w3id.org/catenax/v0.0.1/ns/" } };
+    private static IEnumerable<object> GetContext() => new object[] { "https://www.w3.org/ns/odrl.jsonld", new PolicyContext("https://w3id.org/catenax/v0.0.1/ns/") };
 }
