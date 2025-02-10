@@ -18,10 +18,12 @@
  ********************************************************************************/
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Org.Eclipse.TractusX.PolicyHub.Entities;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.DBAccess;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Logging;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Seeding.DependencyInjection;
 using Serilog;
@@ -38,7 +40,8 @@ try
                 .AddDbContext<PolicyHubContext>(o =>
                     o.UseNpgsql(hostContext.Configuration.GetConnectionString("PolicyHubDb"),
                         x => x.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)
-                            .MigrationsHistoryTable("__efmigrations_history_hub", "public")))
+                            .MigrationsHistoryTable("__efmigrations_history_hub", "public"))
+                        .ReplaceService<IHistoryRepository, CustomNpgsqlHistoryRepository>())
                 .AddDatabaseInitializer<PolicyHubContext>(hostContext.Configuration.GetSection("Seeding"));
         })
         .AddLogging()
