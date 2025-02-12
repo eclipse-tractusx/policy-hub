@@ -131,8 +131,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions);
-        error!.Errors.Should().ContainSingle().And.Satisfy(
-            x => x.Value.Single() == @"The provided value notmatching does not match the regex pattern ^BPNL[\w|\d]{12}$ (Parameter 'value')");
+        error!.Details.Should().ContainSingle().And.Satisfy(
+            x => x.Message == "The provided value {value} does not match the regex pattern {values}" && x.Parameters.Count() == 2);
     }
 
     [Fact]
@@ -145,8 +145,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions);
-        error!.Errors.Should().ContainSingle().And.Satisfy(
-            x => x.Value.Single() == "you must provide a value for the regex (Parameter 'value')");
+        error!.Details.Should().ContainSingle().And.Satisfy(
+            x => x.Message == "you must provide a value for the regex");
     }
 
     [Fact]

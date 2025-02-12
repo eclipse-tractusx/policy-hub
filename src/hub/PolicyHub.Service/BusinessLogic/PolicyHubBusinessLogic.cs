@@ -21,6 +21,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
+using Org.Eclipse.TractusX.PolicyHub.Service.ErrorHandling;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
@@ -42,13 +43,13 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
         var (exists, leftOperand, attributes, rightOperandValue) = await hubRepositories.GetInstance<IPolicyRepository>().GetPolicyContentAsync(useCase, type, credential).ConfigureAwait(false);
         if (!exists)
         {
-            throw new NotFoundException($"Policy for type {type} and technicalKey {credential} does not exists");
+            throw NotFoundException.Create(PolicyErrors.POLICY_NOT_EXIST, new ErrorParameter[] { new("type", type.ToString()), new("credential", credential) });
         }
 
         var rightOperands = attributes.Values.Select(a => rightOperandValue != null ? string.Format(rightOperandValue, a) : a);
         if (attributes.Key == null && rightOperandValue == null)
         {
-            throw new UnexpectedConditionException("There must be one configured rightOperand value");
+            throw UnexpectedConditionException.Create(PolicyErrors.NO_RIGHT_OPERAND_CONFIGURED);
         }
 
         var (rightOperand, additionalAttribute) = attributes.Key != null ?
@@ -64,18 +65,19 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             AttributeKeyId.DynamicValue => (value ?? "{dynamicValue}", null),
             AttributeKeyId.Regex => (GetRegexValue(attributes, value), null),
             _ => operatorId == OperatorId.Equals
-                ? processEqualsOperator(attributes, rightOperands, value, leftOperand, useCase)
+                ? ProcessEqualsOperator(attributes, rightOperands, value, leftOperand, useCase)
                 : (rightOperands, null)
         };
 
-    private static (object rightOperand, AdditionalAttributes? additionalAttribute) processEqualsOperator((AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand, UseCaseId? useCase)
+    private static (object rightOperand, AdditionalAttributes? additionalAttribute) ProcessEqualsOperator((AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand, UseCaseId? useCase)
     {
         if (value != null)
         {
             if (!rightOperands.Any(r => r == value))
             {
-                throw new ControllerArgumentException($"Invalid values [{value}] set for key {leftOperand}. Possible values [{string.Join(",", rightOperands)}]");
+                throw ControllerArgumentException.Create(PolicyErrors.INVALID_VALUES, new ErrorParameter[] { new("value", value), new("leftOperand", leftOperand), new("possibleValues", string.Join(",", rightOperands)) });
             }
+
             rightOperands = rightOperands.Where(r => r.Equals(value));
         }
 
@@ -92,17 +94,17 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new ControllerArgumentException("you must provide a value for the regex", nameof(value));
+            throw ControllerArgumentException.Create(PolicyErrors.NO_VALUE_FOR_REGEX);
         }
 
         if (attributes.Values.Count() != 1)
         {
-            throw new UnexpectedConditionException("There should only be one regex pattern defined");
+            throw UnexpectedConditionException.Create(PolicyErrors.MULTIPLE_REGEX_DEFINED);
         }
 
         if (!Regex.IsMatch(value, attributes.Values.Single(), RegexOptions.Compiled, TimeSpan.FromSeconds(1)))
         {
-            throw new ControllerArgumentException($"The provided value {value} does not match the regex pattern {attributes.Values.Single()}", nameof(value));
+            throw ControllerArgumentException.Create(PolicyErrors.VALUE_DOES_NOT_MATCH_REGEX, new ErrorParameter[] { new("value", value), new("values", attributes.Values.Single()) });
         }
 
         return value;
@@ -126,24 +128,24 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
 
     public async Task<PolicyResponse> GetPolicyContentAsync(PolicyContentRequest requestData)
     {
-        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.ConstraintOperand == ConstraintOperandId.Or)
+        if (requestData is { PolicyType: PolicyTypeId.Usage, ConstraintOperand: ConstraintOperandId.Or })
         {
-            throw new ControllerArgumentException($"The support of OR constraintOperand for Usage constraints are not supported for now");
+            throw ControllerArgumentException.Create(PolicyErrors.OR_WITH_USAGE);
         }
 
         if (requestData.PolicyType == PolicyTypeId.Access && requestData.ConstraintOperand == ConstraintOperandId.And && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Value!.Split(",").Count() > 1)))
         {
-            throw new ControllerArgumentException($"Only a single value BPNL is allowed with an AND constraint");
+            throw ControllerArgumentException.Create(PolicyErrors.SINGLE_VALUE_BPNL_CONSTRAINT);
         }
 
         if (requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber") && !requestData.Constraints.Any(x => x.Operator == OperatorId.Equals))
         {
-            throw new ControllerArgumentException($"The operator for BPNLs should always be Equals");
+            throw ControllerArgumentException.Create(PolicyErrors.BPNL_WRONG_OPERATOR);
         }
 
-        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && (x.Value!.Split(",").Count() > 1)))
+        if (requestData.PolicyType == PolicyTypeId.Usage && requestData.Constraints.Any(x => x.Key == "BusinessPartnerNumber" && x.Value!.Split(",").Length > 1))
         {
-            throw new ControllerArgumentException($"For usage policies only a single BPNL is allowed");
+            throw ControllerArgumentException.Create(PolicyErrors.USAGE_MULTIPLE_BPNL);
         }
 
         var keyCounts = requestData.Constraints
@@ -152,14 +154,14 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
         var multipleDefinedKey = keyCounts.Where(x => x.Value != 1);
         if (multipleDefinedKey.Any())
         {
-            throw new ControllerArgumentException($"Keys {string.Join(",", multipleDefinedKey.Select(x => x.Key).Distinct())} have been defined multiple times");
+            throw ControllerArgumentException.Create(PolicyErrors.KEY_DEFINED_MULTIPLE_TIMES, new ErrorParameter[] { new("keys", string.Join(",", multipleDefinedKey.Select(x => x.Key).Distinct())) });
         }
 
         var technicalKeys = requestData.Constraints.Select(x => x.Key);
         var attributeValuesForTechnicalKeys = await hubRepositories.GetInstance<IPolicyRepository>().GetAttributeValuesForTechnicalKeys(requestData.PolicyType, technicalKeys).ConfigureAwait(false);
         if (technicalKeys.Except(attributeValuesForTechnicalKeys.Select(a => a.TechnicalKey)).Any())
         {
-            throw new ControllerArgumentException($"Policy for type {requestData.PolicyType} and requested technicalKeys does not exists. TechnicalKeys {string.Join(",", attributeValuesForTechnicalKeys.Select(x => x.TechnicalKey))} are allowed");
+            throw ControllerArgumentException.Create(PolicyErrors.POLICY_NOT_EXISTS_FOR_TECHNICAL_KEYS, new ErrorParameter[] { new("policyType", requestData.PolicyType.ToString()), new("technicalKeys", string.Join(",", attributeValuesForTechnicalKeys.Select(x => x.TechnicalKey))) });
         }
 
         IEnumerable<(string TechnicalKey, IEnumerable<string> Values)> keyValues = requestData.Constraints.GroupBy(x => x.Key).Select(x => new ValueTuple<string, IEnumerable<string>>(x.Key, x.Where(y => y.Value != null).SelectMany(y => y.Value!.Split(","))));
@@ -177,13 +179,13 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
         {
             var x = missingValues.Where(x => invalidValues.Contains(x.TechnicalKey)).Select(x =>
                 $"Key: {x.TechnicalKey}, requested value[{string.Join(',', x.Values)}] Possible Values[{string.Join(',', attributeValuesForTechnicalKeys.Where(a => a.TechnicalKey.Equals(x.TechnicalKey)).Select(a => a.Values).First())}]");
-            throw new ControllerArgumentException($"Invalid values set for {string.Join(',', x)}");
+            throw ControllerArgumentException.Create(PolicyErrors.INVALID_VALUES_SET, new ErrorParameter[] { new("values", string.Join(',', x)) });
         }
 
         var policies = await hubRepositories.GetInstance<IPolicyRepository>().GetPolicyForOperandContent(requestData.PolicyType, technicalKeys).ToListAsync().ConfigureAwait(false);
         if (policies.Count != requestData.Constraints.Count())
         {
-            throw new NotFoundException($"Policy for type {requestData.PolicyType} and technicalKeys {string.Join(",", technicalKeys.Except(policies.Select(x => x.TechnicalKey)))} does not exists");
+            throw NotFoundException.Create(PolicyErrors.POLICY_NOT_EXISTS_FOR_TECHNICAL_KEYS, new ErrorParameter[] { new("policyType", requestData.PolicyType.ToString()), new("technicalKeys", string.Join(",", technicalKeys.Except(policies.Select(x => x.TechnicalKey)))) });
         }
 
         var constraints = new List<Constraint>();
@@ -194,7 +196,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             var rightOperands = policy.Attributes.Values.Select(a => policy.RightOperandValue != null ? string.Format(policy.RightOperandValue, a) : a);
             if (policy.Attributes.Key == null && policy.RightOperandValue == null)
             {
-                throw new UnexpectedConditionException("There must be one configured rightOperand value");
+                throw UnexpectedConditionException.Create(PolicyErrors.RIGHT_OPERAND_NOT_CONFIGURED);
             }
 
             if (constraint.Value != null)
@@ -216,7 +218,6 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
                         constraint.Operator.OperatorToJsonString(),
                         rightOperand
                     ));
-
                 }
             }
             else
