@@ -446,7 +446,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"content\": {\n        \"@context\": [\n            \"https://www.w3.org/ns/odrl.jsonld\",\n            {\n                \"cx-policy\": \"https://w3id.org/catenax/v0.0.1/ns/\"\n            }\n        ],\n        \"@type\": \"Offer\",\n        \"@id\": \"....\",\n        \"permission\": {\n            \"action\": \"use\",\n            \"constraint\": {\n                \"leftOperand\": \"Dismantler.activityType\",\n                \"operator\": \"in\",\n                \"rightOperand\": [\n                    \"Audi\",\n                    \"BMW\",\n                    \"VW\"\n                ]\n            }\n        }\n    }\n}"
+					"body": "{\n    \"content\": {\n        \"@context\": [\n            \"https://www.w3.org/ns/odrl.jsonld\",\n            {\n                \"cx-policy\": \"https://w3id.org/catenax/v0.0.1/ns/\"\n            }\n        ],\n        \"@type\": \"Set\",\n        \"@id\": \"....\",\n        \"permission\": {\n            \"action\": \"use\",\n            \"constraint\": {\n                \"leftOperand\": \"Dismantler.activityType\",\n                \"operator\": \"in\",\n                \"rightOperand\": [\n                    \"Audi\",\n                    \"BMW\",\n                    \"VW\"\n                ]\n            }\n        }\n    }\n}"
 				}
 			]
 		},

@@ -131,8 +131,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions);
-        error!.Errors.Should().ContainSingle().And.Satisfy(
-            x => x.Value.Single() == @"The provided value notmatching does not match the regex pattern ^BPNL[\w|\d]{12}$ (Parameter 'value')");
+        error!.Details.Should().ContainSingle().And.Satisfy(
+            x => x.Message == "The provided value {value} does not match the regex pattern {values}" && x.Parameters.Count() == 2);
     }
 
     [Fact]
@@ -145,8 +145,8 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions);
-        error!.Errors.Should().ContainSingle().And.Satisfy(
-            x => x.Value.Single() == "you must provide a value for the regex (Parameter 'value')");
+        error!.Details.Should().ContainSingle().And.Satisfy(
+            x => x.Message == "you must provide a value for the regex");
     }
 
     [Fact]
@@ -160,7 +160,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Set\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"}}}}");
     }
 
     [Fact]
@@ -174,7 +174,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Set\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}}}}");
     }
 
     [Fact]
@@ -199,7 +199,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:Membership\",\"operator\":\"eq\",\"rightOperand\":\"active\"}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Set\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"leftOperand\":\"cx-policy:Membership\",\"operator\":\"eq\",\"rightOperand\":\"active\"}}}}");
     }
 
     #endregion
@@ -227,7 +227,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:UsagePurpose\",\"operator\":\"in\",\"rightOperand\":[\"cx.circular.dpp:1\",\"cx.circular.smc:1\",\"cx.circular.marketplace:1\",\"cx.circular.materialaccounting:1\",\"cx.bpdm.gate.upload:1\",\"cx.bpdm.gate.download:1\",\"cx.bpdm.pool:1\",\"cx.bpdm.vas.dataquality.upload:1\",\"cx.bpdm.vas.dataquality.download:1\",\"cx.bpdm.vas.bdv.upload:1\",\"cx.bpdm.vas.bdv.download:1\",\"cx.bpdm.vas.fpd.upload:1\",\"cx.bpdm.vas.fpd.download:1\",\"cx.bpdm.vas.swd.upload:1\",\"cx.bpdm.vas.swd.download:1\",\"cx.bpdm.vas.nps.upload:1\",\"cx.bpdm.vas.nps.download:1\",\"cx.bpdm.vas.countryrisk:1\",\"cx.behaviortwin.base:1\",\"cx.core.digitalTwinRegistry:1\",\"cx.core.tractionbattery:1\",\"cx.core.industrycore:1\",\"cx.core.qualityNotifications:1\",\"cx.pcf.base:1\",\"cx.quality.base:1\",\"cx.dcm.base:1\",\"cx.puris.base:1\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Set\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:UsagePurpose\",\"operator\":\"in\",\"rightOperand\":[\"cx.circular.dpp:1\",\"cx.circular.smc:1\",\"cx.circular.marketplace:1\",\"cx.circular.materialaccounting:1\",\"cx.bpdm.gate.upload:1\",\"cx.bpdm.gate.download:1\",\"cx.bpdm.pool:1\",\"cx.bpdm.vas.dataquality.upload:1\",\"cx.bpdm.vas.dataquality.download:1\",\"cx.bpdm.vas.bdv.upload:1\",\"cx.bpdm.vas.bdv.download:1\",\"cx.bpdm.vas.fpd.upload:1\",\"cx.bpdm.vas.fpd.download:1\",\"cx.bpdm.vas.swd.upload:1\",\"cx.bpdm.vas.swd.download:1\",\"cx.bpdm.vas.nps.upload:1\",\"cx.bpdm.vas.nps.download:1\",\"cx.bpdm.vas.countryrisk:1\",\"cx.behaviortwin.base:1\",\"cx.core.digitalTwinRegistry:1\",\"cx.core.tractionbattery:1\",\"cx.core.industrycore:1\",\"cx.core.qualityNotifications:1\",\"cx.pcf.base:1\",\"cx.quality.base:1\",\"cx.dcm.base:1\",\"cx.puris.base:1\"]},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
     }
 
     [Fact]
@@ -272,7 +272,7 @@ public class PolicyHubControllerTests : IClassFixture<IntegrationTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync())
             .Should()
-            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Offer\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
+            .Be("{\"content\":{\"@context\":[\"https://www.w3.org/ns/odrl.jsonld\",{\"cx-policy\":\"https://w3id.org/catenax/v0.0.1/ns/\"}],\"@type\":\"Set\",\"@id\":\"....\",\"permission\":{\"action\":\"use\",\"constraint\":{\"odrl:and\":[{\"leftOperand\":\"cx-policy:BusinessPartnerNumber\",\"operator\":\"eq\",\"rightOperand\":\"BPNL00000003CRHK\"},{\"leftOperand\":\"cx-policy:FrameworkAgreement\",\"operator\":\"eq\",\"rightOperand\":\"DataExchangeGovernance:1.0\"}]}}}}");
     }
 
     #endregion
