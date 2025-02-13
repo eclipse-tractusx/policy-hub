@@ -116,7 +116,7 @@ A possible response can look like this:
                 "cx": "https://w3id.org/catenax/v0.0.1/ns/"
             }
         ],
-        "@type": "Offer",
+        "@type": "Set",
         "@id": "....",
         "permission": {
             "action": "use",
