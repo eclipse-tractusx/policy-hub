@@ -36,6 +36,7 @@ public record PolicyFileContent
     [property: JsonPropertyName("@context")] IEnumerable<object> Context,
     [property: JsonPropertyName("@type")] string Type,
     [property: JsonPropertyName("@id")] string Id,
+    [property: JsonPropertyName("profile")] string Profile,
     [property: JsonPropertyName("permission")] Permission Permission
 );
 

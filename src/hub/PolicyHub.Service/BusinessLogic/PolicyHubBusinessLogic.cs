@@ -115,6 +115,7 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             GetContext(),
             "Set",
             "....",
+            GetProfile(),
             new Permission(
                 type.TypeToJsonString(),
                 new Constraint(
@@ -252,10 +253,13 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
             GetContext(),
             "Set",
             "....",
+            GetProfile(),
             permission);
 
         return new PolicyResponse(content, additionalAttributes);
     }
 
-    private static IEnumerable<object> GetContext() => new object[] { "https://www.w3.org/ns/odrl.jsonld", new PolicyContext { CxPolicy = "https://w3id.org/catenax/v0.0.1/ns/" } };
+    private static IEnumerable<object> GetContext() => new object[] { "https://www.w3.org/ns/odrl.jsonld", new PolicyContext { CxPolicy = "https://w3id.org/catenax/policy/" } };
+
+    private static string GetProfile() => "cx-policy:profile2405";
 }
