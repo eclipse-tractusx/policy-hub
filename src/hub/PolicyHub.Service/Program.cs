@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Authentication;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.DependencyInjection;
 using Org.Eclipse.TractusX.PolicyHub.Service.Authentication;
 using Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
+using Org.Eclipse.TractusX.PolicyHub.Service.ErrorHandling;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Service;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Models.Extensions;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Web;
 using System.Text.Json.Serialization;
@@ -31,20 +33,24 @@ await WebApplicationBuildRunner
     .BuildAndRunWebApplicationAsync<Program>(args, "policy-hub", version, ".Hub",
         builder =>
         {
-            builder.Services.AddTransient<IClaimsTransformation, KeycloakClaimsTransformation>();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddHubRepositories(builder.Configuration);
-            builder.Services.ConfigureHttpJsonOptions(options =>
-            {
-                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
-            builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            builder.Services
+                .AddSingleton<IErrorMessageService, ErrorMessageService>()
+                .AddSingleton<IErrorMessageContainer, ErrorMessageContainer>()
+                .AddTransient<IClaimsTransformation, KeycloakClaimsTransformation>()
+                .AddEndpointsApiExplorer()
+                .AddHubRepositories(builder.Configuration)
+                .ConfigureHttpJsonOptions(options =>
+                    {
+                        options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    })
+                .Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+                    {
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    });
         },
         (app, _) =>
         {
+            app.UseMiddleware<GeneralHttpErrorHandler>();
             app.MapGroup("/api")
                 .WithOpenApi()
                 .MapPolicyHubApi();

@@ -22,6 +22,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.DbAccess.Repositories;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
+using Org.Eclipse.TractusX.PolicyHub.Service.ErrorHandling;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
 
@@ -111,7 +112,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<NotFoundException>(Act);
 
         // Assert
-        ex.Message.Should().Be($"Policy for type {policyTypeId} and technicalKey membership does not exists");
+        ex.Message.Should().Be(PolicyErrors.POLICY_NOT_EXIST.ToString());
     }
 
     [Fact]
@@ -127,7 +128,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act);
 
         // Assert
-        ex.Message.Should().Be("There must be one configured rightOperand value");
+        ex.Message.Should().Be(PolicyErrors.NO_RIGHT_OPERAND_CONFIGURED.ToString());
     }
 
     [Fact]
@@ -158,7 +159,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act);
 
         // Assert
-        ex.Message.Should().Be("There should only be one regex pattern defined");
+        ex.Message.Should().Be(PolicyErrors.MULTIPLE_REGEX_DEFINED.ToString());
     }
 
     [Fact]
@@ -202,7 +203,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be("Invalid values [test] set for key multipleAdditionalValues. Possible values [value1,value2,value3]");
+        ex.Message.Should().Be(PolicyErrors.INVALID_VALUES.ToString());
     }
 
     #endregion
@@ -232,7 +233,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<NotFoundException>(Act);
 
         // Assert
-        ex.Message.Should().Be($"Policy for type {data.PolicyType} and technicalKeys abc does not exists");
+        ex.Message.Should().Be(PolicyErrors.POLICY_NOT_EXISTS_FOR_TECHNICAL_KEYS.ToString());
     }
 
     [Fact]
@@ -255,7 +256,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be($"Policy for type {data.PolicyType} and requested technicalKeys does not exists. TechnicalKeys test are allowed");
+        ex.Message.Should().Be(PolicyErrors.POLICY_NOT_EXISTS_FOR_TECHNICAL_KEYS.ToString());
     }
 
     [Fact]
@@ -281,7 +282,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be("Invalid values set for Key: test, requested value[abc] Possible Values[test]");
+        ex.Message.Should().Be(PolicyErrors.INVALID_VALUES_SET.ToString());
     }
 
     [Fact]
@@ -303,7 +304,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<UnexpectedConditionException>(Act);
 
         // Assert
-        ex.Message.Should().Be("There must be one configured rightOperand value");
+        ex.Message.Should().Be(PolicyErrors.RIGHT_OPERAND_NOT_CONFIGURED.ToString());
     }
 
     [Fact]
@@ -325,8 +326,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.ParamName.Should().Be("value");
-        ex.Message.Should().Be("you must provide a value for the regex (Parameter 'value')");
+        ex.Message.Should().Be(PolicyErrors.NO_VALUE_FOR_REGEX.ToString());
     }
 
     [Fact]
@@ -348,8 +348,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.ParamName.Should().Be("value");
-        ex.Message.Should().Be(@"The provided value testRegValue does not match the regex pattern ^BPNL[\w|\d]{12}$ (Parameter 'value')");
+        ex.Message.Should().Be(PolicyErrors.VALUE_DOES_NOT_MATCH_REGEX.ToString());
     }
 
     [Fact]
@@ -370,7 +369,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be("The support of OR constraintOperand for Usage constraints are not supported for now");
+        ex.Message.Should().Be(PolicyErrors.OR_WITH_USAGE.ToString());
     }
 
     [Fact]
@@ -391,7 +390,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be("Only a single value BPNL is allowed with an AND constraint");
+        ex.Message.Should().Be(PolicyErrors.SINGLE_VALUE_BPNL_CONSTRAINT.ToString());
     }
 
     [Fact]
@@ -412,7 +411,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be("The operator for BPNLs should always be Equals");
+        ex.Message.Should().Be(PolicyErrors.BPNL_WRONG_OPERATOR.ToString());
     }
 
     [Fact]
@@ -433,7 +432,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be("For usage policies only a single BPNL is allowed");
+        ex.Message.Should().Be(PolicyErrors.USAGE_MULTIPLE_BPNL.ToString());
     }
 
     [Fact]
@@ -459,7 +458,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be("Keys test have been defined multiple times");
+        ex.Message.Should().Be(PolicyErrors.KEY_DEFINED_MULTIPLE_TIMES.ToString());
     }
 
     [Fact]
