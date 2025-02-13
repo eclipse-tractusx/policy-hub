@@ -23,6 +23,7 @@ using Org.Eclipse.TractusX.PolicyHub.Service.Authentication;
 using Org.Eclipse.TractusX.PolicyHub.Service.Controllers;
 using Org.Eclipse.TractusX.PolicyHub.Service.ErrorHandling;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Service;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Web;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Models.Extensions;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.Web;
 using System.Text.Json.Serialization;
@@ -34,6 +35,7 @@ await WebApplicationBuildRunner
         builder =>
         {
             builder.Services
+                .AddTransient<GeneralHttpExceptionMiddleware>()
                 .AddSingleton<IErrorMessageService, ErrorMessageService>()
                 .AddSingleton<IErrorMessageContainer, ErrorMessageContainer>()
                 .AddTransient<IClaimsTransformation, KeycloakClaimsTransformation>()
@@ -50,7 +52,7 @@ await WebApplicationBuildRunner
         },
         (app, _) =>
         {
-            app.UseMiddleware<GeneralHttpErrorHandler>();
+            app.UseMiddleware<GeneralHttpExceptionMiddleware>();
             app.MapGroup("/api")
                 .WithOpenApi()
                 .MapPolicyHubApi();
