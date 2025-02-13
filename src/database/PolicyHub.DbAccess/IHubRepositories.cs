@@ -21,5 +21,5 @@ namespace Org.Eclipse.TractusX.PolicyHub.DbAccess;
 
 public interface IHubRepositories
 {
-    public T GetInstance<T>();
+    T GetInstance<T>();
 }
