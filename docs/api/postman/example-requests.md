@@ -113,15 +113,16 @@ A possible response can look like this:
         "@context": [
             "https://www.w3.org/ns/odrl.jsonld",
             {
-                "cx": "https://w3id.org/catenax/v0.0.1/ns/"
+                "cx-policy": "https://w3id.org/catenax/policy/"
             }
         ],
         "@type": "Set",
         "@id": "....",
+        "profile": "cx-policy:profile2405",
         "permission": {
             "action": "use",
             "constraint": {
-                "leftOperand": "FrameworkAgreement.traceability",
+                "leftOperand": "cx-policy:FrameworkAgreement.traceability",
                 "operator": "eq",
                 "rightOperand": "@FrameworkAgreement.traceability-Version"
             }

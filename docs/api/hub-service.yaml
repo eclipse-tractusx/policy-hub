@@ -1163,6 +1163,8 @@ components:
           type: string
         '@id':
           type: string
+        profile:
+          type: string
         permission:
           $ref: '#/components/schemas/Permission'
       additionalProperties: false
