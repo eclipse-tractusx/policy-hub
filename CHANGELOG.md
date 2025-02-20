@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.3.0-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v1.2.0-rc.1...v1.3.0-rc.1) (2025-02-20)
+
+
+### Features
+
+* upgrade .NET to v9 ([60bfb13](https://github.com/eclipse-tractusx/policy-hub/commit/60bfb13daa550ef19337e96d628f15c68ccfd533))
+
+
+### Bug Fixes
+
+* adjust error handling ([#261](https://github.com/eclipse-tractusx/policy-hub/issues/261)) ([6391eee](https://github.com/eclipse-tractusx/policy-hub/commit/6391eeed236020299b6342f34e9b1ec088759fd5))
+* **errorHandling:** adjust general error handler ([#259](https://github.com/eclipse-tractusx/policy-hub/issues/259)) ([7798d55](https://github.com/eclipse-tractusx/policy-hub/commit/7798d553f920a381188ed5a2ffabfc5a5bdeacb9))
+* Fixed the ODRL policy type to the Set value ([#224](https://github.com/eclipse-tractusx/policy-hub/issues/224)) ([628332d](https://github.com/eclipse-tractusx/policy-hub/commit/628332d331416aa3c88e7c5bee33efaabb75efe0))
+* **json-ld:** adjust namespace and usage of cx-profile ([#263](https://github.com/eclipse-tractusx/policy-hub/issues/263)) ([f57e145](https://github.com/eclipse-tractusx/policy-hub/commit/f57e1455a29b474ee38a44ef25695548c983ee7c))
+* use correct JSON-LD context prefix ([#257](https://github.com/eclipse-tractusx/policy-hub/issues/257)) ([199553d](https://github.com/eclipse-tractusx/policy-hub/commit/199553dc7dd2b0ca429e87514081ebd7e1f8fa8b))
+
+
+### Miscellaneous Chores
+
+* release 1.3.0-rc.1 ([2a10daa](https://github.com/eclipse-tractusx/policy-hub/commit/2a10daaa5727557543ad1ec737173eeab60b2820))
+
 ## [1.2.0-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v1.1.0-rc.2...v1.2.0-rc.1) (2024-10-24)
 
 
