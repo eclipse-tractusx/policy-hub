@@ -194,7 +194,7 @@ public class PolicyHubBusinessLogicTests
     {
         // Arrange
         A.CallTo(() => _policyRepository.GetPolicyContentAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues"))
-            .Returns(new ValueTuple<bool, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(true, "multipleAdditionalValues", new ValueTuple<AttributeKeyId, IEnumerable<string>>(AttributeKeyId.Static, new[] { "value1", "value2", "value3" }), null));
+            .Returns(new ValueTuple<bool, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(true, "multipleAdditionalValues", new ValueTuple<AttributeKeyId, IEnumerable<string>>(AttributeKeyId.Static, ["value1", "value2", "value3"]), null));
 
         // Act
         async Task Act() => await _sut.GetPolicyContentWithFiltersAsync(UseCaseId.Traceability, PolicyTypeId.Usage, "multipleAdditionalValues", OperatorId.Equals, "test");
@@ -203,7 +203,7 @@ public class PolicyHubBusinessLogicTests
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be(PolicyErrors.INVALID_VALUES.ToString());
+        ex.Message.Should().Be("Invalid values [test] set for key multipleAdditionalValues. Possible values [value1,value2,value3]");
     }
 
     #endregion
@@ -263,26 +263,34 @@ public class PolicyHubBusinessLogicTests
     public async Task GetPolicyContentAsync_WithUnmatchingAttributeValues_ThrowsControllerArgumentException()
     {
         // Arrange
+        List<(string TechnicalKey, AttributeKeyId? AttributeKey, IEnumerable<string> Values)> possibleValues = [
+                ("test", AttributeKeyId.Version, ["test"]),
+            ("abc", AttributeKeyId.Version, [])
+            ];
+
         var data = new PolicyContentRequest(PolicyTypeId.Access, ConstraintOperandId.Or,
             new[]
             {
                 new Constraints("test", OperatorId.In, "abc"),
                 new Constraints("abc", OperatorId.Equals, null)
             });
+
+        var technicalKey = "test";
+        var attributeId = "1234";
+
+        var policyForOperand = new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>(technicalKey, attributeId, default, null);
+
         A.CallTo(() => _policyRepository.GetAttributeValuesForTechnicalKeys(data.PolicyType, A<IEnumerable<string>>._))
-            .Returns([
-                ("test", AttributeKeyId.Version, ["test"]),
-                ("abc", AttributeKeyId.Version, [])
-            ]);
+            .Returns(possibleValues);
         A.CallTo(() => _policyRepository.GetPolicyForOperandContent(data.PolicyType, A<IEnumerable<string>>._))
-            .Returns(Enumerable.Repeat(new ValueTuple<string, string, ValueTuple<AttributeKeyId?, IEnumerable<string>>, string?>("test", "active", default, null), 1).ToAsyncEnumerable());
+            .Returns(Enumerable.Repeat(policyForOperand, 1).ToAsyncEnumerable());
         async Task Act() => await _sut.GetPolicyContentAsync(data);
 
         // Act
         var ex = await Assert.ThrowsAsync<ControllerArgumentException>(Act);
 
         // Assert
-        ex.Message.Should().Be(PolicyErrors.INVALID_VALUES_SET.ToString());
+        ex.Message.Should().Be("Invalid values set for Key: test, requested value[abc] Possible Values[test]");
     }
 
     [Fact]

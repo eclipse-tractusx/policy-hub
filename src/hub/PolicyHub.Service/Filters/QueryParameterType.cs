@@ -17,20 +17,32 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
-
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Filters;
 
-public class PolicyContentQueryParametersFilter : BaseQueryParametersFilter
+public class QueryParameterType
 {
-    public PolicyContentQueryParametersFilter() : base(new Dictionary<string, QueryParameterType>
+    public bool IsRequired { get; set; }
+    public Type? EnumType { get; set; }
+    private object? _enumValue;
+
+    public object? EnumValue
     {
-        { "useCase", new QueryParameterType { IsRequired = false, EnumType = typeof(UseCaseId) } },
-        { "type", new QueryParameterType { IsRequired = true, EnumType = typeof(PolicyTypeId) } },
-        { "policyName", new QueryParameterType { IsRequired = true } },
-        { "operatorType", new QueryParameterType { IsRequired = true, EnumType = typeof(OperatorId) } },
-        { "value", new QueryParameterType { IsRequired = false } }
-    })
+        get => _enumValue;
+        set
+        {
+            if (value is Enum)
+            {
+                _enumValue = value;
+            }
+            else
+            {
+                throw new ArgumentException("Value must be an enum type.");
+            }
+        }
+    }
+
+    public void SetEnumValue<TEnum>(TEnum value) where TEnum : struct, Enum
     {
+        EnumValue = value;
     }
 }

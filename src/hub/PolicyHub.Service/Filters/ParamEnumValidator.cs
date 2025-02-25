@@ -17,20 +17,18 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
+using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Filters;
 
-public class PolicyContentQueryParametersFilter : BaseQueryParametersFilter
+public static class ParamEnumValidator
 {
-    public PolicyContentQueryParametersFilter() : base(new Dictionary<string, QueryParameterType>
+    public static void ThrowIfInvalidEnumValue(Type enumType, string value, string paramName)
     {
-        { "useCase", new QueryParameterType { IsRequired = false, EnumType = typeof(UseCaseId) } },
-        { "type", new QueryParameterType { IsRequired = true, EnumType = typeof(PolicyTypeId) } },
-        { "policyName", new QueryParameterType { IsRequired = true } },
-        { "operatorType", new QueryParameterType { IsRequired = true, EnumType = typeof(OperatorId) } },
-        { "value", new QueryParameterType { IsRequired = false } }
-    })
-    {
+        if (!Enum.IsDefined(enumType, value))
+        {
+            var acceptedValues = string.Join(", ", Enum.GetNames(enumType));
+            throw new ControllerArgumentException($"Invalid value '{value}' for parameter '{paramName}'. Accepted values are: {acceptedValues}.");
+        }
     }
 }

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-public class PolicyContentQueryParametersFilterTests
+public class PolicyTypesQueryParametersFilterTests
 {
     [Fact]
     public async Task InvokeAsync_ValidParameters_ContinuesToNext()
@@ -37,10 +37,7 @@ public class PolicyContentQueryParametersFilterTests
         var queryParams = new QueryCollection(new Dictionary<string, StringValues>
         {
             { "useCase", "PCF" },
-            { "type", "Usage" },
-            { "policyName", "ValidPolicyName" },
-            { "operatorType", "Equals" },
-            { "value", "ValidValue" }
+            { "type", "Usage" }
         });
 
         var context = new DefaultHttpContext();
@@ -52,7 +49,33 @@ public class PolicyContentQueryParametersFilterTests
         var next = A.Fake<EndpointFilterDelegate>();
         A.CallTo(() => next(A<EndpointFilterInvocationContext>.Ignored)).Returns(ValueTask.FromResult<object?>(null).AsTask());
 
-        var filter = new PolicyContentQueryParametersFilter();
+        var filter = new PolicyTypesQueryParametersFilter();
+
+        // Act
+        await filter.InvokeAsync(endpointContext, next);
+
+        // Assert
+        A.CallTo(() => next(A<EndpointFilterInvocationContext>.Ignored)).MustHaveHappenedOnceExactly();
+    }
+
+    [Fact]
+    public async Task InvokeAsync_NoParametersProvided_ContinuesToNext()
+    {
+        // Arrange
+        var queryParams = new QueryCollection(new Dictionary<string, StringValues>
+        {
+        });
+
+        var context = new DefaultHttpContext();
+        context.Request.Query = queryParams;
+
+        var endpointContext = A.Fake<EndpointFilterInvocationContext>();
+        A.CallTo(() => endpointContext.HttpContext).Returns(context);
+
+        var next = A.Fake<EndpointFilterDelegate>();
+        A.CallTo(() => next(A<EndpointFilterInvocationContext>.Ignored)).Returns(ValueTask.FromResult<object?>(null).AsTask());
+
+        var filter = new PolicyTypesQueryParametersFilter();
 
         // Act
         await filter.InvokeAsync(endpointContext, next);
@@ -78,11 +101,11 @@ public class PolicyContentQueryParametersFilterTests
 
         var next = A.Fake<EndpointFilterDelegate>();
 
-        var filter = new PolicyContentQueryParametersFilter();
+        var filter = new PolicyTypesQueryParametersFilter();
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<NotFoundException>(() => filter.InvokeAsync(endpointContext, next).AsTask());
-        Assert.Equal("Missing required parameters: type, policyName, operatorType.", exception.Message);
+        var exception = await Assert.ThrowsAsync<ControllerArgumentException>(() => filter.InvokeAsync(endpointContext, next).AsTask());
+        Assert.Equal("Invalid query parameters: invalidParam. Supported parameters are: useCase, type.", exception.Message);
     }
 
     [Fact]
@@ -93,9 +116,6 @@ public class PolicyContentQueryParametersFilterTests
         {
             { "useCase", "PCF" },
             { "type", "Usage" },
-            { "policyName", "ValidPolicyName" },
-            { "operatorType", "Equals" },
-            { "value", "ValidValue" },
             { "invalidParam1", "InvalidValue1" },
             { "invalidParam2", "InvalidValue2" }
         });
@@ -108,11 +128,11 @@ public class PolicyContentQueryParametersFilterTests
 
         var next = A.Fake<EndpointFilterDelegate>();
 
-        var filter = new PolicyContentQueryParametersFilter();
+        var filter = new PolicyTypesQueryParametersFilter();
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ControllerArgumentException>(() => filter.InvokeAsync(endpointContext, next).AsTask());
-        Assert.Equal("Invalid query parameters: invalidParam1, invalidParam2. Supported parameters are: useCase, type, policyName, operatorType, value.", exception.Message);
+        Assert.Equal("Invalid query parameters: invalidParam1, invalidParam2. Supported parameters are: useCase, type.", exception.Message);
     }
 
     [Fact]
@@ -122,9 +142,7 @@ public class PolicyContentQueryParametersFilterTests
         var queryParams = new QueryCollection(new Dictionary<string, StringValues>
         {
             { "useCase", "InvalidUseCase" },
-            { "type", "Usage" },
-            { "policyName", "ValidPolicyName" },
-            { "operatorType", "Equals" },
+            { "type", "Usage" }
         });
 
         var context = new DefaultHttpContext();
@@ -135,37 +153,10 @@ public class PolicyContentQueryParametersFilterTests
 
         var next = A.Fake<EndpointFilterDelegate>();
 
-        var filter = new PolicyContentQueryParametersFilter();
+        var filter = new PolicyTypesQueryParametersFilter();
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ControllerArgumentException>(() => filter.InvokeAsync(endpointContext, next).AsTask());
         Assert.Equal("Invalid value 'InvalidUseCase' for parameter 'useCase'. Accepted values are: Traceability, Quality, PCF, Behavioraltwin, Businesspartner, CircularEconomy, DemandCapacity.", exception.Message);
-    }
-
-    [Fact]
-    public async Task InvokeAsync_MissingRequiredParameter_ThrowsException()
-    {
-        // Arrange
-        var queryParams = new QueryCollection(new Dictionary<string, StringValues>
-        {
-            { "useCase", "PCF" },
-            { "policyName", "ValidPolicyName" },
-            { "operatorType", "Equals" },
-            { "value", "ValidValue" }
-        });
-
-        var context = new DefaultHttpContext();
-        context.Request.Query = queryParams;
-
-        var endpointContext = A.Fake<EndpointFilterInvocationContext>();
-        A.CallTo(() => endpointContext.HttpContext).Returns(context);
-
-        var next = A.Fake<EndpointFilterDelegate>();
-
-        var filter = new PolicyContentQueryParametersFilter();
-
-        // Act & Assert
-        var exception = await Assert.ThrowsAsync<NotFoundException>(() => filter.InvokeAsync(endpointContext, next).AsTask());
-        Assert.Contains("Missing required parameters: type.", exception.Message);
     }
 }

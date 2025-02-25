@@ -47,7 +47,9 @@ public static class PolicyHubController
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(string), Constants.JsonContentType);
 
-        policyHub.MapGet("policy-types", (PolicyTypeId? type, UseCaseId? useCase, IPolicyHubBusinessLogic logic) => logic.GetPolicyTypes(type, useCase))
+        policyHub.MapGet("policy-types", (string? type, string? useCase, IPolicyHubBusinessLogic logic) =>
+                logic.GetPolicyTypes(ParamEnumHelper.ParseEnum<PolicyTypeId>(type), ParamEnumHelper.ParseEnum<UseCaseId>(useCase)))
+            .AddEndpointFilter<PolicyTypesQueryParametersFilter>()
             .WithSwaggerDescription("Provides all current supported policy types incl. a policy description and useCase link.",
                 "Example: GET: api/policy-hub/policy-types",
                 "OPTIONAL: Type to filter the response",
@@ -58,18 +60,18 @@ public static class PolicyHubController
 
         policyHub.MapGet("policy-content",
                 (string? useCase,
-                String type,
-                string policyName,
-                String operatorType,
+                String? type,
+                string? policyName,
+                String? operatorType,
                 string? value,
                 IPolicyHubBusinessLogic logic) =>
                 {
-                    UseCaseId? useCaseId = null;
-                    if (useCase != null && useCase.Trim() != string.Empty)
+                    if (string.IsNullOrEmpty(type) || string.IsNullOrEmpty(policyName) || string.IsNullOrEmpty(operatorType))
                     {
-                        useCaseId = Enum.Parse<UseCaseId>(useCase, true);
+                        throw new ArgumentNullException(nameof(type), "Type parameter cannot be null or empty.");
                     }
-                    return logic.GetPolicyContentWithFiltersAsync(useCaseId, Enum.Parse<PolicyTypeId>(type), policyName, Enum.Parse<OperatorId>(operatorType), value);
+
+                    return logic.GetPolicyContentWithFiltersAsync(ParamEnumHelper.ParseEnum<UseCaseId>(useCase), Enum.Parse<PolicyTypeId>(type), policyName, Enum.Parse<OperatorId>(operatorType), value);
                 })
             .AddEndpointFilter<PolicyContentQueryParametersFilter>()
             .WithSwaggerDescription("Receive the policy template 'access' or 'usage' for a single policy rule based on the request parameters submitted by the user.",

@@ -17,20 +17,17 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
-
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Filters;
 
-public class PolicyContentQueryParametersFilter : BaseQueryParametersFilter
+public static class ParamEnumHelper
 {
-    public PolicyContentQueryParametersFilter() : base(new Dictionary<string, QueryParameterType>
+    public static TEnum? ParseEnum<TEnum>(string? value) where TEnum : struct, Enum
     {
-        { "useCase", new QueryParameterType { IsRequired = false, EnumType = typeof(UseCaseId) } },
-        { "type", new QueryParameterType { IsRequired = true, EnumType = typeof(PolicyTypeId) } },
-        { "policyName", new QueryParameterType { IsRequired = true } },
-        { "operatorType", new QueryParameterType { IsRequired = true, EnumType = typeof(OperatorId) } },
-        { "value", new QueryParameterType { IsRequired = false } }
-    })
-    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        return Enum.Parse<TEnum>(value.Trim(), true);
     }
 }

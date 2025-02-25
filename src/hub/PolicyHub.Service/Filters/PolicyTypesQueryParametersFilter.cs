@@ -21,15 +21,12 @@ using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 
 namespace Org.Eclipse.TractusX.PolicyHub.Service.Filters;
 
-public class PolicyContentQueryParametersFilter : BaseQueryParametersFilter
+public class PolicyTypesQueryParametersFilter : BaseQueryParametersFilter
 {
-    public PolicyContentQueryParametersFilter() : base(new Dictionary<string, QueryParameterType>
+    public PolicyTypesQueryParametersFilter() : base(new Dictionary<string, QueryParameterType>
     {
         { "useCase", new QueryParameterType { IsRequired = false, EnumType = typeof(UseCaseId) } },
-        { "type", new QueryParameterType { IsRequired = true, EnumType = typeof(PolicyTypeId) } },
-        { "policyName", new QueryParameterType { IsRequired = true } },
-        { "operatorType", new QueryParameterType { IsRequired = true, EnumType = typeof(OperatorId) } },
-        { "value", new QueryParameterType { IsRequired = false } }
+        { "type", new QueryParameterType { IsRequired = false, EnumType = typeof(PolicyTypeId) } }
     })
     {
     }
