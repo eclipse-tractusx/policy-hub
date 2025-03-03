@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Org.Eclipse.TractusX.PolicyHub.Service
-  version: v1.3.0-rc.1
+  version: v1.3.0
 paths:
   /api/policy-hub/policy-attributes:
     get:
