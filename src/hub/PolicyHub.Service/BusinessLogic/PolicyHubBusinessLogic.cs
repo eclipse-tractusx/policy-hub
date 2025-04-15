@@ -89,27 +89,6 @@ public class PolicyHubBusinessLogic(IHubRepositories hubRepositories)
                     (rightOperands.Single(), null);
     }
 
-    private static (object rightOperand, AdditionalAttributes? additionalAttribute) ProcessEqualsOperator((AttributeKeyId? Key, IEnumerable<string> Values) attributes, IEnumerable<string> rightOperands, string? value, string leftOperand, UseCaseId? useCase)
-    {
-        if (value != null)
-        {
-            if (!rightOperands.Any(r => r == value))
-            {
-                throw ControllerArgumentException.Create(PolicyErrors.INVALID_VALUES, new ErrorParameter[] { new("value", value), new("leftOperand", leftOperand), new("possibleValues", string.Join(",", rightOperands)) });
-            }
-
-            rightOperands = rightOperands.Where(r => r.Equals(value));
-        }
-
-        var useCaseValue = useCase != null ?
-            useCase.Value.ToString().Insert(0, ".") :
-            string.Empty;
-        var rightOperand = $"@{leftOperand}{useCaseValue}-{attributes.Key}";
-        return rightOperands.Count() > 1 ?
-                    (rightOperand, new AdditionalAttributes(rightOperand, rightOperands)) :
-                    (rightOperands.Single(), null);
-    }
-
     private static object GetRegexValue((AttributeKeyId? Key, IEnumerable<string> Values) attributes, string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
