@@ -1,18 +1,19 @@
 nuget/nuget/-/AutoFixture.AutoFakeItEasy/4.18.1, MIT, approved, #10064
-nuget/nuget/-/AutoFixture.Xunit/4.18.1, MIT, approved, #10082
+nuget/nuget/-/AutoFixture.Xunit2/4.18.1, MIT, approved, #13973
 nuget/nuget/-/AutoFixture/4.18.1, MIT, approved, #10057
+nuget/nuget/-/BouncyCastle.Cryptography/2.4.0, MIT AND Apache-2.0 AND BSD-3-Clause AND LicenseRef-scancode-ietf-trust, approved, #15706
 nuget/nuget/-/Castle.Core/5.1.1, Apache-2.0, approved, #13966
 nuget/nuget/-/EFCore.NamingConventions/9.0.0, Apache-2.0, approved, #17617
 nuget/nuget/-/FakeItEasy/8.3.0, MIT, approved, #16328
 nuget/nuget/-/Fare/2.1.1, MIT, approved, clearlydefined
-nuget/nuget/-/FluentAssertions/6.12.2, MIT AND Apache-2.0 AND BSD-3-Clause AND CC-BY-3.0-US AND (GPL-2.0-only OR MIT) AND OFL-1.1 AND WTFPL, approved, #13976
+nuget/nuget/-/FluentAssertions/8.2.0, LicenseRef-scancode-xceed-community-2021 AND LicenseRef-scancode-proprietary-license AND LicenseRef-scancode-proprietary-license AND LicenseRef-scancode-xceed-community-2021 AND LicenseRef-scancode-commercial-license AND LicenseRef-scancode-xceed-community-2021 AND LicenseRef-scancode-warranty-disclaimer, restricted, clearlydefined
 nuget/nuget/-/Flurl.Signed/4.0.0, MIT, approved, #16448
 nuget/nuget/-/Humanizer.Core/2.14.1, MIT, approved, #10060
 nuget/nuget/-/Mono.TextTemplating/3.0.0, MIT, approved, #17609
 nuget/nuget/-/Newtonsoft.Json/13.0.1, MIT AND BSD-3-Clause, approved, #3266
-nuget/nuget/-/Npgsql.EntityFrameworkCore.PostgreSQL/9.0.3, PostgreSQL AND MIT, approved, #17615
-nuget/nuget/-/Npgsql/9.0.2, PostgreSQL, approved, #17608
-nuget/nuget/-/SSH.NET/2024.1.0, MIT AND ISC AND LicenseRef-Public-domain AND (MIT AND MS-PL), approved, #17777
+nuget/nuget/-/Npgsql.EntityFrameworkCore.PostgreSQL/9.0.4, PostgreSQL AND MIT, approved, #17615
+nuget/nuget/-/Npgsql/9.0.3, PostgreSQL, approved, #17608
+nuget/nuget/-/SSH.NET/2024.2.0, MIT AND ISC, approved, #20722
 nuget/nuget/-/Serilog.AspNetCore/9.0.0, Apache-2.0 AND MIT, approved, #19193
 nuget/nuget/-/Serilog.Enrichers.CorrelationId/3.0.1, MIT, approved, clearlydefined
 nuget/nuget/-/Serilog.Enrichers.Environment/3.0.1, Apache-2.0, approved, #17052
@@ -32,8 +33,8 @@ nuget/nuget/-/Swashbuckle.AspNetCore.Swagger/7.2.0, MIT AND Apache-2.0, approved
 nuget/nuget/-/Swashbuckle.AspNetCore.SwaggerGen/7.2.0, MIT AND Apache-2.0, approved, #19190
 nuget/nuget/-/Swashbuckle.AspNetCore.SwaggerUI/7.2.0, MIT AND Apache-2.0, approved, #19191
 nuget/nuget/-/Swashbuckle.AspNetCore/7.2.0, MIT AND Apache-2.0, approved, #19182
-nuget/nuget/-/Testcontainers.PostgreSql/4.1.0, MIT, approved, #17771
-nuget/nuget/-/Testcontainers/4.1.0, MIT, approved, #17776
+nuget/nuget/-/Testcontainers.PostgreSql/4.4.0, MIT, approved, #20733
+nuget/nuget/-/Testcontainers/4.4.0, MIT, approved, #20725
 nuget/nuget/-/Xunit.Extensions.AssemblyFixture/2.6.0, MIT, approved, #17055
 nuget/nuget/-/coverlet.collector/6.0.4, MIT, approved, #10075
 nuget/nuget/-/xunit.abstractions/2.0.3, Apache-2.0, approved, clearlydefined
@@ -42,5 +43,5 @@ nuget/nuget/-/xunit.assert/2.9.3, Apache-2.0, approved, #16331
 nuget/nuget/-/xunit.core/2.9.3, Apache-2.0, approved, #16330
 nuget/nuget/-/xunit.extensibility.core/2.9.3, Apache-2.0 AND MIT, approved, #16334
 nuget/nuget/-/xunit.extensibility.execution/2.9.3, Apache-2.0 AND MIT, approved, #16333
-nuget/nuget/-/xunit.runner.visualstudio/3.0.1, Apache-2.0 AND MIT, approved, #19188
+nuget/nuget/-/xunit.runner.visualstudio/3.1.0, , restricted, clearlydefined
 nuget/nuget/-/xunit/2.9.3, Apache-2.0 AND MIT, approved, #16327
