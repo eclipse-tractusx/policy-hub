@@ -43,5 +43,5 @@ nuget/nuget/-/xunit.assert/2.9.3, Apache-2.0, approved, #16331
 nuget/nuget/-/xunit.core/2.9.3, Apache-2.0, approved, #16330
 nuget/nuget/-/xunit.extensibility.core/2.9.3, Apache-2.0 AND MIT, approved, #16334
 nuget/nuget/-/xunit.extensibility.execution/2.9.3, Apache-2.0 AND MIT, approved, #16333
-nuget/nuget/-/xunit.runner.visualstudio/3.1.0, Apache-2.0 AND MIT AND (Apache-2.0 AND LicenseRef-scancode-free-unknown) AND Apache-2.0, restricted, #20978
+nuget/nuget/-/xunit.runner.visualstudio/3.0.2, Apache-2.0 AND MIT, approved, #19188
 nuget/nuget/-/xunit/2.9.3, Apache-2.0 AND MIT, approved, #16327
