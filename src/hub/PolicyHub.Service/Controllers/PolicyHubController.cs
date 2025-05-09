@@ -22,6 +22,7 @@ using Org.Eclipse.TractusX.PolicyHub.DbAccess.Models;
 using Org.Eclipse.TractusX.PolicyHub.Entities.Enums;
 using Org.Eclipse.TractusX.PolicyHub.Service.BusinessLogic;
 using Org.Eclipse.TractusX.PolicyHub.Service.Extensions;
+using Org.Eclipse.TractusX.PolicyHub.Service.Filters;
 using Org.Eclipse.TractusX.PolicyHub.Service.Models;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling;
 using Org.Eclipse.TractusX.Portal.Backend.Framework.ErrorHandling.Web;
@@ -46,7 +47,9 @@ public static class PolicyHubController
             .WithDefaultResponses()
             .Produces(StatusCodes.Status200OK, typeof(string), Constants.JsonContentType);
 
-        policyHub.MapGet("policy-types", (PolicyTypeId? type, UseCaseId? useCase, IPolicyHubBusinessLogic logic) => logic.GetPolicyTypes(type, useCase))
+        policyHub.MapGet("policy-types", (string? type, string? useCase, IPolicyHubBusinessLogic logic) =>
+                logic.GetPolicyTypes(ParamEnumHelper.ParseEnum<PolicyTypeId>(type), ParamEnumHelper.ParseEnum<UseCaseId>(useCase)))
+            .AddEndpointFilter<PolicyTypesQueryParametersFilter>()
             .WithSwaggerDescription("Provides all current supported policy types incl. a policy description and useCase link.",
                 "Example: GET: api/policy-hub/policy-types",
                 "OPTIONAL: Type to filter the response",
@@ -56,12 +59,21 @@ public static class PolicyHubController
             .Produces(StatusCodes.Status200OK, typeof(PolicyTypeResponse), Constants.JsonContentType);
 
         policyHub.MapGet("policy-content",
-                (UseCaseId? useCase,
-                PolicyTypeId type,
-                string policyName,
-                OperatorId operatorType,
+                (string? useCase,
+                String? type,
+                string? policyName,
+                String? operatorType,
                 string? value,
-                IPolicyHubBusinessLogic logic) => logic.GetPolicyContentWithFiltersAsync(useCase, type, policyName, operatorType, value))
+                IPolicyHubBusinessLogic logic) =>
+                {
+                    if (string.IsNullOrEmpty(type) || string.IsNullOrEmpty(policyName) || string.IsNullOrEmpty(operatorType))
+                    {
+                        throw new ArgumentNullException(nameof(type), "Type parameter cannot be null or empty.");
+                    }
+
+                    return logic.GetPolicyContentWithFiltersAsync(ParamEnumHelper.ParseEnum<UseCaseId>(useCase), Enum.Parse<PolicyTypeId>(type), policyName, Enum.Parse<OperatorId>(operatorType), value);
+                })
+            .AddEndpointFilter<PolicyContentQueryParametersFilter>()
             .WithSwaggerDescription("Receive the policy template 'access' or 'usage' for a single policy rule based on the request parameters submitted by the user.",
                 "Example: GET: api/policy-hub/policy-content",
                 "OPTIONAL: The use case",
