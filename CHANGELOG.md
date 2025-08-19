@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v1.3.1-rc.1...v1.3.2-rc.1) (2025-07-23)
+
+
+### Features
+
+* update dependencies ([ea59b62](https://github.com/eclipse-tractusx/policy-hub/commit/ea59b628b09b540647915d7c5b947a540afd7da7))
+
 ## [1.3.1-rc.1](https://github.com/eclipse-tractusx/policy-hub/compare/v1.3.0-rc.1...v1.3.1-rc.1) (2025-05-12)
 
 

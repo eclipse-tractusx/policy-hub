@@ -33,7 +33,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 1.3.1
+    version: 1.3.2-rc.1
 ```
 
 ## Requirements
