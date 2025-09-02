@@ -33,7 +33,7 @@ To use the helm chart as a dependency:
 dependencies:
   - name: policy-hub
     repository: https://eclipse-tractusx.github.io/charts/dev
-    version: 1.3.2-rc.1
+    version: 1.3.2-rc.2
 ```
 
 ## Requirements
@@ -71,7 +71,7 @@ dependencies:
 | dbConnection.schema | string | `"hub"` |  |
 | dbConnection.sslMode | string | `"Disable"` |  |
 | postgresql.enabled | bool | `true` | PostgreSQL chart configuration; default configurations: host: "policy-hub-postgresql-primary", port: 5432; Switch to enable or disable the PostgreSQL helm chart. |
-| postgresql.image | object | `{"tag":"15-debian-11"}` | Setting image tag to major to get latest minor updates |
+| postgresql.image | object | `{"registry":"docker.io","repository":"bitnamilegacy/postgresql","tag":"15-debian-11"}` | Setting image tag to major to get latest minor updates |
 | postgresql.commonLabels."app.kubernetes.io/version" | string | `"15"` |  |
 | postgresql.auth.username | string | `"hub"` | Non-root username. |
 | postgresql.auth.database | string | `"policy-hub"` | Database name. |
