@@ -66,6 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.9" />
     <SonarQubeSetting Include="sonar.coverage.exclusions">
       <Value>Program.cs</Value>
     </SonarQubeSetting>
